@@ -20,7 +20,6 @@
         <maven.compiler.target>21</maven.compiler.target>
         <openapi.generator.maven.plugin>7.8.0</openapi.generator.maven.plugin>
         <swagger.annotations>2.2.25</swagger.annotations>
-
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -105,18 +104,6 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.11.3</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>7.5.1</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
