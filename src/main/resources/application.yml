@@ -1,0 +1,17 @@
+spring:
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/postgres?stringtype=unspecified
+    username: bgs
+    password: bgs
+    driverClassName: org.postgresql.Driver
+  flyway:
+    enabled:  true
+    schemas:  bgs
+    locations:  db/migration
+
