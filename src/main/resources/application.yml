@@ -3,10 +3,15 @@ spring:
     database: POSTGRESQL
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
   datasource:
     platform: postgres
-    url: jdbc:postgresql://localhost:5432/dvdrental
-    username: dbadmin
-    password: dbadmin
+    url: jdbc:postgresql://localhost:5432/postgres?stringtype=unspecified
+    username: bgs
+    password: bgs
     driverClassName: org.postgresql.Driver
+  flyway:
+    enabled:  true
+    schemas:  bgs
+    locations:  db/migration
+

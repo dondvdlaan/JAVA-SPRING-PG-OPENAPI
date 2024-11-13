@@ -86,6 +86,17 @@
             <artifactId>postgresql</artifactId>
             <version>42.7.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>10.21.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+            <version>10.21.0</version>
+            <scope>runtime</scope>
+        </dependency>
 
         <!-- Lombok -->
         <dependency>

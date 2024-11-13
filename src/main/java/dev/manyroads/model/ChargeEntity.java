@@ -2,21 +2,19 @@ package dev.manyroads.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.*;
 
-import java.time.LocalDate;
-
 @Entity
+@Table(name="charges")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Actor {
+public class ChargeEntity {
 
     @Id
-    private int actorId;
-    private String firstName;
-    private String lastName;
-    private LocalDate lastUpdate;
+    private long chargeId;
+    private String chargeStatus;
 
 }

@@ -1,34 +1,37 @@
 package dev.manyroads;
 
-import dev.manyroads.model.Actor;
-import dev.manyroads.repository.ActorRepository;
+import dev.manyroads.model.ChargeEntity;
+import dev.manyroads.repository.ChargeRepository;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
-@DataJpaTest
+@SpringBootTest
 public class PostgresSqlTest {
 
     @Autowired
-    ActorRepository testRepository;
+    ChargeRepository chargeRepository;
 
     @Test
-    void actorRepoTest(){
+    void jobRepoTest() {
 
         // Prepare
-        Actor actor = new Actor();
-        String firstName = "Aap";
-        actor.setFirstName(firstName);
-        Actor savedActor = testRepository.save(actor);
+        ChargeEntity job = new ChargeEntity();
+        String status = "recorded";
+        job.setChargeStatus(status);
+        ChargeEntity savedJob = chargeRepository.save(job);
 
         // Act
-        Optional<Actor> oResult = testRepository.findById(savedActor.getActorId());
+        Optional<ChargeEntity> oResult = chargeRepository.findById(savedJob.getChargeId());
 
         // Verify
-        oResult.ifPresent(s -> assertEquals(firstName, s.getFirstName()));
+        oResult.ifPresent(j -> assertEquals(status, j.getChargeStatus()));
 
     }
 }
