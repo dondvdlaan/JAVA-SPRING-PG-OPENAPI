@@ -1,6 +1,6 @@
 package dev.manyroads;
 
-import dev.manyroads.controller.CaseController;
+import dev.manyroads.casereception.CaseController;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.repository.ChargeRepository;
 import org.junit.jupiter.api.Test;

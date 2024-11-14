@@ -1,4 +1,4 @@
-package dev.manyroads.controller;
+package dev.manyroads.casereception;
 
 import dev.manyroads.model.CaseRequest;
 import dev.manyroads.model.CaseResponse;
