@@ -2,8 +2,6 @@ spring:
   jpa:
     database: POSTGRESQL
     show-sql: true
-    hibernate:
-      ddl-auto: validate
   datasource:
     platform: postgres
     url: jdbc:postgresql://localhost:5432/postgres?stringtype=unspecified

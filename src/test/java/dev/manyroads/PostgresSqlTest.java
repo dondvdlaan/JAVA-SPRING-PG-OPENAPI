@@ -1,13 +1,14 @@
 package dev.manyroads;
 
-import dev.manyroads.model.ChargeEntity;
-import dev.manyroads.repository.ChargeRepository;
+import dev.manyroads.controller.CaseController;
+import dev.manyroads.model.entity.Charge;
+import dev.manyroads.model.repository.ChargeRepository;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
@@ -17,21 +18,28 @@ public class PostgresSqlTest {
 
     @Autowired
     ChargeRepository chargeRepository;
+    @Autowired
+    CaseController caseController;
 
     @Test
-    void jobRepoTest() {
+    void chargeRepoTest() {
 
         // Prepare
-        ChargeEntity job = new ChargeEntity();
+        Charge job = new Charge();
         String status = "recorded";
         job.setChargeStatus(status);
-        ChargeEntity savedJob = chargeRepository.save(job);
+        Charge savedJob = chargeRepository.save(job);
 
         // Act
-        Optional<ChargeEntity> oResult = chargeRepository.findById(savedJob.getChargeId());
+        Optional<Charge> oResult = chargeRepository.findById(savedJob.getId());
 
         // Verify
         oResult.ifPresent(j -> assertEquals(status, j.getChargeStatus()));
 
+    }
+    @Test
+    void smokeTest(){
+        // Verify
+        assertThat(caseController).isNotNull();
     }
 }
