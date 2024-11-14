@@ -4,9 +4,7 @@ import dev.manyroads.model.CaseRequest;
 import dev.manyroads.model.CaseResponse;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,10 +28,10 @@ public class CaseControllerTest {
         String expected = caseResponse.toString();
 
         // Activate
-        CaseResponse result  = testRestTemplate
-                .postForObject(
-                        "http://localhost:" + port + "/v1/cases",
-                        caseRequest, CaseResponse.class);
+        CaseResponse result = testRestTemplate.postForObject(
+                "http://localhost:" + port + "/v1/cases",
+                caseRequest,
+                CaseResponse.class);
 
         // Verify
         assertEquals(result.toString(), expected);
