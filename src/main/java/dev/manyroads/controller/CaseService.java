@@ -3,6 +3,6 @@ package dev.manyroads.controller;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OrderService {
+public class CaseService {
 
 }
