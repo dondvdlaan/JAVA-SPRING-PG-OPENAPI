@@ -13,7 +13,8 @@ public class DCMExceptionHandler {
     @ExceptionHandler({
             CaseRequestEmptyOrNullException.class,
             PersonIDIsMissingException.class,
-            CaseIDIsMissingException.class
+            CaseIDIsMissingException.class,
+            AdminClientException.class
     })
     public ResponseEntity<ErrorData> handleException(final DCMException ex) {
         log.error(String.format("Error from handleException: %s %s", ex.getClass().getSimpleName(), ex.getMessage()));

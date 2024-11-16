@@ -1,26 +1,32 @@
 package dev.manyroads.casereception;
 
+import dev.manyroads.client.AdminClient;
 import dev.manyroads.exception.CaseIDIsMissingException;
 import dev.manyroads.exception.CaseRequestEmptyOrNullException;
 import dev.manyroads.exception.PersonIDIsMissingException;
 import dev.manyroads.model.CaseRequest;
 import dev.manyroads.model.CaseResponse;
+import dev.manyroads.model.VehicleTypeEnum;
 import dev.manyroads.verification.Verification;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 
+import java.util.Optional;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CaseControllerTest {
+public class CaseReceptionControllerTests {
 
     @LocalServerPort
     private int port;
@@ -29,6 +35,9 @@ public class CaseControllerTest {
     private TestRestTemplate testRestTemplate;
     @Autowired
     Verification verification;
+
+    @MockBean
+    AdminClient adminClient;
 
     @Test
     void caseRequestCaseIDNullShouldThrowExceptionTest()  {
@@ -83,13 +92,14 @@ public class CaseControllerTest {
     }
 
     @Test
-    void caseRequestShouldReturnStausCose200Test() throws Exception {
+    void caseRequestShouldReturnStatusCose200Test() throws Exception {
         // Prepare
         CaseRequest caseRequest = new CaseRequest();
         caseRequest.setPersonID(123456L);
         caseRequest.setCaseID("123456");
         CaseResponse caseResponse = new CaseResponse();
         String expected = "200 OK";
+        when(adminClient.searchVehicleType(caseRequest.getCaseID())).thenReturn(VehicleTypeEnum.BULLDOZER);
 
         // Activate
         ResponseEntity<CaseRequest> result = testRestTemplate.postForEntity(
