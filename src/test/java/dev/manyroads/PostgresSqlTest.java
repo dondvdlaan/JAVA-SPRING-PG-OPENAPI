@@ -1,6 +1,6 @@
 package dev.manyroads;
 
-import dev.manyroads.casereception.CaseController;
+import dev.manyroads.casereception.CaseReceptionController;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.repository.ChargeRepository;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ public class PostgresSqlTest {
     @Autowired
     ChargeRepository chargeRepository;
     @Autowired
-    CaseController caseController;
+    CaseReceptionController caseController;
 
     @Test
     void chargeRepoTest() {

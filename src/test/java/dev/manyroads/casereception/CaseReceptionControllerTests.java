@@ -1,18 +1,22 @@
 package dev.manyroads.casereception;
 
+import dev.manyroads.client.AdminClient;
 import dev.manyroads.exception.CaseIDIsMissingException;
 import dev.manyroads.exception.CaseRequestEmptyOrNullException;
 import dev.manyroads.exception.PersonIDIsMissingException;
 import dev.manyroads.model.CaseRequest;
 import dev.manyroads.model.CaseResponse;
+import dev.manyroads.model.VehicleTypeEnum;
 import dev.manyroads.verification.Verification;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +24,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CaseControllerTest {
+public class CaseReceptionControllerTests {
 
     @LocalServerPort
     private int port;
@@ -30,8 +34,11 @@ public class CaseControllerTest {
     @Autowired
     Verification verification;
 
+    @MockBean
+    AdminClient adminClient;
+
     @Test
-    void caseRequestCaseIDNullShouldThrowExceptionTest()  {
+    void caseRequestCaseIDNullShouldThrowExceptionTest() {
         // Prepare
         CaseRequest caseRequestCaseIDIsNull = new CaseRequest();
         caseRequestCaseIDIsNull.setPersonID(987654L);
@@ -46,7 +53,7 @@ public class CaseControllerTest {
     }
 
     @Test
-    void caseRequestPersonIDNullShouldThrowExceptionTest()  {
+    void caseRequestPersonIDNullShouldThrowExceptionTest() {
         // Prepare
         CaseRequest caseRequestPersonIDIsNull = new CaseRequest();
         caseRequestPersonIDIsNull.setPersonID(null);
@@ -61,7 +68,7 @@ public class CaseControllerTest {
     }
 
     @Test
-    void caseRequestNulShouldThrowExceptionTest() throws Exception {
+    void caseRequestNulShouldThrowExceptionTest() {
         // Prepare
         CaseRequest caseRequestIsNull = null;
         HttpHeaders headers = new HttpHeaders();
@@ -83,13 +90,14 @@ public class CaseControllerTest {
     }
 
     @Test
-    void caseRequestShouldReturnStausCose200Test() throws Exception {
+    void caseRequestShouldReturnStatusCose200Test() {
         // Prepare
         CaseRequest caseRequest = new CaseRequest();
         caseRequest.setPersonID(123456L);
         caseRequest.setCaseID("123456");
         CaseResponse caseResponse = new CaseResponse();
         String expected = "200 OK";
+        when(adminClient.searchVehicleType(caseRequest.getCaseID())).thenReturn(VehicleTypeEnum.BULLDOZER);
 
         // Activate
         ResponseEntity<CaseRequest> result = testRestTemplate.postForEntity(
@@ -102,7 +110,7 @@ public class CaseControllerTest {
     }
 
     @Test
-    void caseRequestShouldReturnCaseResponseTest() throws Exception {
+    void caseRequestShouldReturnCaseResponseTest() {
         // Prepare
         CaseRequest caseRequest = new CaseRequest();
         CaseResponse caseResponse = new CaseResponse();

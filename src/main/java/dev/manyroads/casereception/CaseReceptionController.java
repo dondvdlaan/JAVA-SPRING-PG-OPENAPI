@@ -9,16 +9,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@Slf4j
 @AllArgsConstructor
-public class CaseController {
+@Slf4j
+public class CaseReceptionController {
 
     Verification verification;
+    CaseReceptionService caseReceptionService;
 
     @RequestMapping(value = "/v1/cases", method = RequestMethod.POST)
     public ResponseEntity<CaseResponse> receiveCase(@RequestBody CaseRequest caseRequest){
 
         verification.verifyCaseRequest(caseRequest);
+        CaseResponse caseResponse = caseReceptionService.processIncomingCaseRequest(caseRequest);
 
         System.out.println("caseRequest: " + caseRequest);
         return ResponseEntity.ok(new CaseResponse());
