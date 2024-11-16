@@ -7,7 +7,6 @@ import dev.manyroads.model.CaseRequest;
 import dev.manyroads.model.CaseResponse;
 import dev.manyroads.model.VehicleTypeEnum;
 import feign.FeignException;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,7 +31,7 @@ public class CaseReceptionService {
 
     private VehicleTypeEnum retrieveVehicleType(String caseID) {
 
-        VehicleTypeEnum vehicleType = null;
+        VehicleTypeEnum vehicleType;
         try {
             Optional<VehicleTypeEnum> oVehicleType = getVehicleTypeEnum(caseID);
             oVehicleType.orElseThrow(VehicleTypeNotFoundException::new);

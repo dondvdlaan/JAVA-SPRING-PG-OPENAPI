@@ -23,8 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 
-import java.util.Optional;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CaseReceptionControllerTests {
 
@@ -40,7 +38,7 @@ public class CaseReceptionControllerTests {
     AdminClient adminClient;
 
     @Test
-    void caseRequestCaseIDNullShouldThrowExceptionTest()  {
+    void caseRequestCaseIDNullShouldThrowExceptionTest() {
         // Prepare
         CaseRequest caseRequestCaseIDIsNull = new CaseRequest();
         caseRequestCaseIDIsNull.setPersonID(987654L);
@@ -55,7 +53,7 @@ public class CaseReceptionControllerTests {
     }
 
     @Test
-    void caseRequestPersonIDNullShouldThrowExceptionTest()  {
+    void caseRequestPersonIDNullShouldThrowExceptionTest() {
         // Prepare
         CaseRequest caseRequestPersonIDIsNull = new CaseRequest();
         caseRequestPersonIDIsNull.setPersonID(null);
@@ -70,7 +68,7 @@ public class CaseReceptionControllerTests {
     }
 
     @Test
-    void caseRequestNulShouldThrowExceptionTest() throws Exception {
+    void caseRequestNulShouldThrowExceptionTest() {
         // Prepare
         CaseRequest caseRequestIsNull = null;
         HttpHeaders headers = new HttpHeaders();
@@ -92,7 +90,7 @@ public class CaseReceptionControllerTests {
     }
 
     @Test
-    void caseRequestShouldReturnStatusCose200Test() throws Exception {
+    void caseRequestShouldReturnStatusCose200Test() {
         // Prepare
         CaseRequest caseRequest = new CaseRequest();
         caseRequest.setPersonID(123456L);
@@ -112,7 +110,7 @@ public class CaseReceptionControllerTests {
     }
 
     @Test
-    void caseRequestShouldReturnCaseResponseTest() throws Exception {
+    void caseRequestShouldReturnCaseResponseTest() {
         // Prepare
         CaseRequest caseRequest = new CaseRequest();
         CaseResponse caseResponse = new CaseResponse();
