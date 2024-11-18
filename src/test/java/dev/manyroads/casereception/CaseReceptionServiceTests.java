@@ -1,9 +1,9 @@
 package dev.manyroads.casereception;
 
 import dev.manyroads.client.AdminClient;
-import dev.manyroads.exception.AdminClientException;
-import dev.manyroads.exception.VehicleTypeNotCoincideWithDomainException;
-import dev.manyroads.exception.VehicleTypeNotFoundException;
+import dev.manyroads.casereception.exception.AdminClientException;
+import dev.manyroads.casereception.exception.VehicleTypeNotCoincideWithDomainException;
+import dev.manyroads.casereception.exception.VehicleTypeNotFoundException;
 import dev.manyroads.model.CaseRequest;
 import dev.manyroads.model.CaseResponse;
 import dev.manyroads.model.VehicleTypeEnum;

@@ -1,4 +1,4 @@
-package dev.manyroads.exception;
+package dev.manyroads.casereception.exception;
 
 
 public abstract class DCMException extends RuntimeException {

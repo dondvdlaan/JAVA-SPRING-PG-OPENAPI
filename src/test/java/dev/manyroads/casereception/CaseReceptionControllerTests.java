@@ -1,12 +1,11 @@
 package dev.manyroads.casereception;
 
 import dev.manyroads.client.AdminClient;
-import dev.manyroads.exception.CaseIDIsMissingException;
-import dev.manyroads.exception.CaseRequestEmptyOrNullException;
-import dev.manyroads.exception.PersonIDIsMissingException;
+import dev.manyroads.casereception.exception.CaseIDIsMissingException;
+import dev.manyroads.casereception.exception.CaseRequestEmptyOrNullException;
+import dev.manyroads.casereception.exception.PersonIDIsMissingException;
 import dev.manyroads.model.CaseRequest;
 import dev.manyroads.model.CaseResponse;
-import dev.manyroads.model.VehicleTypeEnum;
 import dev.manyroads.verification.Verification;
 import org.junit.jupiter.api.Test;
 

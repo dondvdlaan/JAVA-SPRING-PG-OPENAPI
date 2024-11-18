@@ -1,14 +1,12 @@
 package dev.manyroads.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.UUID;
 
 @Entity
-@Table(name="charges")
+@Table(name = "charges")
 @Getter
 @Setter
 @Builder
@@ -21,5 +19,8 @@ public class Charge {
     private UUID id = UUID.randomUUID();
     private long chargeId;
     private String chargeStatus;
+    @ManyToOne()
+    @JoinColumn(name = "customerID")
+    private Customer customer;
 
 }
