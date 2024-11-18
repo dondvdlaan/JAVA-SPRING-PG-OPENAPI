@@ -14,7 +14,9 @@ public class DCMExceptionHandler {
             CaseRequestEmptyOrNullException.class,
             PersonIDIsMissingException.class,
             CaseIDIsMissingException.class,
-            AdminClientException.class
+            AdminClientException.class,
+            VehicleTypeNotCoincideWithDomainException.class,
+            VehicleTypeNotFoundException.class
     })
     public ResponseEntity<ErrorData> handleException(final DCMException ex) {
         log.error(String.format("Error from handleException: %s %s", ex.getClass().getSimpleName(), ex.getMessage()));

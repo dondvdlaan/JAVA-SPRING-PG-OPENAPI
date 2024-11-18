@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface AdminClient {
 
     @GetMapping("/vehicles/{caseID}")
-    VehicleTypeEnum searchVehicleType(@PathVariable("caseID") String caseID);
+    String searchVehicleType(@PathVariable("caseID") String caseID);
 
 }

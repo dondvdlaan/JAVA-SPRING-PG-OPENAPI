@@ -97,7 +97,7 @@ public class CaseReceptionControllerTests {
         caseRequest.setCaseID("123456");
         CaseResponse caseResponse = new CaseResponse();
         String expected = "200 OK";
-        when(adminClient.searchVehicleType(caseRequest.getCaseID())).thenReturn(VehicleTypeEnum.BULLDOZER);
+        when(adminClient.searchVehicleType(caseRequest.getCaseID())).thenReturn("bulldozer");
 
         // Activate
         ResponseEntity<CaseRequest> result = testRestTemplate.postForEntity(

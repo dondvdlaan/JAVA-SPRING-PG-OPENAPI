@@ -2,6 +2,7 @@ package dev.manyroads.casereception;
 
 import dev.manyroads.client.AdminClient;
 import dev.manyroads.exception.AdminClientException;
+import dev.manyroads.exception.VehicleTypeNotCoincideWithDomainException;
 import dev.manyroads.exception.VehicleTypeNotFoundException;
 import dev.manyroads.model.CaseRequest;
 import dev.manyroads.model.CaseResponse;
@@ -22,18 +23,28 @@ public class CaseReceptionService {
 
     public CaseResponse processIncomingCaseRequest(CaseRequest caseRequest) {
 
+        // Retrieve vehicle type from admin microservice
         CaseResponse caseResponse = new CaseResponse();
-        VehicleTypeEnum vehicleType = retrieveVehicleType(caseRequest.getCaseID());
-        caseResponse.setVehicleType(vehicleType);
+        String vehicleType = retrieveVehicleType(caseRequest.getCaseID());
+
+        // Verify vehicle type in DCM domain
+        VehicleTypeEnum vehicleTypeConfirmed;
+        try{
+            vehicleTypeConfirmed = VehicleTypeEnum.fromValue(vehicleType);
+        }catch(IllegalArgumentException ex){
+            throw new VehicleTypeNotCoincideWithDomainException();
+        }
+
+        caseResponse.setVehicleType(vehicleTypeConfirmed);
 
         return caseResponse;
     }
 
-    private VehicleTypeEnum retrieveVehicleType(String caseID) {
+    private String retrieveVehicleType(String caseID) {
 
-        VehicleTypeEnum vehicleType;
+        String vehicleType;
         try {
-            Optional<VehicleTypeEnum> oVehicleType = getVehicleTypeEnum(caseID);
+            Optional<String> oVehicleType = getVehicleTypeEnum(caseID);
             oVehicleType.orElseThrow(VehicleTypeNotFoundException::new);
             vehicleType = oVehicleType.get();
         } catch (FeignException ex) {
@@ -42,7 +53,12 @@ public class CaseReceptionService {
         return vehicleType;
     }
 
-    private Optional<VehicleTypeEnum> getVehicleTypeEnum(String caseID) {
+    /**
+     * Check if return value is null, if so, return an empty object
+     * @param caseID
+     * @return
+     */
+    private Optional<String> getVehicleTypeEnum(String caseID) {
         return Optional.ofNullable(adminClient.searchVehicleType(caseID));
     }
 }
