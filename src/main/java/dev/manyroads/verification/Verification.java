@@ -11,6 +11,11 @@ import java.util.Optional;
 @Service
 public class Verification {
 
+    /**
+     * Verify incoming request case on null or empty object/fields, if erroneous send back a 400 BAD REQUEST to
+     * the requesting microservice
+     * @param caseRequest
+     */
     public void verifyCaseRequest(CaseRequest caseRequest) {
         Optional.ofNullable(caseRequest)
                 .orElseThrow(CaseRequestEmptyOrNullException::new);
