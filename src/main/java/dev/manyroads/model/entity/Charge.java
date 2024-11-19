@@ -29,7 +29,7 @@ public class Charge {
     @ManyToOne()
     @JoinColumn(name="customer_id")
     private Customer customer;
-    @OneToMany(mappedBy = "case")
-    private Set<Case> cases = new HashSet<>();
+    @OneToMany(mappedBy = "charge")
+    private Set<Matter> matters = new HashSet<>();
 
 }

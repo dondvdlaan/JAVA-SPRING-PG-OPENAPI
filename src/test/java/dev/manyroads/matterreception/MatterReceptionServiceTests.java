@@ -1,11 +1,11 @@
-package dev.manyroads.casereception;
+package dev.manyroads.matterreception;
 
 import dev.manyroads.client.AdminClient;
-import dev.manyroads.casereception.exception.AdminClientException;
-import dev.manyroads.casereception.exception.VehicleTypeNotCoincideWithDomainException;
-import dev.manyroads.casereception.exception.VehicleTypeNotFoundException;
-import dev.manyroads.model.CaseRequest;
-import dev.manyroads.model.CaseResponse;
+import dev.manyroads.matterreception.exception.AdminClientException;
+import dev.manyroads.matterreception.exception.VehicleTypeNotCoincideWithDomainException;
+import dev.manyroads.matterreception.exception.VehicleTypeNotFoundException;
+import dev.manyroads.model.MatterRequest;
+import dev.manyroads.model.MatterResponse;
 import dev.manyroads.model.VehicleTypeEnum;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.Customer;
@@ -20,9 +20,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class CaseReceptionServiceTests {
+public class MatterReceptionServiceTests {
 
-    CaseReceptionService caseReceptionService;
+    MatterReceptionService matterReceptionService;
     AdminClient adminClient;
     CustomerRepository customerRepository;
     ChargeRepository chargeRepository;
@@ -32,14 +32,14 @@ public class CaseReceptionServiceTests {
         adminClient = mock(AdminClient.class);
         customerRepository = mock(CustomerRepository.class);
         chargeRepository = mock(ChargeRepository.class);
-        this.caseReceptionService = new CaseReceptionService(adminClient, customerRepository, chargeRepository);
+        this.matterReceptionService = new MatterReceptionService(adminClient, customerRepository, chargeRepository);
     }
 
     @Test
     void checkIfChargeIsBookedTest() {
         // prepare
-        CaseRequest caseRequest = new CaseRequest();
-        caseRequest.setCaseID("121212");
+        MatterRequest caseRequest = new MatterRequest();
+        caseRequest.setMatterID("121212");
         caseRequest.setCustomerNr(343434L);
         Customer customer = new Customer();
         customer.setCustomerNr(caseRequest.getCustomerNr());
@@ -50,10 +50,10 @@ public class CaseReceptionServiceTests {
         charge.setCustomer(savedCustomer);
         Charge savedCharge = chargeRepository.save(charge);
         String expected = "bulldozer";
-        when(adminClient.searchVehicleType(caseRequest.getCaseID())).thenReturn("bulldozer");
+        when(adminClient.searchVehicleType(caseRequest.getMatterID())).thenReturn("bulldozer");
 
         // activate
-        caseReceptionService.processIncomingCaseRequest(caseRequest);
+        matterReceptionService.processIncomingCaseRequest(caseRequest);
 
         // verify
 
@@ -62,16 +62,16 @@ public class CaseReceptionServiceTests {
     @Test
     void adminClientReturnsIncorrectVehicleTypeShouldThrowVehicleTypeNotCoincideExceptionTest() {
         // prepare
-        CaseRequest caseRequest = new CaseRequest();
-        caseRequest.setCaseID("121212");
+        MatterRequest caseRequest = new MatterRequest();
+        caseRequest.setMatterID("121212");
         caseRequest.setCustomerNr(343434L);
         String expected = "bulldozer";
-        when(adminClient.searchVehicleType(caseRequest.getCaseID())).thenReturn("Vouwfiets");
+        when(adminClient.searchVehicleType(caseRequest.getMatterID())).thenReturn("Vouwfiets");
 
         // activate
 
         // verify
-        assertThatThrownBy(() -> caseReceptionService.processIncomingCaseRequest(caseRequest))
+        assertThatThrownBy(() -> matterReceptionService.processIncomingCaseRequest(caseRequest))
                 .isInstanceOf(VehicleTypeNotCoincideWithDomainException.class)
                 .hasMessageStartingWith("DCM-006: Vehicle type does not coincide with domain");
         verify(adminClient, times(1)).searchVehicleType(anyString());
@@ -80,18 +80,18 @@ public class CaseReceptionServiceTests {
     @Test
     void adminClientReturnsFeignExceptionShouldThrowAdminClientExceptionTest() {
         // prepare
-        CaseRequest caseRequest = new CaseRequest();
-        caseRequest.setCaseID("121212");
+        MatterRequest caseRequest = new MatterRequest();
+        caseRequest.setMatterID("121212");
         caseRequest.setCustomerNr(343434L);
         // Mock 404 BAD REQUEST return
         var feignException = Mockito.mock(FeignException.class);
         Mockito.when(feignException.status()).thenReturn(404);
-        when(adminClient.searchVehicleType(caseRequest.getCaseID())).thenThrow(feignException);
+        when(adminClient.searchVehicleType(caseRequest.getMatterID())).thenThrow(feignException);
 
         // activate
 
         // verify
-        assertThatThrownBy(() -> caseReceptionService.processIncomingCaseRequest(caseRequest))
+        assertThatThrownBy(() -> matterReceptionService.processIncomingCaseRequest(caseRequest))
                 .isInstanceOf(AdminClientException.class)
                 .hasMessageStartingWith("DCM-004: No vehice type received");
         verify(adminClient, times(1)).searchVehicleType(anyString());
@@ -100,15 +100,15 @@ public class CaseReceptionServiceTests {
     @Test
     void adminClientReturnsNullShouldThrowVehicleTypeNotFoundExceptionTest() {
         // prepare
-        CaseRequest caseRequest = new CaseRequest();
-        caseRequest.setCaseID("121212");
+        MatterRequest caseRequest = new MatterRequest();
+        caseRequest.setMatterID("121212");
         caseRequest.setCustomerNr(343434L);
-        when(adminClient.searchVehicleType(caseRequest.getCaseID())).thenReturn(null);
+        when(adminClient.searchVehicleType(caseRequest.getMatterID())).thenReturn(null);
 
         // activate
 
         // verify
-        assertThatThrownBy(() -> caseReceptionService.processIncomingCaseRequest(caseRequest))
+        assertThatThrownBy(() -> matterReceptionService.processIncomingCaseRequest(caseRequest))
                 .isInstanceOf(VehicleTypeNotFoundException.class)
                 .hasMessageStartingWith("DCM-005: Vehicle type not found");
         verify(adminClient, times(1)).searchVehicleType(anyString());
@@ -117,14 +117,14 @@ public class CaseReceptionServiceTests {
     @Test
     void castIDShouldReturnCorrectVehicleTypeAndCustomerNrTest() {
         // prepare
-        CaseRequest caseRequest = new CaseRequest();
-        caseRequest.setCaseID("121212");
+        MatterRequest caseRequest = new MatterRequest();
+        caseRequest.setMatterID("121212");
         caseRequest.setCustomerNr(343434L);
         String expectedVehicle = "bulldozer";
-        when(adminClient.searchVehicleType(caseRequest.getCaseID())).thenReturn("bulldozer");
+        when(adminClient.searchVehicleType(caseRequest.getMatterID())).thenReturn("bulldozer");
 
         // activate
-        CaseResponse caseResponse = caseReceptionService.processIncomingCaseRequest(caseRequest);
+        MatterResponse caseResponse = matterReceptionService.processIncomingCaseRequest(caseRequest);
         VehicleTypeEnum result = caseResponse.getVehicleType();
 
         // verify

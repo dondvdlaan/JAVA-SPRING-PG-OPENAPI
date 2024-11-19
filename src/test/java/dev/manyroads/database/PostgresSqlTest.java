@@ -1,13 +1,16 @@
 package dev.manyroads.database;
 
-import dev.manyroads.casereception.CaseReceptionController;
-import dev.manyroads.casereception.CaseReceptionService;
+import dev.manyroads.matterreception.MatterReceptionController;
+import dev.manyroads.matterreception.MatterReceptionService;
 import dev.manyroads.client.AdminClient;
-import dev.manyroads.model.CaseRequest;
+import dev.manyroads.model.MatterRequest;
+import dev.manyroads.model.VehicleTypeEnum;
+import dev.manyroads.model.entity.Matter;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.Customer;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.CustomerRepository;
+import dev.manyroads.model.repository.MatterRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -29,9 +32,11 @@ public class PostgresSqlTest {
     @Autowired
     CustomerRepository customerRepository;
     @Autowired
-    CaseReceptionController caseController;
+    MatterRepository matterRepository;
     @Autowired
-    CaseReceptionService caseReceptionService;
+    MatterReceptionController caseController;
+    @Autowired
+    MatterReceptionService matterReceptionService;
     @MockBean
     AdminClient adminClient;
 
@@ -39,22 +44,27 @@ public class PostgresSqlTest {
     @DisplayName("Testing DB @Query")
     void checkIfChargeIsBookedTest() {
         // prepare
-        CaseRequest caseRequest = new CaseRequest();
-        caseRequest.setCaseID("121212");
-        caseRequest.setCustomerNr((long)(Math.random() * 9999999));
+        MatterRequest matterRequest = new MatterRequest();
+        matterRequest.setMatterID("121212");
+        matterRequest.setCustomerNr((long)(Math.random() * 9999999));
         Customer customer = new Customer();
-        customer.setCustomerNr(caseRequest.getCustomerNr());
+        customer.setCustomerNr(matterRequest.getCustomerNr());
         Customer savedCustomer = customerRepository.save(customer);
         Charge charge = new Charge();
         charge.setChargeStatus("applied");
         charge.setCustomerNr(savedCustomer.getCustomerNr());
         charge.setCustomer(savedCustomer);
+        charge.setVehicleType(VehicleTypeEnum.BULLDOZER);
         Charge savedCharge = chargeRepository.save(charge);
+        Matter matter  = new Matter();
+        matter.setCustomerNr(matterRequest.getCustomerNr());
+        matter.setCharge(savedCharge);
+        Matter savedMatter = matterRepository.save(matter);
         String expected = "bulldozer";
-        when(adminClient.searchVehicleType(caseRequest.getCaseID())).thenReturn("bulldozer");
+        when(adminClient.searchVehicleType(matterRequest.getMatterID())).thenReturn("bulldozer");
 
         // activate
-        caseReceptionService.processIncomingCaseRequest(caseRequest);
+        matterReceptionService.processIncomingCaseRequest(matterRequest);
 
         // verify
 

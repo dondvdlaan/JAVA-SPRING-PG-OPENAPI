@@ -1,28 +1,26 @@
 package dev.manyroads.model.entity;
 
-import dev.manyroads.model.VehicleTypeEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.UUID;
 
 @Entity
-@Table(name = "cases")
+@Table(name = "matters")
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Case {
+public class Matter {
 
     @Id
     @Builder.Default
-    @Column(name="case_id")
-    private UUID caseID = UUID.randomUUID();
-    private String chargeStatus;
+    @Column(name="matter_id")
+    private UUID matterID = UUID.randomUUID();
     @Column(name = "customer_nr")
     private Long customerNr;
     @ManyToOne()
-    @JoinColumn(name="case_id")
+    @JoinColumn(name="charge_id")
     private Charge charge;
 }

@@ -1,11 +1,11 @@
-package dev.manyroads.casereception;
+package dev.manyroads.matterreception;
 
 import dev.manyroads.client.AdminClient;
-import dev.manyroads.casereception.exception.CaseIDIsMissingException;
-import dev.manyroads.casereception.exception.CaseRequestEmptyOrNullException;
-import dev.manyroads.casereception.exception.PersonIDIsMissingException;
-import dev.manyroads.model.CaseRequest;
-import dev.manyroads.model.CaseResponse;
+import dev.manyroads.matterreception.exception.CaseIDIsMissingException;
+import dev.manyroads.matterreception.exception.CaseRequestEmptyOrNullException;
+import dev.manyroads.matterreception.exception.PersonIDIsMissingException;
+import dev.manyroads.model.MatterRequest;
+import dev.manyroads.model.MatterResponse;
 import dev.manyroads.verification.Verification;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +23,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CaseReceptionControllerTests {
+public class MatterReceptionControllerTests {
 
     @LocalServerPort
     private int port;
@@ -39,9 +39,9 @@ public class CaseReceptionControllerTests {
     @Test
     void caseRequestCaseIDNullShouldThrowExceptionTest() {
         // Prepare
-        CaseRequest caseRequestCaseIDIsNull = new CaseRequest();
+        MatterRequest caseRequestCaseIDIsNull = new MatterRequest();
         caseRequestCaseIDIsNull.setCustomerNr(987654L);
-        caseRequestCaseIDIsNull.setCaseID(null);
+        caseRequestCaseIDIsNull.setMatterID(null);
 
         // Activate
 
@@ -54,9 +54,9 @@ public class CaseReceptionControllerTests {
     @Test
     void caseRequestPersonIDNullShouldThrowExceptionTest() {
         // Prepare
-        CaseRequest caseRequestPersonIDIsNull = new CaseRequest();
-        caseRequestPersonIDIsNull.setCaseID(null);
-        caseRequestPersonIDIsNull.setCaseID("123654");
+        MatterRequest caseRequestPersonIDIsNull = new MatterRequest();
+        caseRequestPersonIDIsNull.setMatterID(null);
+        caseRequestPersonIDIsNull.setMatterID("123654");
 
         // Activate
 
@@ -69,17 +69,17 @@ public class CaseReceptionControllerTests {
     @Test
     void caseRequestNulShouldThrowExceptionTest() {
         // Prepare
-        CaseRequest caseRequestIsNull = null;
+        MatterRequest caseRequestIsNull = null;
         HttpHeaders headers = new HttpHeaders();
         headers.set("content-type", "application/json");
-        HttpEntity<CaseRequest> request = new HttpEntity<>(caseRequestIsNull, headers);
+        HttpEntity<MatterRequest> request = new HttpEntity<>(caseRequestIsNull, headers);
         String expectedStatusCode = "400 BAD_REQUEST";
 
         // Activate
-        ResponseEntity<CaseRequest> result = testRestTemplate.postForEntity(
+        ResponseEntity<MatterRequest> result = testRestTemplate.postForEntity(
                 "http://localhost:" + port + "/v1/cases",
                 request,
-                CaseRequest.class);
+                MatterRequest.class);
 
         // Verify
         assertEquals(expectedStatusCode, result.getStatusCode().toString());
@@ -91,18 +91,18 @@ public class CaseReceptionControllerTests {
     @Test
     void caseRequestShouldReturnStatusCose200Test() {
         // Prepare
-        CaseRequest caseRequest = new CaseRequest();
+        MatterRequest caseRequest = new MatterRequest();
         caseRequest.setCustomerNr(123456L);
-        caseRequest.setCaseID("123456");
-        CaseResponse caseResponse = new CaseResponse();
+        caseRequest.setMatterID("123456");
+        MatterResponse caseResponse = new MatterResponse();
         String expected = "200 OK";
-        when(adminClient.searchVehicleType(caseRequest.getCaseID())).thenReturn("bulldozer");
+        when(adminClient.searchVehicleType(caseRequest.getMatterID())).thenReturn("bulldozer");
 
         // Activate
-        ResponseEntity<CaseRequest> result = testRestTemplate.postForEntity(
+        ResponseEntity<MatterRequest> result = testRestTemplate.postForEntity(
                 "http://localhost:" + port + "/v1/cases",
                 caseRequest,
-                CaseRequest.class);
+                MatterRequest.class);
 
         // Verify
         assertEquals(result.getStatusCode().toString(), expected);
@@ -111,15 +111,15 @@ public class CaseReceptionControllerTests {
     @Test
     void caseRequestShouldReturnCaseResponseTest() {
         // Prepare
-        CaseRequest caseRequest = new CaseRequest();
-        CaseResponse caseResponse = new CaseResponse();
+        MatterRequest caseRequest = new MatterRequest();
+        MatterResponse caseResponse = new MatterResponse();
         String expected = caseResponse.toString();
 
         // Activate
-        CaseResponse result = testRestTemplate.postForObject(
+        MatterResponse result = testRestTemplate.postForObject(
                 "http://localhost:" + port + "/v1/cases",
                 caseRequest,
-                CaseResponse.class);
+                MatterResponse.class);
 
         // Verify
         assertEquals(result.toString(), expected);

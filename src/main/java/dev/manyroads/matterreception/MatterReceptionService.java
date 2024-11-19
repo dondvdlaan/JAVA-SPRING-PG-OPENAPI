@@ -1,12 +1,12 @@
-package dev.manyroads.casereception;
+package dev.manyroads.matterreception;
 
 import dev.manyroads.client.AdminClient;
-import dev.manyroads.casereception.exception.AdminClientException;
-import dev.manyroads.casereception.exception.VehicleTypeNotCoincideWithDomainException;
-import dev.manyroads.casereception.exception.VehicleTypeNotFoundException;
-import dev.manyroads.model.CaseRequest;
-import dev.manyroads.model.CaseResponse;
+import dev.manyroads.matterreception.exception.AdminClientException;
+import dev.manyroads.matterreception.exception.VehicleTypeNotCoincideWithDomainException;
+import dev.manyroads.matterreception.exception.VehicleTypeNotFoundException;
 import dev.manyroads.model.ChargeStatusEnum;
+import dev.manyroads.model.MatterRequest;
+import dev.manyroads.model.MatterResponse;
 import dev.manyroads.model.VehicleTypeEnum;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.Customer;
@@ -22,18 +22,18 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CaseReceptionService {
+public class MatterReceptionService {
 
     private final AdminClient adminClient;
     private final CustomerRepository customerRepository;
     private final ChargeRepository chargeRepository;
 
-    public CaseResponse processIncomingCaseRequest(CaseRequest caseRequest) {
+    public MatterResponse processIncomingCaseRequest(MatterRequest caseRequest) {
 
-        CaseResponse caseResponse = new CaseResponse();
+        MatterResponse caseResponse = new MatterResponse();
 
         // Retrieve vehicle type from admin microservice
-        String vehicleType = retrieveVehicleType(caseRequest.getCaseID());
+        String vehicleType = retrieveVehicleType(caseRequest.getMatterID());
 
         // Verify vehicle type in DCM domain
         VehicleTypeEnum vehicleTypeConfirmed;
@@ -62,9 +62,9 @@ public class CaseReceptionService {
                 caseRequest.getCustomerNr());
         oCharge.ifPresentOrElse(
                 (c)->{
-                    if(c.getVehicleType().equals(vehicleTypeConfirmed))
+                    if(c.getVehicleType().equals(vehicleTypeConfirmed));
 
-                }
+                },
                 ()->log.info("no such value"));
 
         return caseResponse;

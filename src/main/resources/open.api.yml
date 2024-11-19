@@ -3,39 +3,39 @@ info:
   version: 1.0.0
   title: JAVA-SPRING-PG-DOCKER
 paths:
-  /v1/cases:
+  /v1/matters:
     post:
-      summary: Receiving cases
-      operationId: receiveCase
+      summary: Receiving matters
+      operationId: receiveMatter
       requestBody:
-        description: Case Post object to be received
+        description: Matter Post object to be received
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CaseRequest"
+              $ref: "#/components/schemas/MatterRequest"
       responses:
         '201':
           description: Service has started
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CaseResponse"
+                $ref: "#/components/schemas/MatterResponse"
 
 components:
   schemas:
-    CaseRequest:
+    MatterRequest:
       type: object
       required:
         - customerNr
-        - caseID
+        - matterID
       properties:
         customerNr:
           type: integer
           format: int64
-        caseID:
+        matterID:
           type: string
-    CaseResponse:
+    MatterResponse:
       type: object
       required:
         - customerNr
@@ -56,7 +56,7 @@ components:
           format: date
         vehicleType:
           $ref: "#/components/schemas/VehicleTypeEnum"
-        cases:
+        matters:
           type: array
           items:
             type: string
