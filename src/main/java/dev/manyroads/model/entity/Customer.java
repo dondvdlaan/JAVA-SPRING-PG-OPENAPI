@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name="customers")
+@Table(name = "customers")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,11 +17,11 @@ import java.util.UUID;
 public class Customer {
     @Id
     @Builder.Default
-    @Column(name="customer_id")
-    private UUID customerID= UUID.randomUUID();
-    @Column(name="customer_nr")
+    @Column(name = "customer_id")
+    private UUID customerID = UUID.randomUUID();
+    @Column(name = "customer_nr")
     private Long customerNr;
-    @OneToMany(mappedBy="customer")
-    private List<Charge> charge=new ArrayList<>();
+    @OneToMany(mappedBy = "customer")
+    private List<Charge> charge = new ArrayList<>();
 
 }
