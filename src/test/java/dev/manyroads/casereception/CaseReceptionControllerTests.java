@@ -1,21 +1,16 @@
 package dev.manyroads.casereception;
 
-import dev.manyroads.casereception.exception.VehicleTypeNotCoincideWithDomainException;
 import dev.manyroads.client.AdminClient;
 import dev.manyroads.casereception.exception.CaseIDIsMissingException;
 import dev.manyroads.casereception.exception.CaseRequestEmptyOrNullException;
 import dev.manyroads.casereception.exception.PersonIDIsMissingException;
 import dev.manyroads.model.CaseRequest;
 import dev.manyroads.model.CaseResponse;
-import dev.manyroads.model.entity.Charge;
-import dev.manyroads.model.entity.Customer;
-import dev.manyroads.model.repository.CustomerRepository;
 import dev.manyroads.verification.Verification;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +35,6 @@ public class CaseReceptionControllerTests {
 
     @MockBean
     AdminClient adminClient;
-
-
 
     @Test
     void caseRequestCaseIDNullShouldThrowExceptionTest() {

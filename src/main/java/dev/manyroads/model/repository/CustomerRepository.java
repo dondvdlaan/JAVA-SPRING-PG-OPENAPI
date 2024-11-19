@@ -1,6 +1,5 @@
 package dev.manyroads.model.repository;
 
-import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 

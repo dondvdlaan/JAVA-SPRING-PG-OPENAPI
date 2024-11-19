@@ -54,13 +54,17 @@ public class CaseReceptionService {
         });
         caseResponse.setCustomerNr(caseRequest.getCustomerNr());
 
-        // Check if charge for customer exist and if so see if case can be added
+        // Check if charge for customer exists and if so see if case can be added
+        Charge newCharge = new Charge();
         Optional<Charge> oCharge = chargeRepository.findByCustomerNrAndChargeStatus(
                 ChargeStatusEnum.APPLIED.toString(),
                 ChargeStatusEnum.BOOKED.toString(),
                 caseRequest.getCustomerNr());
         oCharge.ifPresentOrElse(
-                (p)-> System.out.println("ChargeStaus : " + p.getChargeStatus()),
+                (c)->{
+                    if(c.getVehicleType().equals(vehicleTypeConfirmed))
+
+                }
                 ()->log.info("no such value"));
 
         return caseResponse;
