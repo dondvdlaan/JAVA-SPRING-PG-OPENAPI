@@ -19,6 +19,8 @@ public class Charge {
     @Column(name="charge_id")
     private UUID chargeID = UUID.randomUUID();
     private String chargeStatus;
+    @Column(name = "customer_nr")
+    private Long customerNr;
     @ManyToOne()
     @JoinColumn(name="customer_id")
     private Customer customer;

@@ -1,17 +1,22 @@
 package dev.manyroads.casereception;
 
+import dev.manyroads.casereception.exception.VehicleTypeNotCoincideWithDomainException;
 import dev.manyroads.client.AdminClient;
 import dev.manyroads.casereception.exception.CaseIDIsMissingException;
 import dev.manyroads.casereception.exception.CaseRequestEmptyOrNullException;
 import dev.manyroads.casereception.exception.PersonIDIsMissingException;
 import dev.manyroads.model.CaseRequest;
 import dev.manyroads.model.CaseResponse;
+import dev.manyroads.model.entity.Charge;
+import dev.manyroads.model.entity.Customer;
+import dev.manyroads.model.repository.CustomerRepository;
 import dev.manyroads.verification.Verification;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,11 +41,13 @@ public class CaseReceptionControllerTests {
     @MockBean
     AdminClient adminClient;
 
+
+
     @Test
     void caseRequestCaseIDNullShouldThrowExceptionTest() {
         // Prepare
         CaseRequest caseRequestCaseIDIsNull = new CaseRequest();
-        caseRequestCaseIDIsNull.setCustomerID(987654L);
+        caseRequestCaseIDIsNull.setCustomerNr(987654L);
         caseRequestCaseIDIsNull.setCaseID(null);
 
         // Activate
@@ -92,7 +99,7 @@ public class CaseReceptionControllerTests {
     void caseRequestShouldReturnStatusCose200Test() {
         // Prepare
         CaseRequest caseRequest = new CaseRequest();
-        caseRequest.setCustomerID(123456L);
+        caseRequest.setCustomerNr(123456L);
         caseRequest.setCaseID("123456");
         CaseResponse caseResponse = new CaseResponse();
         String expected = "200 OK";

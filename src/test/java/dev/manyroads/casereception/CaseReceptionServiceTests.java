@@ -7,6 +7,10 @@ import dev.manyroads.casereception.exception.VehicleTypeNotFoundException;
 import dev.manyroads.model.CaseRequest;
 import dev.manyroads.model.CaseResponse;
 import dev.manyroads.model.VehicleTypeEnum;
+import dev.manyroads.model.entity.Charge;
+import dev.manyroads.model.entity.Customer;
+import dev.manyroads.model.repository.ChargeRepository;
+import dev.manyroads.model.repository.CustomerRepository;
 import feign.FeignException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,11 +24,39 @@ public class CaseReceptionServiceTests {
 
     CaseReceptionService caseReceptionService;
     AdminClient adminClient;
+    CustomerRepository customerRepository;
+    ChargeRepository chargeRepository;
 
     @BeforeEach
     void preparation() {
         adminClient = mock(AdminClient.class);
-        this.caseReceptionService = new CaseReceptionService(adminClient);
+        customerRepository = mock(CustomerRepository.class);
+        chargeRepository = mock(ChargeRepository.class);
+        this.caseReceptionService = new CaseReceptionService(adminClient, customerRepository, chargeRepository);
+    }
+
+    @Test
+    void checkIfChargeIsBookedTest() {
+        // prepare
+        CaseRequest caseRequest = new CaseRequest();
+        caseRequest.setCaseID("121212");
+        caseRequest.setCustomerNr(343434L);
+        Customer customer = new Customer();
+        customer.setCustomerNr(caseRequest.getCustomerNr());
+        Customer savedCustomer = customerRepository.save(customer);
+        Charge charge = new Charge();
+        charge.setChargeStatus("bookedd");
+        charge.setCustomerNr(savedCustomer.getCustomerNr());
+        charge.setCustomer(savedCustomer);
+        Charge savedCharge = chargeRepository.save(charge);
+        String expected = "bulldozer";
+        when(adminClient.searchVehicleType(caseRequest.getCaseID())).thenReturn("bulldozer");
+
+        // activate
+        caseReceptionService.processIncomingCaseRequest(caseRequest);
+
+        // verify
+
     }
 
     @Test
@@ -32,7 +64,7 @@ public class CaseReceptionServiceTests {
         // prepare
         CaseRequest caseRequest = new CaseRequest();
         caseRequest.setCaseID("121212");
-        caseRequest.setCustomerID(343434L);
+        caseRequest.setCustomerNr(343434L);
         String expected = "bulldozer";
         when(adminClient.searchVehicleType(caseRequest.getCaseID())).thenReturn("Vouwfiets");
 
@@ -50,7 +82,7 @@ public class CaseReceptionServiceTests {
         // prepare
         CaseRequest caseRequest = new CaseRequest();
         caseRequest.setCaseID("121212");
-        caseRequest.setCustomerID(343434L);
+        caseRequest.setCustomerNr(343434L);
         // Mock 404 BAD REQUEST return
         var feignException = Mockito.mock(FeignException.class);
         Mockito.when(feignException.status()).thenReturn(404);
@@ -70,7 +102,7 @@ public class CaseReceptionServiceTests {
         // prepare
         CaseRequest caseRequest = new CaseRequest();
         caseRequest.setCaseID("121212");
-        caseRequest.setCustomerID(343434L);
+        caseRequest.setCustomerNr(343434L);
         when(adminClient.searchVehicleType(caseRequest.getCaseID())).thenReturn(null);
 
         // activate
@@ -83,12 +115,12 @@ public class CaseReceptionServiceTests {
     }
 
     @Test
-    void castIDShouldReturnCorrectVehicleTypeTest() {
+    void castIDShouldReturnCorrectVehicleTypeAndCustomerNrTest() {
         // prepare
         CaseRequest caseRequest = new CaseRequest();
         caseRequest.setCaseID("121212");
-        caseRequest.setCustomerID(343434L);
-        String expected = "bulldozer";
+        caseRequest.setCustomerNr(343434L);
+        String expectedVehicle = "bulldozer";
         when(adminClient.searchVehicleType(caseRequest.getCaseID())).thenReturn("bulldozer");
 
         // activate
@@ -96,7 +128,8 @@ public class CaseReceptionServiceTests {
         VehicleTypeEnum result = caseResponse.getVehicleType();
 
         // verify
-        assertEquals(expected, result.toString());
+        assertEquals(expectedVehicle, result.toString());
+        assertEquals(caseRequest.getCustomerNr(), caseResponse.getCustomerNr());
         verify(adminClient, times(1)).searchVehicleType(anyString());
     }
 }
