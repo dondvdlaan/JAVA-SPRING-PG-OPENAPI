@@ -16,11 +16,11 @@ public class Charge {
 
     @Id
     @Builder.Default
-    private UUID id = UUID.randomUUID();
-    private long chargeId;
+    @Column(name="charge_id")
+    private UUID chargeID = UUID.randomUUID();
     private String chargeStatus;
     @ManyToOne()
-    @JoinColumn(name = "customerID")
+    @JoinColumn(name="customer_id")
     private Customer customer;
 
 }

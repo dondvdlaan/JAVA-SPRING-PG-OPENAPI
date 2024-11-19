@@ -19,7 +19,7 @@ public class Verification {
     public void verifyCaseRequest(CaseRequest caseRequest) {
         Optional.ofNullable(caseRequest)
                 .orElseThrow(CaseRequestEmptyOrNullException::new);
-        Optional.ofNullable(caseRequest.getPersonID())
+        Optional.ofNullable(caseRequest.getCustomerID())
                 .orElseThrow(PersonIDIsMissingException::new);
         Optional.ofNullable(caseRequest.getCaseID())
                 .orElseThrow(CaseIDIsMissingException::new);

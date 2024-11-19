@@ -1,26 +1,27 @@
 package dev.manyroads.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name="customer")
+@Table(name="customers")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Customer {
     @Id
     @Builder.Default
-    private UUID id= UUID.randomUUID();
-    private Long customerID;
-    @OneToMany(mappedBy="Charge")
-    private Charge charge;
+    @Column(name="customer_id")
+    private UUID customerID= UUID.randomUUID();
+    @Column(name="customer_nr")
+    private Long customerNr;
+    @OneToMany(mappedBy="customer")
+    private List<Charge> charge=new ArrayList<>();
 
 }

@@ -40,7 +40,7 @@ public class CaseReceptionControllerTests {
     void caseRequestCaseIDNullShouldThrowExceptionTest() {
         // Prepare
         CaseRequest caseRequestCaseIDIsNull = new CaseRequest();
-        caseRequestCaseIDIsNull.setPersonID(987654L);
+        caseRequestCaseIDIsNull.setCustomerID(987654L);
         caseRequestCaseIDIsNull.setCaseID(null);
 
         // Activate
@@ -55,7 +55,7 @@ public class CaseReceptionControllerTests {
     void caseRequestPersonIDNullShouldThrowExceptionTest() {
         // Prepare
         CaseRequest caseRequestPersonIDIsNull = new CaseRequest();
-        caseRequestPersonIDIsNull.setPersonID(null);
+        caseRequestPersonIDIsNull.setCaseID(null);
         caseRequestPersonIDIsNull.setCaseID("123654");
 
         // Activate
@@ -92,7 +92,7 @@ public class CaseReceptionControllerTests {
     void caseRequestShouldReturnStatusCose200Test() {
         // Prepare
         CaseRequest caseRequest = new CaseRequest();
-        caseRequest.setPersonID(123456L);
+        caseRequest.setCustomerID(123456L);
         caseRequest.setCaseID("123456");
         CaseResponse caseResponse = new CaseResponse();
         String expected = "200 OK";
