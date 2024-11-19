@@ -1,4 +1,4 @@
-package dev.manyroads.exception;
+package dev.manyroads.casereception.exception;
 
 import org.springframework.http.HttpStatus;
 

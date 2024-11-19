@@ -1,9 +1,9 @@
 package dev.manyroads.casereception;
 
 import dev.manyroads.client.AdminClient;
-import dev.manyroads.exception.AdminClientException;
-import dev.manyroads.exception.VehicleTypeNotCoincideWithDomainException;
-import dev.manyroads.exception.VehicleTypeNotFoundException;
+import dev.manyroads.casereception.exception.AdminClientException;
+import dev.manyroads.casereception.exception.VehicleTypeNotCoincideWithDomainException;
+import dev.manyroads.casereception.exception.VehicleTypeNotFoundException;
 import dev.manyroads.model.CaseRequest;
 import dev.manyroads.model.CaseResponse;
 import dev.manyroads.model.VehicleTypeEnum;
@@ -32,7 +32,7 @@ public class CaseReceptionServiceTests {
         // prepare
         CaseRequest caseRequest = new CaseRequest();
         caseRequest.setCaseID("121212");
-        caseRequest.setPersonID(343434L);
+        caseRequest.setCustomerID(343434L);
         String expected = "bulldozer";
         when(adminClient.searchVehicleType(caseRequest.getCaseID())).thenReturn("Vouwfiets");
 
@@ -50,7 +50,7 @@ public class CaseReceptionServiceTests {
         // prepare
         CaseRequest caseRequest = new CaseRequest();
         caseRequest.setCaseID("121212");
-        caseRequest.setPersonID(343434L);
+        caseRequest.setCustomerID(343434L);
         // Mock 404 BAD REQUEST return
         var feignException = Mockito.mock(FeignException.class);
         Mockito.when(feignException.status()).thenReturn(404);
@@ -70,7 +70,7 @@ public class CaseReceptionServiceTests {
         // prepare
         CaseRequest caseRequest = new CaseRequest();
         caseRequest.setCaseID("121212");
-        caseRequest.setPersonID(343434L);
+        caseRequest.setCustomerID(343434L);
         when(adminClient.searchVehicleType(caseRequest.getCaseID())).thenReturn(null);
 
         // activate
@@ -87,7 +87,7 @@ public class CaseReceptionServiceTests {
         // prepare
         CaseRequest caseRequest = new CaseRequest();
         caseRequest.setCaseID("121212");
-        caseRequest.setPersonID(343434L);
+        caseRequest.setCustomerID(343434L);
         String expected = "bulldozer";
         when(adminClient.searchVehicleType(caseRequest.getCaseID())).thenReturn("bulldozer");
 

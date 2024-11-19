@@ -27,10 +27,10 @@ components:
     CaseRequest:
       type: object
       required:
-        - personID
+        - customerID
         - caseID
       properties:
-        personID:
+        customerID:
           type: integer
           format: int64
         caseID:
@@ -38,13 +38,13 @@ components:
     CaseResponse:
       type: object
       required:
-        - personID
+        - customerID
         - chargeID
         - chargeStatus
         - vehicleType
         - startDate
       properties:
-        personID:
+        customerID:
           type: integer
           format: int64
         chargeID:
