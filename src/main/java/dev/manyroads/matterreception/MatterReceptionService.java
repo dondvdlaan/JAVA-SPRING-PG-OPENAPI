@@ -47,7 +47,7 @@ public class MatterReceptionService {
 
         // Check if customer exists, otherwise create new account and save
         Optional<Customer> oCustomer = customerRepository.findByCustomerNr(matterRequest.getCustomerNr());
-        oCustomer.orElseGet(() -> {
+        Customer newSavedCustomer = oCustomer.orElseGet(() -> {
             Customer newCustomer = new Customer();
             newCustomer.setCustomerNr(matterRequest.getCustomerNr());
             log.info(String.format("New customer with nr: %d is saved", matterRequest.getCustomerNr()));
@@ -66,15 +66,14 @@ public class MatterReceptionService {
                     if (c.getVehicleType().equals(vehicleTypeConfirmed)) {
                         log.info("Vehicle type coincides, matter added to charge {}", matterRequest.getCustomerNr());
                         c.getMatters().add(mapMatterRequest(matterRequest));
-                        Charge savedCharge =chargeRepository.save(c);
+                        Charge savedCharge = chargeRepository.save(c);
                     }
                     matterResponse.setChargeID(c.getChargeID());
                 },
                 () -> {
                     log.info("New charge created for customer nr: {}", matterRequest.getCustomerNr());
-                    Charge newCharge = Charge.builder()
-                            .
-                            .build();
+                    Charge savedNewCharge = createAndSaveNewCharge(matterRequest, vehicleTypeConfirmed, newSavedCustomer);
+                    matterResponse.setChargeID(savedNewCharge.getChargeID());
                 }
         );
 
@@ -108,6 +107,16 @@ public class MatterReceptionService {
         return Matter.builder()
                 .customerNr(matterRequest.getCustomerNr())
                 .build();
+    }
+
+    private Charge createAndSaveNewCharge(MatterRequest matterRequest, VehicleTypeEnum vehicleType, Customer customer) {
+        Charge newCharge = new Charge();
+        newCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
+        newCharge.setCustomerNr(matterRequest.getCustomerNr());
+        newCharge.setVehicleType(vehicleType);
+        newCharge.setCustomer(customer);
+        newCharge.getMatters().add(Matter.builder().customerNr(matterRequest.getCustomerNr()).build());
+        return chargeRepository.save(newCharge);
     }
 
 }

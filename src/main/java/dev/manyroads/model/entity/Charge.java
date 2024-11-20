@@ -5,6 +5,7 @@ import dev.manyroads.model.VehicleTypeEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Entity
@@ -27,6 +28,8 @@ public class Charge {
     @Column(name = "vehicle_type")
     @Enumerated(EnumType.STRING)
     private VehicleTypeEnum vehicleType;
+    @Column(name = "start_date")
+    private LocalDate startDate;
     @ManyToOne()
     @JoinColumn(name="customer_id")
     private Customer customer;
