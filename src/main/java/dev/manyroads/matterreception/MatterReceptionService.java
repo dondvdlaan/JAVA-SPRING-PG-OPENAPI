@@ -4,7 +4,7 @@ import dev.manyroads.client.AdminClient;
 import dev.manyroads.matterreception.exception.AdminClientException;
 import dev.manyroads.matterreception.exception.VehicleTypeNotCoincideWithDomainException;
 import dev.manyroads.matterreception.exception.VehicleTypeNotFoundException;
-import dev.manyroads.model.ChargeStatusEnum;
+import dev.manyroads.model.ChargeStatus;
 import dev.manyroads.model.MatterRequest;
 import dev.manyroads.model.MatterResponse;
 import dev.manyroads.model.VehicleTypeEnum;
@@ -32,6 +32,7 @@ public class MatterReceptionService {
     public MatterResponse processIncomingCaseRequest(MatterRequest matterRequest) {
 
         MatterResponse matterResponse = new MatterResponse();
+        matterResponse.setCustomerNr(matterRequest.getCustomerNr());
 
         // Retrieve vehicle type from admin microservice
         String vehicleType = retrieveVehicleType(matterRequest.getMatterID());
@@ -43,7 +44,6 @@ public class MatterReceptionService {
         } catch (IllegalArgumentException ex) {
             throw new VehicleTypeNotCoincideWithDomainException();
         }
-        matterResponse.setVehicleType(vehicleTypeConfirmed);
 
         // Check if customer exists, otherwise create new account and save
         Optional<Customer> oCustomer = customerRepository.findByCustomerNr(matterRequest.getCustomerNr());
@@ -53,12 +53,11 @@ public class MatterReceptionService {
             log.info(String.format("New customer with nr: %d is saved", matterRequest.getCustomerNr()));
             return customerRepository.save(newCustomer);
         });
-        matterResponse.setCustomerNr(matterRequest.getCustomerNr());
 
         // Check if charge for customer exists, if so, check if matter can be added. Otherwise create new charge
         Optional<Charge> oCharge = chargeRepository.findByCustomerNrAndChargeStatus(
-                ChargeStatusEnum.APPLIED.toString(),
-                ChargeStatusEnum.BOOKED.toString(),
+                ChargeStatus.APPLIED,
+                ChargeStatus.BOOKED,
                 matterRequest.getCustomerNr());
         oCharge.ifPresentOrElse(
                 (c) -> {
@@ -111,7 +110,7 @@ public class MatterReceptionService {
 
     private Charge createAndSaveNewCharge(MatterRequest matterRequest, VehicleTypeEnum vehicleType, Customer customer) {
         Charge newCharge = new Charge();
-        newCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
+        newCharge.setChargeStatus(ChargeStatus.BOOKED);
         newCharge.setCustomerNr(matterRequest.getCustomerNr());
         newCharge.setVehicleType(vehicleType);
         newCharge.setCustomer(customer);

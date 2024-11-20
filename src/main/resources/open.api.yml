@@ -48,7 +48,7 @@ components:
           type: string
           format: uuid
 
-    ChargeStatusEnum:
+    ChargeStatus:
       type: string
       enum:
         - booked

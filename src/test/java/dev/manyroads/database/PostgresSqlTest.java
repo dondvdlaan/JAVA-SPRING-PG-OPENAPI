@@ -3,6 +3,7 @@ package dev.manyroads.database;
 import dev.manyroads.matterreception.MatterReceptionController;
 import dev.manyroads.matterreception.MatterReceptionService;
 import dev.manyroads.client.AdminClient;
+import dev.manyroads.model.ChargeStatus;
 import dev.manyroads.model.MatterRequest;
 import dev.manyroads.model.MatterResponse;
 import dev.manyroads.model.VehicleTypeEnum;
@@ -42,7 +43,7 @@ public class PostgresSqlTest {
     AdminClient adminClient;
 
     @Test
-    @DisplayName("Testing DB @Query")
+    @DisplayName("Testing DB @Query for ChargeRepository")
     void checkIfChargeIsBookedTest() {
         // prepare
         MatterRequest matterRequest = new MatterRequest();
@@ -52,7 +53,7 @@ public class PostgresSqlTest {
         customer.setCustomerNr(matterRequest.getCustomerNr());
         Customer savedCustomer = customerRepository.save(customer);
         Charge charge = new Charge();
-        charge.setChargeStatus("applied");
+        charge.setChargeStatus(ChargeStatus.BOOKED);
         charge.setCustomerNr(savedCustomer.getCustomerNr());
         charge.setCustomer(savedCustomer);
         charge.setVehicleType(VehicleTypeEnum.BULLDOZER);
@@ -68,6 +69,7 @@ public class PostgresSqlTest {
         MatterResponse result = matterReceptionService.processIncomingCaseRequest(matterRequest);
 
         // verify
+        // Check log info messages
 
     }
 
@@ -79,7 +81,7 @@ public class PostgresSqlTest {
         customer.setCustomerNr((long) (Math.random() * 99999999));
         Customer customerSaved = customerRepository.save(customer);
         Charge job = new Charge();
-        String status = "recorded";
+        ChargeStatus status = ChargeStatus.BOOKED;
         job.setChargeStatus(status);
         job.setCustomerNr(customerSaved.getCustomerNr());
         job.setCustomer(customerSaved);

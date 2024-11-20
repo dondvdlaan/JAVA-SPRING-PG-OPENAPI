@@ -6,9 +6,6 @@ import dev.manyroads.matterreception.exception.VehicleTypeNotCoincideWithDomainE
 import dev.manyroads.matterreception.exception.VehicleTypeNotFoundException;
 import dev.manyroads.model.MatterRequest;
 import dev.manyroads.model.MatterResponse;
-import dev.manyroads.model.VehicleTypeEnum;
-import dev.manyroads.model.entity.Charge;
-import dev.manyroads.model.entity.Customer;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.CustomerRepository;
 import feign.FeignException;
@@ -35,29 +32,7 @@ public class MatterReceptionServiceTests {
         this.matterReceptionService = new MatterReceptionService(adminClient, customerRepository, chargeRepository);
     }
 
-    @Test
-    void checkIfChargeIsBookedTest() {
-        // prepare
-        MatterRequest caseRequest = new MatterRequest();
-        caseRequest.setMatterID("121212");
-        caseRequest.setCustomerNr(343434L);
-        Customer customer = new Customer();
-        customer.setCustomerNr(caseRequest.getCustomerNr());
-        Customer savedCustomer = customerRepository.save(customer);
-        Charge charge = new Charge();
-        charge.setChargeStatus("bookedd");
-        charge.setCustomerNr(savedCustomer.getCustomerNr());
-        charge.setCustomer(savedCustomer);
-        Charge savedCharge = chargeRepository.save(charge);
-        String expected = "bulldozer";
-        when(adminClient.searchVehicleType(caseRequest.getMatterID())).thenReturn("bulldozer");
 
-        // activate
-        matterReceptionService.processIncomingCaseRequest(caseRequest);
-
-        // verify
-
-    }
 
     @Test
     void adminClientReturnsIncorrectVehicleTypeShouldThrowVehicleTypeNotCoincideExceptionTest() {
@@ -115,7 +90,7 @@ public class MatterReceptionServiceTests {
     }
 
     @Test
-    void castIDShouldReturnCorrectVehicleTypeAndCustomerNrTest() {
+    void shouldReturnCorrectCustomerNrTest() {
         // prepare
         MatterRequest caseRequest = new MatterRequest();
         caseRequest.setMatterID("121212");
@@ -124,12 +99,10 @@ public class MatterReceptionServiceTests {
         when(adminClient.searchVehicleType(caseRequest.getMatterID())).thenReturn("bulldozer");
 
         // activate
-        MatterResponse caseResponse = matterReceptionService.processIncomingCaseRequest(caseRequest);
-        VehicleTypeEnum result = caseResponse.getVehicleType();
+        MatterResponse matterResponse = matterReceptionService.processIncomingCaseRequest(caseRequest);
 
         // verify
-        assertEquals(expectedVehicle, result.toString());
-        assertEquals(caseRequest.getCustomerNr(), caseResponse.getCustomerNr());
+        assertEquals(caseRequest.getCustomerNr(), matterResponse.getCustomerNr());
         verify(adminClient, times(1)).searchVehicleType(anyString());
     }
 }
