@@ -20,7 +20,7 @@ public class MatterReceptionController {
     public ResponseEntity<MatterResponse> receiveCase(@RequestBody MatterRequest caseRequest){
 
         verification.verifyCaseRequest(caseRequest);
-        MatterResponse caseResponse = matterReceptionService.processIncomingCaseRequest(caseRequest);
+        MatterResponse caseResponse = matterReceptionService.processIncomingMatterRequest(caseRequest);
 
         System.out.println("caseRequest: " + caseRequest);
         return ResponseEntity.ok(new MatterResponse());

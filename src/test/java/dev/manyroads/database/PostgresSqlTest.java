@@ -7,7 +7,6 @@ import dev.manyroads.model.ChargeStatus;
 import dev.manyroads.model.MatterRequest;
 import dev.manyroads.model.MatterResponse;
 import dev.manyroads.model.VehicleTypeEnum;
-import dev.manyroads.model.entity.Matter;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.Customer;
 import dev.manyroads.model.repository.ChargeRepository;
@@ -64,7 +63,7 @@ public class PostgresSqlTest {
         when(adminClient.searchVehicleType(matterRequest.getMatterID())).thenReturn("bulldozer");
 
         // activate
-        MatterResponse result = matterReceptionService.processIncomingCaseRequest(matterRequest);
+        MatterResponse result = matterReceptionService.processIncomingMatterRequest(matterRequest);
 
         // verify
         // Check log info messages

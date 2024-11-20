@@ -31,7 +31,7 @@ public class MatterReceptionService {
     private final ChargeRepository chargeRepository;
     private final MatterRepository matterRepository;
 
-    public MatterResponse processIncomingCaseRequest(MatterRequest matterRequest) {
+    public MatterResponse processIncomingMatterRequest(MatterRequest matterRequest) {
 
         MatterResponse matterResponse = new MatterResponse();
         matterResponse.setCustomerNr(matterRequest.getCustomerNr());
@@ -48,13 +48,16 @@ public class MatterReceptionService {
         }
 
         // Check if customer exists, otherwise create new account and save
-        Optional<Customer> oCustomer = customerRepository.findByCustomerNr(matterRequest.getCustomerNr());
-        Customer newSavedCustomer = oCustomer.orElseGet(() -> {
-            Customer newCustomer = new Customer();
-            newCustomer.setCustomerNr(matterRequest.getCustomerNr());
-            log.info(String.format("New customer with nr: %d is saved", matterRequest.getCustomerNr()));
-            return customerRepository.save(newCustomer);
-        });
+        Customer customer;
+        Customer oCustomer = customerRepository.findByCustomerNr(matterRequest.getCustomerNr());
+        customer = Optional.ofNullable(oCustomer)
+                .orElseGet(
+                        () -> {
+                            Customer newCustomer = new Customer();
+                            newCustomer.setCustomerNr(matterRequest.getCustomerNr());
+                            log.info(String.format("New customer with nr: %d is saved", matterRequest.getCustomerNr()));
+                            return customerRepository.save(newCustomer);
+                        });
 
         // Check if charge for customer exists, if so, check if matter can be added. Otherwise create new charge
         Optional<Charge> oCharge = chargeRepository.findByCustomerNrAndChargeStatus(
@@ -74,7 +77,7 @@ public class MatterReceptionService {
                 },
                 () -> {
                     log.info("New charge created for customer nr: {}", matterRequest.getCustomerNr());
-                    Charge savedNewCharge = createAndSaveNewCharge(matterRequest, vehicleTypeConfirmed, newSavedCustomer);
+                    Charge savedNewCharge = createAndSaveNewCharge(matterRequest, vehicleTypeConfirmed, customer);
                     matterResponse.setChargeID(savedNewCharge.getChargeID());
                 }
         );
