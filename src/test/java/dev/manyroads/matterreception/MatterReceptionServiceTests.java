@@ -8,6 +8,7 @@ import dev.manyroads.model.MatterRequest;
 import dev.manyroads.model.MatterResponse;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.CustomerRepository;
+import dev.manyroads.model.repository.MatterRepository;
 import feign.FeignException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,13 +24,14 @@ public class MatterReceptionServiceTests {
     AdminClient adminClient;
     CustomerRepository customerRepository;
     ChargeRepository chargeRepository;
+    MatterRepository matterRepository;
 
     @BeforeEach
     void preparation() {
         adminClient = mock(AdminClient.class);
         customerRepository = mock(CustomerRepository.class);
         chargeRepository = mock(ChargeRepository.class);
-        this.matterReceptionService = new MatterReceptionService(adminClient, customerRepository, chargeRepository);
+        this.matterReceptionService = new MatterReceptionService(adminClient, customerRepository, chargeRepository, matterRepository);
     }
 
 

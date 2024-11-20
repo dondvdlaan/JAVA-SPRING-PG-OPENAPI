@@ -23,6 +23,7 @@ import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -43,6 +44,7 @@ public class PostgresSqlTest {
     AdminClient adminClient;
 
     @Test
+    @Transactional
     @DisplayName("Testing DB @Query for ChargeRepository")
     void checkIfChargeIsBookedTest() {
         // prepare
@@ -58,10 +60,6 @@ public class PostgresSqlTest {
         charge.setCustomer(savedCustomer);
         charge.setVehicleType(VehicleTypeEnum.BULLDOZER);
         Charge savedCharge = chargeRepository.save(charge);
-        Matter matter  = new Matter();
-        matter.setCustomerNr(matterRequest.getCustomerNr());
-        matter.setCharge(savedCharge);
-        Matter savedMatter = matterRepository.save(matter);
         String expected = "bulldozer";
         when(adminClient.searchVehicleType(matterRequest.getMatterID())).thenReturn("bulldozer");
 

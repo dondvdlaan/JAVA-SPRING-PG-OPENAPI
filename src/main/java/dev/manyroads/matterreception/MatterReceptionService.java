@@ -13,6 +13,7 @@ import dev.manyroads.model.entity.Customer;
 import dev.manyroads.model.entity.Matter;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.CustomerRepository;
+import dev.manyroads.model.repository.MatterRepository;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class MatterReceptionService {
     private final AdminClient adminClient;
     private final CustomerRepository customerRepository;
     private final ChargeRepository chargeRepository;
+    private final MatterRepository matterRepository;
 
     public MatterResponse processIncomingCaseRequest(MatterRequest matterRequest) {
 
@@ -64,7 +66,8 @@ public class MatterReceptionService {
                     log.info("Existing charge found for customer nr: {}", matterRequest.getCustomerNr());
                     if (c.getVehicleType().equals(vehicleTypeConfirmed)) {
                         log.info("Vehicle type coincides, matter added to charge {}", matterRequest.getCustomerNr());
-                        c.getMatters().add(mapMatterRequest(matterRequest));
+                        Matter savedMatter = matterRepository.save(mapMatterRequest(matterRequest));
+                        c.getMatters().add(savedMatter);
                         Charge savedCharge = chargeRepository.save(c);
                     }
                     matterResponse.setChargeID(c.getChargeID());

@@ -15,6 +15,7 @@ import java.util.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Charge {
 
     @Id
