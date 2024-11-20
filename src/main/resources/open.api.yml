@@ -49,6 +49,7 @@ components:
           format: int64
         chargeID:
           type: string
+          format: uuid
         chargeStatus:
           $ref: "#/components/schemas/ChargeStatusEnum"
         startDate:

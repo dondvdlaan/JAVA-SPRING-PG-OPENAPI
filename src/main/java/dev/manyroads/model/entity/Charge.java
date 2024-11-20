@@ -1,5 +1,6 @@
 package dev.manyroads.model.entity;
 
+import dev.manyroads.model.ChargeStatusEnum;
 import dev.manyroads.model.VehicleTypeEnum;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,7 +21,7 @@ public class Charge {
     @Column(name="charge_id")
     private UUID chargeID = UUID.randomUUID();
     @Column(name="charge_status")
-    private String chargeStatus;
+    private ChargeStatusEnum chargeStatus;
     @Column(name = "customer_nr")
     private Long customerNr;
     @Column(name = "vehicle_type")

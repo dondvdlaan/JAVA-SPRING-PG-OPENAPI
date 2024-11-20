@@ -4,6 +4,7 @@ import dev.manyroads.matterreception.MatterReceptionController;
 import dev.manyroads.matterreception.MatterReceptionService;
 import dev.manyroads.client.AdminClient;
 import dev.manyroads.model.MatterRequest;
+import dev.manyroads.model.MatterResponse;
 import dev.manyroads.model.VehicleTypeEnum;
 import dev.manyroads.model.entity.Matter;
 import dev.manyroads.model.entity.Charge;
@@ -64,7 +65,7 @@ public class PostgresSqlTest {
         when(adminClient.searchVehicleType(matterRequest.getMatterID())).thenReturn("bulldozer");
 
         // activate
-        matterReceptionService.processIncomingCaseRequest(matterRequest);
+        MatterResponse result = matterReceptionService.processIncomingCaseRequest(matterRequest);
 
         // verify
 
