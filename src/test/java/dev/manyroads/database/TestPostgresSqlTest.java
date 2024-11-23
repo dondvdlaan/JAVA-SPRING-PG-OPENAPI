@@ -1,40 +1,34 @@
 package dev.manyroads.database;
 
+import dev.manyroads.client.AdminClient;
 import dev.manyroads.matterreception.MatterReceptionController;
 import dev.manyroads.matterreception.MatterReceptionService;
-import dev.manyroads.client.AdminClient;
 import dev.manyroads.model.ChargeStatus;
 import dev.manyroads.model.MatterRequest;
 import dev.manyroads.model.MatterResponse;
 import dev.manyroads.model.VehicleTypeEnum;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.Customer;
-import dev.manyroads.model.entity.Matter;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.CustomerRepository;
 import dev.manyroads.model.repository.MatterRepository;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
-public class PostgresSqlTest {
+public class TestPostgresSqlTest {
 
     @Autowired
     ChargeRepository chargeRepository;
@@ -49,7 +43,6 @@ public class PostgresSqlTest {
     @MockBean
     AdminClient adminClient;
 
-    @Disabled
     @Test
     @Transactional
     void customerExistChargeExistOtherVehicleTypeShouldNotAddMattterToExistingChargeTest() {
@@ -73,62 +66,9 @@ public class PostgresSqlTest {
         MatterResponse matterResponse = matterReceptionService.processIncomingMatterRequest(matterRequest);
 
         // verify
-
         verify(adminClient, times(1)).searchVehicleType(anyString());
         assertEquals(customerNr, matterResponse.getCustomerNr());
         assertNotEquals(savedExistingCharge.getChargeID(), matterResponse.getChargeID());
-    }
-
-    @Test
-    @Transactional
-    @DisplayName("Testing DB @Query for ChargeRepository")
-    void checkIfChargeIsBookedTest() {
-        // prepare
-        MatterRequest matterRequest = new MatterRequest();
-        matterRequest.setMatterID("121212");
-        matterRequest.setCustomerNr((long) (Math.random() * 9999999));
-        Customer customer = new Customer();
-        customer.setCustomerNr(matterRequest.getCustomerNr());
-        Customer savedCustomer = customerRepository.save(customer);
-        System.out.println("savedCustomer " + chargeRepository.findById(savedCustomer.getCustomerID()));
-        Charge charge = new Charge();
-        charge.setChargeStatus(ChargeStatus.BOOKED);
-        charge.setCustomerNr(savedCustomer.getCustomerNr());
-        charge.setCustomer(savedCustomer);
-        charge.setVehicleType(VehicleTypeEnum.BULLDOZER);
-        Charge savedCharge = chargeRepository.save(charge);
-        String expected = "bulldozer";
-        when(adminClient.searchVehicleType(matterRequest.getMatterID())).thenReturn("bulldozer");
-
-        // activate
-        MatterResponse result = matterReceptionService.processIncomingMatterRequest(matterRequest);
-
-        // verify
-        // Check log info messages
-
-    }
-
-    @Disabled
-    @Test
-    void chargeRepoTest() {
-
-        // Prepare
-        Customer customer = new Customer();
-        customer.setCustomerNr((long) (Math.random() * 99999999));
-        Customer customerSaved = customerRepository.save(customer);
-        Charge job = new Charge();
-        ChargeStatus status = ChargeStatus.BOOKED;
-        job.setChargeStatus(status);
-        job.setCustomerNr(customerSaved.getCustomerNr());
-        job.setCustomer(customerSaved);
-        Charge savedJob = chargeRepository.save(job);
-
-        // Act
-        Optional<Charge> oResult = chargeRepository.findById(savedJob.getChargeID());
-
-        // Verify
-        oResult.ifPresent(j -> assertEquals(status, j.getChargeStatus()));
-
     }
 
     @Test

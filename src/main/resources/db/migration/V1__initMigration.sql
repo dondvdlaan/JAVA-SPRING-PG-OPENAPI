@@ -1,7 +1,3 @@
-DROP TABLE IF EXISTS customers;
-DROP TABLE IF EXISTS charges;
-DROP TABLE IF EXISTS cases;
-
 CREATE TABLE IF NOT EXISTS customers
 (
 customer_id    uuid NOT NULL,

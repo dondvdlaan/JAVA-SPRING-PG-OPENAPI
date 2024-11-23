@@ -5,6 +5,7 @@ import dev.manyroads.model.VehicleTypeEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -31,7 +32,7 @@ public class Charge {
     @Enumerated(EnumType.STRING)
     private VehicleTypeEnum vehicleType;
     @Column(name = "start_date")
-    private LocalDate startDate;
+    private Instant startDate;
     @ManyToOne()
     @JoinColumn(name="customer_id")
     private Customer customer;
