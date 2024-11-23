@@ -89,16 +89,16 @@ public class MatterReceptionService {
         return matterResponse;
     }
 
-    public Charge createNewCharge(MatterRequest matterRequest, VehicleTypeEnum vehicleTypeConfirmed, Customer customer) {
+   private Charge createNewCharge(MatterRequest matterRequest, VehicleTypeEnum vehicleTypeConfirmed, Customer customer) {
         Charge newCharge = new Charge();
         newCharge.setChargeStatus(ChargeStatus.BOOKED);
         newCharge.setCustomerNr(matterRequest.getCustomerNr());
         newCharge.setVehicleType(vehicleTypeConfirmed);
         newCharge.setCustomer(customer);
-        Charge savedChart = chargeRepository.save(newCharge);
-        Matter newMatter = mapMatterRequest(matterRequest, savedChart);
-        Matter savedMatter = matterRepository.save(newMatter);
-        newCharge.getMatters().add(savedMatter);
+        chargeRepository.save(newCharge);
+        Matter newMatter = mapMatterRequest(matterRequest, newCharge);
+        matterRepository.save(newMatter);
+        newCharge.getMatters().add(newMatter);
         return chargeRepository.save(newCharge);
     }
 
