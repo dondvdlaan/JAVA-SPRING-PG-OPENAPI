@@ -3,68 +3,59 @@ info:
   version: 1.0.0
   title: JAVA-SPRING-PG-DOCKER
 paths:
-  /v1/cases:
+  /v1/matters:
     post:
-      summary: Receiving cases
-      operationId: receiveCase
+      summary: Receiving matters
+      operationId: receiveMatter
       requestBody:
-        description: Case Post object to be received
+        description: Matter Post object to be received
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CaseRequest"
+              $ref: "#/components/schemas/MatterRequest"
       responses:
         '201':
           description: Service has started
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CaseResponse"
+                $ref: "#/components/schemas/MatterResponse"
 
 components:
   schemas:
-    CaseRequest:
+    MatterRequest:
       type: object
       required:
-        - customerID
-        - caseID
+        - customerNr
+        - matterID
       properties:
-        customerID:
+        customerNr:
           type: integer
           format: int64
-        caseID:
+        matterID:
           type: string
-    CaseResponse:
+    MatterResponse:
       type: object
       required:
-        - customerID
+        - customerNr
         - chargeID
-        - chargeStatus
-        - vehicleType
-        - startDate
       properties:
-        customerID:
+        customerNr:
           type: integer
           format: int64
         chargeID:
           type: string
-        chargeStatus:
-          $ref: "#/components/schemas/ChargeStatusEnum"
-        startDate:
-          type: string
-          format: date
-        vehicleType:
-          $ref: "#/components/schemas/VehicleTypeEnum"
-        cases:
-          type: array
-          items:
-            type: string
+          format: uuid
 
-    ChargeStatusEnum:
+    ChargeStatus:
       type: string
       enum:
         - booked
+        - rejected
+        - released
+        - applied
+        - treated
     VehicleTypeEnum:
       type: string
       enum:

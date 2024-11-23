@@ -1,9 +1,9 @@
 package dev.manyroads.verification;
 
-import dev.manyroads.casereception.exception.CaseIDIsMissingException;
-import dev.manyroads.casereception.exception.CaseRequestEmptyOrNullException;
-import dev.manyroads.casereception.exception.PersonIDIsMissingException;
-import dev.manyroads.model.CaseRequest;
+import dev.manyroads.matterreception.exception.CaseIDIsMissingException;
+import dev.manyroads.matterreception.exception.CaseRequestEmptyOrNullException;
+import dev.manyroads.matterreception.exception.PersonIDIsMissingException;
+import dev.manyroads.model.MatterRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,12 +16,12 @@ public class Verification {
      * the requesting microservice
      * @param caseRequest
      */
-    public void verifyCaseRequest(CaseRequest caseRequest) {
+    public void verifyCaseRequest(MatterRequest caseRequest) {
         Optional.ofNullable(caseRequest)
                 .orElseThrow(CaseRequestEmptyOrNullException::new);
-        Optional.ofNullable(caseRequest.getCustomerID())
+        Optional.ofNullable(caseRequest.getCustomerNr())
                 .orElseThrow(PersonIDIsMissingException::new);
-        Optional.ofNullable(caseRequest.getCaseID())
+        Optional.ofNullable(caseRequest.getMatterID())
                 .orElseThrow(CaseIDIsMissingException::new);
     }
 
