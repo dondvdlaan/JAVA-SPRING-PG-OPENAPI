@@ -9,7 +9,6 @@ import dev.manyroads.model.MatterResponse;
 import dev.manyroads.model.VehicleTypeEnum;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.Customer;
-import dev.manyroads.model.entity.Matter;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.CustomerRepository;
 import dev.manyroads.model.repository.MatterRepository;
@@ -20,8 +19,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
