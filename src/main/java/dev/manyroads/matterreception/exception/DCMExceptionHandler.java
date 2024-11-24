@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class DCMExceptionHandler {
 
     @ExceptionHandler({
-            CaseRequestEmptyOrNullException.class,
+            MatterRequestEmptyOrNullException.class,
             PersonIDIsMissingException.class,
-            CaseIDIsMissingException.class,
+            MatterIDIsMissingException.class,
             AdminClientException.class,
             VehicleTypeNotCoincideWithDomainException.class,
             VehicleTypeNotFoundException.class

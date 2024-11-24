@@ -1,7 +1,7 @@
 package dev.manyroads.verification;
 
-import dev.manyroads.matterreception.exception.CaseIDIsMissingException;
-import dev.manyroads.matterreception.exception.CaseRequestEmptyOrNullException;
+import dev.manyroads.matterreception.exception.MatterIDIsMissingException;
+import dev.manyroads.matterreception.exception.MatterRequestEmptyOrNullException;
 import dev.manyroads.matterreception.exception.PersonIDIsMissingException;
 import dev.manyroads.model.MatterRequest;
 import org.springframework.stereotype.Service;
@@ -14,15 +14,15 @@ public class Verification {
     /**
      * Verify incoming request case on null or empty object/fields, if erroneous send back a 400 BAD REQUEST to
      * the requesting microservice
-     * @param caseRequest
+     * @param matterRequest
      */
-    public void verifyCaseRequest(MatterRequest caseRequest) {
-        Optional.ofNullable(caseRequest)
-                .orElseThrow(CaseRequestEmptyOrNullException::new);
-        Optional.ofNullable(caseRequest.getCustomerNr())
+    public void verifyMatterRequest(MatterRequest matterRequest) {
+        Optional.ofNullable(matterRequest)
+                .orElseThrow(MatterRequestEmptyOrNullException::new);
+        Optional.ofNullable(matterRequest.getCustomerNr())
                 .orElseThrow(PersonIDIsMissingException::new);
-        Optional.ofNullable(caseRequest.getMatterID())
-                .orElseThrow(CaseIDIsMissingException::new);
+        Optional.ofNullable(matterRequest.getMatterID())
+                .orElseThrow(MatterIDIsMissingException::new);
     }
 
 
