@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -86,7 +87,7 @@ public class MatterReceptionControllerTests {
                 MatterResponse.class);
 
         // Verify
-        System.out.println("result: "+ result);
+        System.out.println("result: " + result);
         assertEquals(expectedStatusCode, result.getStatusCode().toString());
         assertThatThrownBy(() -> verification.verifyMatterRequest(matterRequestIsNull))
                 .isInstanceOf(MatterRequestEmptyOrNullException.class)
@@ -100,11 +101,11 @@ public class MatterReceptionControllerTests {
         matterRequest.setCustomerNr(123456L);
         matterRequest.setMatterID("123456");
         UUID chargeID = UUID.randomUUID();
-        MatterResponse caseResponse = new MatterResponse();
-        caseResponse.setChargeID(chargeID);
-        caseResponse.setCustomerNr(matterRequest.getCustomerNr());
+        MatterResponse matterResponse = new MatterResponse();
+        matterResponse.setChargeID(chargeID);
+        matterResponse.setCustomerNr(matterRequest.getCustomerNr());
         String expected = "200 OK";
-        when(matterReceptionService.processIncomingMatterRequest(any())).thenReturn(caseResponse);
+        when(matterReceptionService.processIncomingMatterRequest(any())).thenReturn(matterResponse);
 
         // Activate
         ResponseEntity<MatterResponse> result = testRestTemplate.postForEntity(
@@ -114,13 +115,14 @@ public class MatterReceptionControllerTests {
 
         // Verify
         assertEquals(result.getStatusCode().toString(), expected);
+        assertEquals(Objects.requireNonNull(result.getBody()).getCustomerNr(), matterRequest.getCustomerNr());
     }
 
     @Test
     @DisplayName("HappyFlow")
     void caseRequestShouldReturnCaseResponseTest() {
         // Prepare
-        Long customerNr = (long)(Math.random() * 99999);
+        Long customerNr = (long) (Math.random() * 99999);
         MatterRequest matterRequest = new MatterRequest();
         matterRequest.setMatterID("12345");
         matterRequest.setCustomerNr(customerNr);
@@ -138,7 +140,7 @@ public class MatterReceptionControllerTests {
         // Verify
         System.out.println("expected: " + expected);
         System.out.println("result: " + result);
-        verify(matterReceptionService,times(1)).processIncomingMatterRequest(any());
+        verify(matterReceptionService, times(1)).processIncomingMatterRequest(any());
         assertEquals(expected, result.getCustomerNr());
     }
 }
