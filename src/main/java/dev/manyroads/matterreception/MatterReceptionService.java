@@ -1,7 +1,9 @@
 package dev.manyroads.matterreception;
 
 import dev.manyroads.client.AdminClient;
+import dev.manyroads.client.CustomerProcessingClient;
 import dev.manyroads.matterreception.exception.AdminClientException;
+import dev.manyroads.matterreception.exception.InternalException;
 import dev.manyroads.matterreception.exception.VehicleTypeNotCoincideWithDomainException;
 import dev.manyroads.matterreception.exception.VehicleTypeNotFoundException;
 import dev.manyroads.model.ChargeStatus;
@@ -30,11 +32,13 @@ public class MatterReceptionService {
     private final CustomerRepository customerRepository;
     private final ChargeRepository chargeRepository;
     private final MatterRepository matterRepository;
+    private final CustomerProcessingClient customerProcessingClient;
 
     public MatterResponse processIncomingMatterRequest(MatterRequest matterRequest) {
 
         MatterResponse matterResponse = new MatterResponse();
         matterResponse.setCustomerNr(matterRequest.getCustomerNr());
+        Charge charge;
 
         // Retrieve vehicle type from admin microservice
         String vehicleType = retrieveVehicleType(matterRequest.getMatterID());
@@ -60,36 +64,34 @@ public class MatterReceptionService {
                         });
 
         // Check if charge for customer exists, if so, check if matter can be added. Otherwise create new charge
-        Charge Charge = chargeRepository.findByCustomerNrAndChargeStatus(
+        Optional<Charge> oCharge = chargeRepository.findByCustomerNrAndChargeStatus(
                 ChargeStatus.APPLIED,
                 ChargeStatus.BOOKED,
                 matterRequest.getCustomerNr());
-        Optional.ofNullable(Charge).ifPresentOrElse(
-                (c) -> {
-                    log.info("Existing charge found for customer nr: {}", c.getCustomerNr());
-                    if (c.getVehicleType().equals(vehicleTypeConfirmed)) {
-                        log.info("Vehicle type coincides, matter added to existing charge: {}", c.getChargeID());
-                        Matter newMatter = mapMatterRequest(matterRequest, c);
-                        matterRepository.save(newMatter);
-                        c.getMatters().add(newMatter);
-                        chargeRepository.save(c);
-                        matterResponse.setChargeID(c.getChargeID());
-                    } else {
-                        Charge savedNewCharge = createNewCharge(matterRequest, vehicleTypeConfirmed, customer);
-                        matterResponse.setChargeID(savedNewCharge.getChargeID());
-                        log.info("New charge created {} for existing customer nr: {}", savedNewCharge.getChargeID(), matterRequest.getCustomerNr());
-                    }
-                },
-                () -> {
-                    Charge savedNewCharge = createNewCharge(matterRequest, vehicleTypeConfirmed, customer);
-                    matterResponse.setChargeID(savedNewCharge.getChargeID());
-                    log.info("New charge created {} for new customer nr: {}", savedNewCharge.getChargeID(), savedNewCharge.getCustomer().getCustomerID());
-                }
-        );
+        if (oCharge.isPresent() && oCharge.get().getVehicleType().equals(vehicleTypeConfirmed)) {
+            charge = oCharge.get();
+            Matter newMatter = mapMatterRequest(matterRequest, charge);
+            matterRepository.save(newMatter);
+            charge.getMatters().add(newMatter);
+            chargeRepository.save(charge);
+            log.info("Vehicle type coincides, matter added to existing charge: {}", charge.getChargeID());
+        } else {
+            charge = createNewCharge(matterRequest, vehicleTypeConfirmed, customer);
+            log.info("New charge created {} for new customer nr: {}", charge.getChargeID(), charge.getCustomer().getCustomerID());
+        }
+        matterResponse.setChargeID(charge.getChargeID());
+
+        // Pass on data to customer processing
+        if (!customerProcessingClient.sendMessageToCustomerProcessing()) {
+            log.info("Failed to send message to customerProcessingClient for customer: {} ", customer.getCustomerNr());
+            throw (new InternalException("DCM 101: customerProcessingClient not responsive"));
+        }
+
         return matterResponse;
     }
 
-   private Charge createNewCharge(MatterRequest matterRequest, VehicleTypeEnum vehicleTypeConfirmed, Customer customer) {
+    // Submethods
+    private Charge createNewCharge(MatterRequest matterRequest, VehicleTypeEnum vehicleTypeConfirmed, Customer customer) {
         Charge newCharge = new Charge();
         newCharge.setChargeStatus(ChargeStatus.BOOKED);
         newCharge.setCustomerNr(matterRequest.getCustomerNr());
