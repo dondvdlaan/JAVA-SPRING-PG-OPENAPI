@@ -17,15 +17,14 @@ public class MatterReceptionController {
     MatterReceptionService matterReceptionService;
 
     @RequestMapping(value = "/v1/matters", method = RequestMethod.POST)
-    public ResponseEntity<MatterResponse> receiveCase(@RequestBody MatterRequest matterRequest){
+    public ResponseEntity<MatterResponse> receiveCase(@RequestBody MatterRequest matterRequest) {
 
         verification.verifyMatterRequest(matterRequest);
         MatterResponse caseResponse = matterReceptionService.processIncomingMatterRequest(matterRequest);
 
-        System.out.println("matterRequest: " + matterRequest);
+        log.info("Response returned: {}", caseResponse);
         return ResponseEntity.ok(caseResponse);
     }
-
 
 
 }
