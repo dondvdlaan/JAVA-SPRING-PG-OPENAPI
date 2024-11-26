@@ -2,10 +2,10 @@ package dev.manyroads.matterreception;
 
 import dev.manyroads.client.AdminClient;
 import dev.manyroads.client.CustomerProcessingClient;
-import dev.manyroads.matterreception.exception.AdminClientException;
-import dev.manyroads.matterreception.exception.InternalException;
-import dev.manyroads.matterreception.exception.VehicleTypeNotCoincideWithDomainException;
-import dev.manyroads.matterreception.exception.VehicleTypeNotFoundException;
+import dev.manyroads.decomreception.exception.AdminClientException;
+import dev.manyroads.decomreception.exception.InternalException;
+import dev.manyroads.decomreception.exception.VehicleTypeNotCoincideWithDomainException;
+import dev.manyroads.decomreception.exception.VehicleTypeNotFoundException;
 import dev.manyroads.model.MatterRequest;
 import dev.manyroads.model.MatterResponse;
 import dev.manyroads.model.VehicleTypeEnum;

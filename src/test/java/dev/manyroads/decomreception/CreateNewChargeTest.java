@@ -1,12 +1,14 @@
-package dev.manyroads.matterreception;
+package dev.manyroads.decomreception;
 
 import dev.manyroads.client.AdminClient;
-import dev.manyroads.model.ChargeStatus;
+import dev.manyroads.client.CustomerProcessingClient;
+import dev.manyroads.matterreception.MatterReceptionService;
 import dev.manyroads.model.MatterRequest;
 import dev.manyroads.model.VehicleTypeEnum;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.Customer;
 import dev.manyroads.model.entity.Matter;
+import dev.manyroads.model.enums.ChargeStatus;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.CustomerRepository;
 import dev.manyroads.model.repository.MatterRepository;
@@ -30,6 +32,7 @@ public class CreateNewChargeTest {
     CustomerRepository customerRepository;
     ChargeRepository chargeRepository;
     MatterRepository matterRepository;
+    CustomerProcessingClient customerProcessingClient;
 
     @BeforeEach
     void preparation() {
@@ -37,7 +40,9 @@ public class CreateNewChargeTest {
         customerRepository = mock(CustomerRepository.class);
         chargeRepository = mock(ChargeRepository.class);
         matterRepository = mock(MatterRepository.class);
-        this.matterReceptionService = new MatterReceptionService(adminClient, customerRepository, chargeRepository, matterRepository);
+        customerProcessingClient=mock(CustomerProcessingClient.class);
+        this.matterReceptionService = new MatterReceptionService(
+                adminClient, customerRepository, chargeRepository, matterRepository,customerProcessingClient);
     }
 
     @Disabled

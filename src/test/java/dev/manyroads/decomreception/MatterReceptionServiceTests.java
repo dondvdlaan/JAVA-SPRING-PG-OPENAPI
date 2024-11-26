@@ -1,16 +1,18 @@
-package dev.manyroads.matterreception;
+package dev.manyroads.decomreception;
 
 import dev.manyroads.client.AdminClient;
-import dev.manyroads.matterreception.exception.AdminClientException;
-import dev.manyroads.matterreception.exception.VehicleTypeNotCoincideWithDomainException;
-import dev.manyroads.matterreception.exception.VehicleTypeNotFoundException;
-import dev.manyroads.model.ChargeStatus;
+import dev.manyroads.client.CustomerProcessingClient;
+import dev.manyroads.decomreception.exception.AdminClientException;
+import dev.manyroads.decomreception.exception.VehicleTypeNotCoincideWithDomainException;
+import dev.manyroads.decomreception.exception.VehicleTypeNotFoundException;
+import dev.manyroads.matterreception.MatterReceptionService;
 import dev.manyroads.model.MatterRequest;
 import dev.manyroads.model.MatterResponse;
 import dev.manyroads.model.VehicleTypeEnum;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.Customer;
 import dev.manyroads.model.entity.Matter;
+import dev.manyroads.model.enums.ChargeStatus;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.CustomerRepository;
 import dev.manyroads.model.repository.MatterRepository;
@@ -19,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -32,6 +35,7 @@ public class MatterReceptionServiceTests {
     CustomerRepository customerRepository;
     ChargeRepository chargeRepository;
     MatterRepository matterRepository;
+    CustomerProcessingClient customerProcessingClient;
 
     @BeforeEach
     void preparation() {
@@ -39,7 +43,9 @@ public class MatterReceptionServiceTests {
         customerRepository = mock(CustomerRepository.class);
         chargeRepository = mock(ChargeRepository.class);
         matterRepository = mock(MatterRepository.class);
-        this.matterReceptionService = new MatterReceptionService(adminClient, customerRepository, chargeRepository, matterRepository);
+        customerProcessingClient = mock(CustomerProcessingClient.class);
+        this.matterReceptionService = new MatterReceptionService(
+                adminClient, customerRepository, chargeRepository, matterRepository, customerProcessingClient);
     }
 
     @Test
@@ -61,7 +67,7 @@ public class MatterReceptionServiceTests {
         existingCharge.setCustomerNr(matterRequest.getCustomerNr());
         existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
         existingCharge.setCustomer(existingCustomer);
-        when(chargeRepository.findByCustomerNrAndChargeStatus(any(), any(), anyLong())).thenReturn(existingCharge);
+        when(chargeRepository.findByCustomerNrAndChargeStatus(any(), any(), anyLong())).thenReturn(Optional.of(existingCharge));
         Charge newCharge = new Charge();
         UUID chargeID = UUID.randomUUID();
         newCharge.setChargeID(chargeID);

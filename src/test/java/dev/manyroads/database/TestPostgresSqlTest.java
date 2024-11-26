@@ -1,14 +1,14 @@
 package dev.manyroads.database;
 
 import dev.manyroads.client.AdminClient;
-import dev.manyroads.matterreception.MatterReceptionController;
+import dev.manyroads.decomreception.DecomReceptionController;
 import dev.manyroads.matterreception.MatterReceptionService;
-import dev.manyroads.model.ChargeStatus;
 import dev.manyroads.model.MatterRequest;
 import dev.manyroads.model.MatterResponse;
 import dev.manyroads.model.VehicleTypeEnum;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.Customer;
+import dev.manyroads.model.enums.ChargeStatus;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.CustomerRepository;
 import dev.manyroads.model.repository.MatterRepository;
@@ -17,8 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,7 +34,7 @@ public class TestPostgresSqlTest {
     @Autowired
     MatterRepository matterRepository;
     @Autowired
-    MatterReceptionController caseController;
+    DecomReceptionController caseController;
     @Autowired
     MatterReceptionService matterReceptionService;
     @MockBean
