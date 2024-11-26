@@ -1,7 +1,8 @@
 package dev.manyroads.model.entity;
 
-import dev.manyroads.model.ChargeStatus;
+
 import dev.manyroads.model.VehicleTypeEnum;
+import dev.manyroads.model.enums.ChargeStatus;
 import jakarta.persistence.*;
 import lombok.*;
 

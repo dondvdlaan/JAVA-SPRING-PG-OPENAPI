@@ -1,7 +1,7 @@
 package dev.manyroads.model.repository;
 
-import dev.manyroads.model.ChargeStatus;
 import dev.manyroads.model.entity.Charge;
+import dev.manyroads.model.enums.ChargeStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
