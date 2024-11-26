@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS matters
 matter_id       uuid NOT NULL,
 customer_nr     bigint NOT NULL UNIQUE,
 charge_id       uuid NOT NULL,
+matter_status   character varying(255) COLLATE pg_catalog."default" NOT NULL,
 
 PRIMARY KEY (matter_id )
 );

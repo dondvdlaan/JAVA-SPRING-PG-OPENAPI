@@ -2,17 +2,18 @@ package dev.manyroads.matterreception;
 
 import dev.manyroads.client.AdminClient;
 import dev.manyroads.client.CustomerProcessingClient;
-import dev.manyroads.matterreception.exception.AdminClientException;
-import dev.manyroads.matterreception.exception.InternalException;
-import dev.manyroads.matterreception.exception.VehicleTypeNotCoincideWithDomainException;
-import dev.manyroads.matterreception.exception.VehicleTypeNotFoundException;
-import dev.manyroads.model.ChargeStatus;
+import dev.manyroads.decomreception.exception.AdminClientException;
+import dev.manyroads.decomreception.exception.InternalException;
+import dev.manyroads.decomreception.exception.VehicleTypeNotCoincideWithDomainException;
+import dev.manyroads.decomreception.exception.VehicleTypeNotFoundException;
 import dev.manyroads.model.MatterRequest;
 import dev.manyroads.model.MatterResponse;
 import dev.manyroads.model.VehicleTypeEnum;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.Customer;
 import dev.manyroads.model.entity.Matter;
+import dev.manyroads.model.enums.ChargeStatus;
+import dev.manyroads.model.enums.MatterStatus;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.CustomerRepository;
 import dev.manyroads.model.repository.MatterRepository;
@@ -65,7 +66,7 @@ public class MatterReceptionService {
 
         // Check if charge for customer exists, if so, check if matter can be added. Otherwise create new charge
         Optional<Charge> oCharge = chargeRepository.findByCustomerNrAndChargeStatus(
-                ChargeStatus.APPLIED,
+                ChargeStatus.IN_PROCESS,
                 ChargeStatus.BOOKED,
                 matterRequest.getCustomerNr());
         if (oCharge.isPresent() && oCharge.get().getVehicleType().equals(vehicleTypeConfirmed)) {
@@ -129,6 +130,7 @@ public class MatterReceptionService {
     private Matter mapMatterRequest(MatterRequest matterRequest, Charge charge) {
         Matter newMatter = new Matter();
         newMatter.setCustomerNr(matterRequest.getCustomerNr());
+        newMatter.setMatterStatus(MatterStatus.EXECUTABLE);
         newMatter.setCharge(charge);
         return newMatter;
     }

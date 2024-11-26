@@ -1,8 +1,9 @@
-package dev.manyroads.matterreception;
+package dev.manyroads.decomreception;
 
 import dev.manyroads.matterreception.exception.MatterIDIsMissingException;
 import dev.manyroads.matterreception.exception.MatterRequestEmptyOrNullException;
-import dev.manyroads.matterreception.exception.PersonIDIsMissingException;
+import dev.manyroads.matterreception.exception.CustomerNrIsMissingException;
+import dev.manyroads.matterreception.MatterReceptionService;
 import dev.manyroads.model.MatterRequest;
 import dev.manyroads.model.MatterResponse;
 import dev.manyroads.verification.Verification;
@@ -26,13 +27,13 @@ import java.util.Objects;
 import java.util.UUID;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class MatterReceptionControllerTests {
+public class DecomReceptionControllerTests {
 
     @LocalServerPort
     private int port;
 
     @Autowired
-    MatterReceptionController matterReceptionController;
+    DecomReceptionController decomReceptionController;
     @Autowired
     private TestRestTemplate testRestTemplate;
     @Autowired
@@ -67,7 +68,7 @@ public class MatterReceptionControllerTests {
 
         // Verify
         assertThatThrownBy(() -> verification.verifyMatterRequest(caseRequestPersonIDIsNull))
-                .isInstanceOf(PersonIDIsMissingException.class)
+                .isInstanceOf(CustomerNrIsMissingException.class)
                 .hasMessageStartingWith("DCM-002: CaseRequest PersonID is missing");
     }
 

@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value= HttpStatus.BAD_REQUEST)
-public final class MatterRequestEmptyOrNullException extends DCMException {
-    public MatterRequestEmptyOrNullException() {
-        super("DCM-001: CaseRequest empty or Null");
+public final class CustomerNrIsMissingException extends DCMException {
+    public CustomerNrIsMissingException() {
+        super("DCM-002: MatterRequest CustomerNr is missing");
     }
 }

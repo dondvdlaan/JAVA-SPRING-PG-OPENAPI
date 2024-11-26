@@ -21,6 +21,24 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/MatterResponse"
+  /v1/execinterrup:
+      post:
+        summary: Receiving execution interrupts
+        operationId: receiveExecInterrup
+        requestBody:
+          description: Execution Interruption Post object to be received
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExecInterrupRequest"
+        responses:
+          '201':
+            description: Excecution Interruption received and saved
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/ExecInterrupResponse"
 
 components:
   schemas:
@@ -48,19 +66,45 @@ components:
           type: string
           format: uuid
 
-    ChargeStatus:
-      type: string
-      enum:
-        - booked
-        - rejected
-        - released
-        - applied
-        - treated
+    ExecInterrupRequest:
+      type: object
+      required:
+        - customerNr
+        - execInterrupType
+        - matterID
+      properties:
+        customerNr:
+          type: integer
+          format: int64
+        execInterrupType:
+          $ref: "#/components/schemas/ExecInterrupEnum"
+        matterID:
+          type: string
+    ExecInterrupResponse:
+      type: object
+      required:
+        - customerNr
+        - chargeID
+      properties:
+        customerNr:
+          type: integer
+          format: int64
+        chargeID:
+          type: string
+          format: uuid
+
     VehicleTypeEnum:
       type: string
       enum:
         - bulldozer
         - dirtbike
         - unimog
+    ExecInterrupEnum:
+      type: string
+      enum:
+        - customer_deceased
+        - rejected
+        - withdrawn
+
 
 
