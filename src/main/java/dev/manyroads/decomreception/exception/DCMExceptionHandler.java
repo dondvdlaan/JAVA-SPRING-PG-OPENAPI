@@ -1,6 +1,8 @@
 package dev.manyroads.decomreception.exception;
 
+import dev.manyroads.execinterrup.exception.ChargeHasDoneStatusException;
 import dev.manyroads.execinterrup.exception.ChargeMissingForCustomerNrException;
+import dev.manyroads.execinterrup.exception.MatterMissingForCustomerNrException;
 import dev.manyroads.matterreception.exception.CustomerNrIsMissingException;
 import dev.manyroads.matterreception.exception.MatterIDIsMissingException;
 import dev.manyroads.matterreception.exception.MatterRequestEmptyOrNullException;
@@ -23,7 +25,9 @@ public class DCMExceptionHandler {
             VehicleTypeNotCoincideWithDomainException.class,
             VehicleTypeNotFoundException.class,
             InternalException.class,
-            ChargeMissingForCustomerNrException.class
+            ChargeMissingForCustomerNrException.class,
+            MatterMissingForCustomerNrException.class,
+            ChargeHasDoneStatusException.class
     })
     public ResponseEntity<ErrorData> handleException(final DCMException ex) {
         log.error(String.format("Error from handleException: %s %s", ex.getClass().getSimpleName(), ex.getMessage()));
