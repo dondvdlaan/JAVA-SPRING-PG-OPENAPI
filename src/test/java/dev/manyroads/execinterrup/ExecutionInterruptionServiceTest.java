@@ -1,5 +1,7 @@
 package dev.manyroads.execinterrup;
 
+import dev.manyroads.execinterrup.exception.ChargeMissingForCustomerNrException;
+import dev.manyroads.execinterrup.exception.CustomerNrIsMissingException;
 import dev.manyroads.model.ExecInterrupEnum;
 import dev.manyroads.model.ExecInterrupRequest;
 import dev.manyroads.model.ExecInterrupResponse;
@@ -10,9 +12,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -34,7 +37,7 @@ public class ExecutionInterruptionServiceTest {
     }
 
     @Test
-    void customerNrCorrectMatterIdEmptyShallReturnExecInterrupResponseNotNull() {
+    void noChargeForCustomerNrShallThrowChargeMissingForCustomerNrExceptionTest() {
         // prepare
         Long customerNr = (long) (Math.random() * 99999);
         ExecInterrupRequest happyCustomerInterruptRequest = new ExecInterrupRequest();
@@ -45,17 +48,43 @@ public class ExecutionInterruptionServiceTest {
         existingCharge.setChargeStatus(ChargeStatus.BOOKED);
         existingCharge.setCustomerNr(customerNr);
         Optional<List<Charge>> listCharges = Optional.of(List.of(existingCharge));
+        when(chargeRepository.findByCustomerNr(anyLong())).thenReturn(null);
+        ExecInterrupResponse expected = new ExecInterrupResponse();
+
+        // activate
+        //ExecInterrupResponse result = executionInterruptionService.processIncomingExecutionInterruptions(happyCustomerInterruptRequest);
+
+        // Verify
+        verify(chargeRepository, times(0)).findByCustomerNr(anyLong());
+        verify(chargeRepository, times(0)).save(any());
+        assertThatThrownBy(() -> executionInterruptionService.processIncomingExecutionInterruptions(happyCustomerInterruptRequest))
+                .isInstanceOf(ChargeMissingForCustomerNrException.class)
+                .hasMessage(String.format("DCM-205: ExecInterrup No Charge found for CustomerNr: %d", customerNr));
+    }
+
+    @Test
+    void customerNrCorrectMatterIdEmptyShallReturnExecInterrupResponseNotNull() {
+        // prepare
+        Long customerNr = (long) (Math.random() * 99999);
+        ExecInterrupRequest happyCustomerInterruptRequest = new ExecInterrupRequest();
+        happyCustomerInterruptRequest.setCustomerNr(customerNr);
+        happyCustomerInterruptRequest.setExecInterrupType(ExecInterrupEnum.CUSTOMER_DECEASED);
+        happyCustomerInterruptRequest.setMatterID(null);
+        Charge existingCharge = new Charge();
+        existingCharge.setChargeStatus(ChargeStatus.BOOKED);
+        existingCharge.setCustomerNr(customerNr);
+        List<Charge> listCharges = (List.of(existingCharge));
         when(chargeRepository.findByCustomerNr(anyLong())).thenReturn(listCharges);
         ExecInterrupResponse expected = new ExecInterrupResponse();
 
         // activate
         ExecInterrupResponse result = executionInterruptionService.processIncomingExecutionInterruptions(happyCustomerInterruptRequest);
-        Optional<List<Charge>> oListCharge = chargeRepository.findByCustomerNr(customerNr);
+        List<Charge> listCharge = chargeRepository.findByCustomerNr(customerNr);
 
         // Verify
         verify(chargeRepository, times(2)).findByCustomerNr(anyLong());
         verify(chargeRepository, times(1)).save(any());
-        oListCharge.ifPresent(cl -> cl.forEach(c -> assertEquals(ChargeStatus.CUSTOMER_DECEASED, c.getChargeStatus())));
+        listCharge.forEach(c -> assertEquals(ChargeStatus.CUSTOMER_DECEASED, c.getChargeStatus()));
         assertEquals(expected, result);
     }
 }

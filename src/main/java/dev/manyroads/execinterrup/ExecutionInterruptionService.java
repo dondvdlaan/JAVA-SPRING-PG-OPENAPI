@@ -2,12 +2,10 @@ package dev.manyroads.execinterrup;
 
 import dev.manyroads.decomreception.exception.InternalException;
 import dev.manyroads.execinterrup.exception.ChargeMissingForCustomerNrException;
-import dev.manyroads.model.ExecInterrupEnum;
 import dev.manyroads.model.ExecInterrupRequest;
 import dev.manyroads.model.ExecInterrupResponse;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.enums.ChargeStatus;
-import dev.manyroads.model.enums.MatterStatus;
 import dev.manyroads.model.repository.ChargeRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,9 +53,10 @@ public class ExecutionInterruptionService {
 
     private void handleCustomerDeceased(ExecInterrupRequest execInterrupRequest) {
         log.info("Started handleCustomerDeceased for customer nr: {} ", execInterrupRequest.getCustomerNr());
-        Optional<List<Charge>> oCharge = chargeRepository.findByCustomerNr(execInterrupRequest.getCustomerNr());
-        oCharge.orElseThrow(() -> new ChargeMissingForCustomerNrException(execInterrupRequest.getCustomerNr()));
-        oCharge.get().forEach(c -> {
+        List<Charge> chargeList = chargeRepository.findByCustomerNr(execInterrupRequest.getCustomerNr());
+        Optional<List<Charge>> oChargeList = Optional.ofNullable(chargeList);
+        oChargeList.orElseThrow(() -> new ChargeMissingForCustomerNrException(execInterrupRequest.getCustomerNr()));
+        oChargeList.get().forEach(c -> {
             c.setChargeStatus(ChargeStatus.CUSTOMER_DECEASED);
             chargeRepository.save(c);
         });
