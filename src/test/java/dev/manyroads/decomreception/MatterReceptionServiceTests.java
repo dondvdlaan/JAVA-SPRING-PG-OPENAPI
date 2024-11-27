@@ -3,7 +3,7 @@ package dev.manyroads.decomreception;
 import dev.manyroads.client.AdminClient;
 import dev.manyroads.client.CustomerProcessingClient;
 import dev.manyroads.decomreception.exception.AdminClientException;
-import dev.manyroads.decomreception.exception.VehicleTypeNotCoincideWithDomainException;
+import dev.manyroads.matterreception.exception.VehicleTypeNotCoincideWithDomainException;
 import dev.manyroads.decomreception.exception.VehicleTypeNotFoundException;
 import dev.manyroads.matterreception.MatterReceptionService;
 import dev.manyroads.model.MatterRequest;

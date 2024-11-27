@@ -3,6 +3,7 @@ package dev.manyroads.decomreception.exception;
 import dev.manyroads.matterreception.exception.CustomerNrIsMissingException;
 import dev.manyroads.matterreception.exception.MatterIDIsMissingException;
 import dev.manyroads.matterreception.exception.MatterRequestEmptyOrNullException;
+import dev.manyroads.matterreception.exception.VehicleTypeNotCoincideWithDomainException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,8 @@ public class DCMExceptionHandler {
             MatterIDIsMissingException.class,
             AdminClientException.class,
             VehicleTypeNotCoincideWithDomainException.class,
-            VehicleTypeNotFoundException.class
+            VehicleTypeNotFoundException.class,
+            InternalException.class
     })
     public ResponseEntity<ErrorData> handleException(final DCMException ex) {
         log.error(String.format("Error from handleException: %s %s", ex.getClass().getSimpleName(), ex.getMessage()));

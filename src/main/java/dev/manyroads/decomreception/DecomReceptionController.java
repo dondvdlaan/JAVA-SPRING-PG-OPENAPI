@@ -1,5 +1,6 @@
 package dev.manyroads.decomreception;
 
+import dev.manyroads.execinterrup.ExecutionInterruptionService;
 import dev.manyroads.matterreception.MatterReceptionService;
 import dev.manyroads.model.ExecInterrupRequest;
 import dev.manyroads.model.ExecInterrupResponse;
@@ -18,6 +19,7 @@ public class DecomReceptionController {
 
     Verification verification;
     MatterReceptionService matterReceptionService;
+    ExecutionInterruptionService executionInterruptionService;
 
     @RequestMapping(value = "/v1/matters", method = RequestMethod.POST)
     public ResponseEntity<MatterResponse> receiveMatter(@RequestBody MatterRequest matterRequest) {
@@ -33,10 +35,10 @@ public class DecomReceptionController {
     public ResponseEntity<ExecInterrupResponse> receiveExecutionInterrupts(@RequestBody ExecInterrupRequest execInterrupRequest) {
 
         verification.verifyExecInterrupRequest(execInterrupRequest);
-        //MatterResponse caseResponse = matterReceptionService.processIncomingMatterRequest(matterRequest);
+        ExecInterrupResponse execInterrupResponse = executionInterruptionService.processIncomingExecutionInterruptions(execInterrupRequest);
 
-        //log.info("Response returned: {}", caseResponse);
-        return ResponseEntity.ok(new ExecInterrupResponse());
+        log.info("execInterrupResponse returned: {}", execInterrupResponse);
+        return ResponseEntity.ok(execInterrupResponse);
     }
 
 
