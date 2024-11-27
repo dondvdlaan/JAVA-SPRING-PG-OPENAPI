@@ -1,5 +1,6 @@
-package dev.manyroads.decomreception.exception;
+package dev.manyroads.matterreception.exception;
 
+import dev.manyroads.decomreception.exception.DCMException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 

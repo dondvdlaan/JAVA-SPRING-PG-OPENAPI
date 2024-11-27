@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,4 +22,6 @@ public interface ChargeRepository extends JpaRepository<Charge, UUID> {
     Optional<Charge> findByCustomerNrAndChargeStatus(@Param("cs1") ChargeStatus chargeStatus1,
                                                      @Param("cs2") ChargeStatus chargeStatus2,
                                                      @Param("customerNr") long customerNr);
+
+    Optional<List<Charge>> findByCustomerNr(Long customerNr);
 }

@@ -5,5 +5,5 @@ public enum ChargeStatus {
     REJECTED,
     IN_PROCESS,
     DONE,
-    CUSTOMER_DECESED
+    CUSTOMER_DECEASED
 }
