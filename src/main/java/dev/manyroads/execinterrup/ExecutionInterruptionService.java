@@ -79,8 +79,9 @@ public class ExecutionInterruptionService {
     }
 
     private void handleMatterWithdrawn(ExecInterrupRequest execInterrupRequest) {
-        log.info("Started handleMatterRejected for customer nr: {} ", execInterrupRequest.getCustomerNr());
+        log.info("Started handleMatterWithdrawn for customer nr: {} ", execInterrupRequest.getCustomerNr());
         Optional<Matter> oMatter = matterRepository.findById(UUID.fromString(execInterrupRequest.getMatterID()));
+        oMatter.ifPresent(System.out::println);
         oMatter.orElseThrow(() -> new MatterMissingForCustomerNrException(execInterrupRequest.getMatterID(), execInterrupRequest.getCustomerNr()));
         if (oMatter.get().getCharge().getChargeStatus() == ChargeStatus.DONE) {
             throw new ChargeHasDoneStatusException(execInterrupRequest.getCustomerNr());
