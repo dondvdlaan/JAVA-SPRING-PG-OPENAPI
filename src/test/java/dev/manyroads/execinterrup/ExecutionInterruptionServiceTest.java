@@ -1,7 +1,7 @@
 package dev.manyroads.execinterrup;
 
 import dev.manyroads.execinterrup.exception.ChargeMissingForCustomerNrException;
-import dev.manyroads.execinterrup.exception.CustomerNrIsMissingException;
+import dev.manyroads.execinterrup.exception.MatterCustomerNrMismatchException;
 import dev.manyroads.model.ExecInterrupEnum;
 import dev.manyroads.model.ExecInterrupRequest;
 import dev.manyroads.model.ExecInterrupResponse;
@@ -12,7 +12,6 @@ import dev.manyroads.model.enums.MatterStatus;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.MatterRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -43,6 +42,38 @@ public class ExecutionInterruptionServiceTest {
     }
 
     @Test
+    void matterAndCustomerIdMismatchThrowsExceptionTest() {
+        // prepare
+        Long customerNr = (long) (Math.random() * 99999);
+        Long wrongCustomerNr = (long) (Math.random() * 99999);
+        UUID chargeId = UUID.randomUUID();
+        String matterId = UUID.randomUUID().toString();
+
+        Charge existingCharge = new Charge();
+        existingCharge.setChargeID(chargeId);
+        existingCharge.setChargeStatus(ChargeStatus.BOOKED);
+        existingCharge.setCustomerNr(customerNr);
+        Matter existingMatter = new Matter();
+        existingMatter.setMatterID(UUID.fromString(matterId));
+        existingMatter.setMatterStatus(MatterStatus.EXECUTABLE);
+        existingMatter.setCustomerNr(customerNr);
+        existingMatter.setCharge(existingCharge);
+        ExecInterrupRequest matterCustomerNrMismatchInterruptRequest = new ExecInterrupRequest();
+        matterCustomerNrMismatchInterruptRequest.setCustomerNr(wrongCustomerNr);
+        matterCustomerNrMismatchInterruptRequest.setExecInterrupType(ExecInterrupEnum.WITHDRAWN);
+        matterCustomerNrMismatchInterruptRequest.setMatterID(matterId);
+        when(matterRepository.findById(any())).thenReturn(Optional.of(existingMatter));
+        ExecInterrupResponse expected = new ExecInterrupResponse();
+
+        // activate - Verify
+        assertThatThrownBy(() -> executionInterruptionService.processIncomingExecutionInterruptions(matterCustomerNrMismatchInterruptRequest))
+                .isInstanceOf(MatterCustomerNrMismatchException.class)
+                .hasMessage(String.format("DCM-208: ExecInterrup Matter with id %s not found for CustomerNr: %d",
+                        existingMatter.getMatterID(), matterCustomerNrMismatchInterruptRequest.getCustomerNr()));
+        verify(matterRepository, times(1)).findById(any());
+    }
+
+    @Test
     void happyFlowMatterWithdrawnTest() {
         // prepare
         Long customerNr = (long) (Math.random() * 99999);
@@ -68,15 +99,10 @@ public class ExecutionInterruptionServiceTest {
         // activate
         ExecInterrupResponse result = executionInterruptionService.processIncomingExecutionInterruptions(happyCustomerInterruptRequest);
         Optional<Matter> oMatter = matterRepository.findById(UUID.fromString(matterId));
-        oMatter.ifPresent(System.out::println);
-        
+
         // Verify
-        verify(matterRepository, times(2)).findById(any());
-        /*
-        assertThatThrownBy(() -> executionInterruptionService.processIncomingExecutionInterruptions(happyCustomerInterruptRequest))
-                .isInstanceOf(ChargeMissingForCustomerNrException.class)
-                .hasMessage(String.format("DCM-205: ExecInterrup No Charge found for CustomerNr: %d", customerNr));
-         */
+        verify(matterRepository, times(3)).findById(any());
+        verify(matterRepository, times(1)).save(any());
         oMatter.ifPresent(m -> assertEquals(MatterStatus.WITHDRAWN, m.getMatterStatus()));
         assertEquals(expected, result);
     }
@@ -85,19 +111,15 @@ public class ExecutionInterruptionServiceTest {
     void noChargeForCustomerNrShallThrowChargeMissingForCustomerNrExceptionTest() {
         // prepare
         Long customerNr = (long) (Math.random() * 99999);
-        ExecInterrupRequest happyCustomerInterruptRequest = new ExecInterrupRequest();
-        happyCustomerInterruptRequest.setCustomerNr(customerNr);
-        happyCustomerInterruptRequest.setExecInterrupType(ExecInterrupEnum.CUSTOMER_DECEASED);
-        happyCustomerInterruptRequest.setMatterID(null);
-        Charge existingCharge = new Charge();
-        existingCharge.setChargeStatus(ChargeStatus.BOOKED);
-        existingCharge.setCustomerNr(customerNr);
-        Optional<List<Charge>> listCharges = Optional.of(List.of(existingCharge));
+        ExecInterrupRequest noChargeForCustomerInterruptRequest = new ExecInterrupRequest();
+        noChargeForCustomerInterruptRequest.setCustomerNr(customerNr);
+        noChargeForCustomerInterruptRequest.setExecInterrupType(ExecInterrupEnum.CUSTOMER_DECEASED);
+        noChargeForCustomerInterruptRequest.setMatterID(null);
+
         when(chargeRepository.findByCustomerNr(anyLong())).thenReturn(null);
-        ExecInterrupResponse expected = new ExecInterrupResponse();
 
         // Activate - Verify
-        assertThatThrownBy(() -> executionInterruptionService.processIncomingExecutionInterruptions(happyCustomerInterruptRequest))
+        assertThatThrownBy(() -> executionInterruptionService.processIncomingExecutionInterruptions(noChargeForCustomerInterruptRequest))
                 .isInstanceOf(ChargeMissingForCustomerNrException.class)
                 .hasMessage(String.format("DCM-205: ExecInterrup No Charge found for CustomerNr: %d", customerNr));
         verify(chargeRepository, times(1)).findByCustomerNr(anyLong());

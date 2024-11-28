@@ -3,6 +3,7 @@ package dev.manyroads.execinterrup;
 import dev.manyroads.decomreception.exception.InternalException;
 import dev.manyroads.execinterrup.exception.ChargeHasDoneStatusException;
 import dev.manyroads.execinterrup.exception.ChargeMissingForCustomerNrException;
+import dev.manyroads.execinterrup.exception.MatterCustomerNrMismatchException;
 import dev.manyroads.execinterrup.exception.MatterMissingForCustomerNrException;
 import dev.manyroads.model.ExecInterrupRequest;
 import dev.manyroads.model.ExecInterrupResponse;
@@ -17,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -47,7 +49,7 @@ public class ExecutionInterruptionService {
 
         switch (execInterrupRequest.getExecInterrupType()) {
             case CUSTOMER_DECEASED -> handleCustomerDeceased(execInterrupRequest);
-            //case WITHDRAWN -> handleCustomerChargeWithdrawn(execInterrupRequest);
+            // TODO: case WITHDRAWN -> handleCustomerChargeWithdrawn(execInterrupRequest);
             default ->
                     throw new InternalException("handleCustomerExecutionInterruption: Default ExecInterrup enums not matched ");
         }
@@ -57,6 +59,11 @@ public class ExecutionInterruptionService {
 
     private ExecInterrupResponse handleMatterExecutionInterruption(ExecInterrupRequest execInterrupRequest) {
         log.info("Handling of matter Execution Interruption for customer nr: {} started.", execInterrupRequest.getCustomerNr());
+        Optional<Matter> oMatter = matterRepository.findById(UUID.fromString(execInterrupRequest.getMatterID()));
+        oMatter.orElseThrow(() -> new InternalException(String.format("Matter with id: %s not found", execInterrupRequest.getMatterID())));
+        if (!Objects.equals(oMatter.get().getCustomerNr(), execInterrupRequest.getCustomerNr())) {
+            throw new MatterCustomerNrMismatchException(oMatter.get().getMatterID().toString(), execInterrupRequest.getCustomerNr());
+        }
 
         switch (execInterrupRequest.getExecInterrupType()) {
             case WITHDRAWN -> handleMatterWithdrawn(execInterrupRequest);
@@ -81,7 +88,6 @@ public class ExecutionInterruptionService {
     private void handleMatterWithdrawn(ExecInterrupRequest execInterrupRequest) {
         log.info("Started handleMatterWithdrawn for customer nr: {} ", execInterrupRequest.getCustomerNr());
         Optional<Matter> oMatter = matterRepository.findById(UUID.fromString(execInterrupRequest.getMatterID()));
-        oMatter.ifPresent(System.out::println);
         oMatter.orElseThrow(() -> new MatterMissingForCustomerNrException(execInterrupRequest.getMatterID(), execInterrupRequest.getCustomerNr()));
         if (oMatter.get().getCharge().getChargeStatus() == ChargeStatus.DONE) {
             throw new ChargeHasDoneStatusException(execInterrupRequest.getCustomerNr());
