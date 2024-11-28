@@ -48,18 +48,20 @@ public class ExecutionInterruptionServiceTest {
         Long customerNr = (long) (Math.random() * 99999);
         UUID chargeId = UUID.randomUUID();
         String matterId = UUID.randomUUID().toString();
+
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(chargeId);
         existingCharge.setChargeStatus(ChargeStatus.BOOKED);
         existingCharge.setCustomerNr(customerNr);
         Matter existingMatter = new Matter();
+        existingMatter.setMatterID(UUID.fromString(matterId));
         existingMatter.setMatterStatus(MatterStatus.EXECUTABLE);
         existingMatter.setCustomerNr(customerNr);
         existingMatter.setCharge(existingCharge);
         ExecInterrupRequest happyCustomerInterruptRequest = new ExecInterrupRequest();
         happyCustomerInterruptRequest.setCustomerNr(customerNr);
         happyCustomerInterruptRequest.setExecInterrupType(ExecInterrupEnum.WITHDRAWN);
-        happyCustomerInterruptRequest.setMatterID(UUID.randomUUID().toString());
+        happyCustomerInterruptRequest.setMatterID(matterId);
         when(matterRepository.findById(any())).thenReturn(Optional.of(existingMatter));
         ExecInterrupResponse expected = new ExecInterrupResponse();
 
@@ -69,8 +71,7 @@ public class ExecutionInterruptionServiceTest {
         oMatter.ifPresent(System.out::println);
         
         // Verify
-        //verify(chargeRepository, times(0)).findByCustomerNr(anyLong());
-        //verify(chargeRepository, times(0)).save(any());
+        verify(matterRepository, times(2)).findById(any());
         /*
         assertThatThrownBy(() -> executionInterruptionService.processIncomingExecutionInterruptions(happyCustomerInterruptRequest))
                 .isInstanceOf(ChargeMissingForCustomerNrException.class)
@@ -80,7 +81,6 @@ public class ExecutionInterruptionServiceTest {
         assertEquals(expected, result);
     }
 
-    @Disabled
     @Test
     void noChargeForCustomerNrShallThrowChargeMissingForCustomerNrExceptionTest() {
         // prepare
@@ -96,18 +96,14 @@ public class ExecutionInterruptionServiceTest {
         when(chargeRepository.findByCustomerNr(anyLong())).thenReturn(null);
         ExecInterrupResponse expected = new ExecInterrupResponse();
 
-        // activate
-        //ExecInterrupResponse result = executionInterruptionService.processIncomingExecutionInterruptions(happyCustomerInterruptRequest);
-
-        // Verify
-        verify(chargeRepository, times(0)).findByCustomerNr(anyLong());
-        verify(chargeRepository, times(0)).save(any());
+        // Activate - Verify
         assertThatThrownBy(() -> executionInterruptionService.processIncomingExecutionInterruptions(happyCustomerInterruptRequest))
                 .isInstanceOf(ChargeMissingForCustomerNrException.class)
                 .hasMessage(String.format("DCM-205: ExecInterrup No Charge found for CustomerNr: %d", customerNr));
+        verify(chargeRepository, times(1)).findByCustomerNr(anyLong());
+        verify(chargeRepository, times(0)).save(any());
     }
 
-    @Disabled
     @Test
     void customerNrCorrectMatterIdEmptyShallReturnExecInterrupResponseNotNull() {
         // prepare

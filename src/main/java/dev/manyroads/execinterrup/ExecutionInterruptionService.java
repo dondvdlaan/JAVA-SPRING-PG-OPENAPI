@@ -56,7 +56,7 @@ public class ExecutionInterruptionService {
     }
 
     private ExecInterrupResponse handleMatterExecutionInterruption(ExecInterrupRequest execInterrupRequest) {
-        log.info("Handling of cmatter Execution Interruption for customer nr: {} started.", execInterrupRequest.getCustomerNr());
+        log.info("Handling of matter Execution Interruption for customer nr: {} started.", execInterrupRequest.getCustomerNr());
 
         switch (execInterrupRequest.getExecInterrupType()) {
             case WITHDRAWN -> handleMatterWithdrawn(execInterrupRequest);
