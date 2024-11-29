@@ -10,6 +10,7 @@ import dev.manyroads.model.entity.Matter;
 import dev.manyroads.model.enums.ChargeStatus;
 import dev.manyroads.model.enums.MatterStatus;
 import dev.manyroads.model.repository.ChargeRepository;
+import dev.manyroads.model.repository.ExecInterrupRepository;
 import dev.manyroads.model.repository.MatterRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,12 +34,15 @@ public class ExecutionInterruptionServiceTest {
     ExecutionInterruptionService executionInterruptionService;
     ChargeRepository chargeRepository;
     MatterRepository matterRepository;
+    ExecInterrupRepository execInterrupRepository;
 
     @BeforeEach
     void setup() {
         chargeRepository = mock(ChargeRepository.class);
         matterRepository = mock(MatterRepository.class);
-        executionInterruptionService = new ExecutionInterruptionService(chargeRepository, matterRepository);
+        execInterrupRepository = mock(ExecInterrupRepository.class);
+        executionInterruptionService = new ExecutionInterruptionService(
+                chargeRepository, matterRepository, execInterrupRepository);
     }
 
     @Test
@@ -71,6 +75,7 @@ public class ExecutionInterruptionServiceTest {
                 .hasMessage(String.format("DCM-208: ExecInterrup Matter with id %s not found for CustomerNr: %d",
                         existingMatter.getMatterID(), matterCustomerNrMismatchInterruptRequest.getCustomerNr()));
         verify(matterRepository, times(1)).findById(any());
+        verify(execInterrupRepository, times(1)).save(any());
     }
 
     @Test
@@ -101,6 +106,7 @@ public class ExecutionInterruptionServiceTest {
         Optional<Matter> oMatter = matterRepository.findById(UUID.fromString(matterId));
 
         // Verify
+        verify(execInterrupRepository, times(1)).save(any());
         verify(matterRepository, times(3)).findById(any());
         verify(matterRepository, times(1)).save(any());
         oMatter.ifPresent(m -> assertEquals(MatterStatus.WITHDRAWN, m.getMatterStatus()));
@@ -123,6 +129,7 @@ public class ExecutionInterruptionServiceTest {
                 .isInstanceOf(ChargeMissingForCustomerNrException.class)
                 .hasMessage(String.format("DCM-205: ExecInterrup No Charge found for CustomerNr: %d", customerNr));
         verify(chargeRepository, times(1)).findByCustomerNr(anyLong());
+        verify(execInterrupRepository, times(1)).save(any());
         verify(chargeRepository, times(0)).save(any());
     }
 
@@ -130,10 +137,12 @@ public class ExecutionInterruptionServiceTest {
     void customerNrCorrectMatterIdEmptyShallReturnExecInterrupResponseNotNull() {
         // prepare
         Long customerNr = (long) (Math.random() * 99999);
-        ExecInterrupRequest happyCustomerInterruptRequest = new ExecInterrupRequest();
-        happyCustomerInterruptRequest.setCustomerNr(customerNr);
-        happyCustomerInterruptRequest.setExecInterrupType(ExecInterrupEnum.CUSTOMER_DECEASED);
-        happyCustomerInterruptRequest.setMatterID(null);
+        ExecInterrupRequest happyCustomerInterruptRequest =
+                new ExecInterrupRequest()
+                        .customerNr(customerNr)
+                        .execInterrupType(ExecInterrupEnum.CUSTOMER_DECEASED)
+                        .matterID(null);
+        
         Charge existingCharge = new Charge();
         existingCharge.setChargeStatus(ChargeStatus.BOOKED);
         existingCharge.setCustomerNr(customerNr);
@@ -147,6 +156,7 @@ public class ExecutionInterruptionServiceTest {
 
         // Verify
         verify(chargeRepository, times(2)).findByCustomerNr(anyLong());
+        verify(execInterrupRepository, times(1)).save(any());
         verify(chargeRepository, times(1)).save(any());
         listCharge.forEach(c -> assertEquals(ChargeStatus.CUSTOMER_DECEASED, c.getChargeStatus()));
         assertEquals(expected, result);
