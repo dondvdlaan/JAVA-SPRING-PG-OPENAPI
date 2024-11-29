@@ -1,5 +1,6 @@
 package dev.manyroads.execinterrup;
 
+import dev.manyroads.client.AdminClient;
 import dev.manyroads.decomreception.exception.InternalException;
 import dev.manyroads.execinterrup.exception.ChargeHasDoneStatusException;
 import dev.manyroads.execinterrup.exception.ChargeMissingForCustomerNrException;
@@ -15,10 +16,12 @@ import dev.manyroads.model.enums.MatterStatus;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.ExecInterrupRepository;
 import dev.manyroads.model.repository.MatterRepository;
+import dev.manyroads.utils.DCMutils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -33,6 +36,7 @@ public class ExecutionInterruptionService {
     ChargeRepository chargeRepository;
     MatterRepository matterRepository;
     ExecInterrupRepository execInterrupRepository;
+    AdminClient adminClient;
 
     public ExecInterrupResponse processIncomingExecutionInterruptions(ExecInterrupRequest execInterrupRequest) {
         log.info("Processing of Execution Interruption for customer nr: {} started.", execInterrupRequest.getCustomerNr());
@@ -82,11 +86,22 @@ public class ExecutionInterruptionService {
         log.info("Started handleCustomerDeceased for customer nr: {} ", execInterrupRequest.getCustomerNr());
         Optional<List<Charge>> oChargeList = chargeRepository.findByCustomerNr(execInterrupRequest.getCustomerNr());
         oChargeList.orElseThrow(() -> new ChargeMissingForCustomerNrException(execInterrupRequest.getCustomerNr()));
+
         // Filter charges for status booked
-        oChargeList.get().forEach(c -> {
-            c.setChargeStatus(ChargeStatus.CUSTOMER_DECEASED);
-            chargeRepository.save(c);
-        });
+        List<Charge> listChargesDecom =
+                oChargeList.get().stream().filter(c -> c.getChargeStatus() == ChargeStatus.BOOKED).toList();
+
+        // Update status for active charges
+        DCMutils.isActive(oChargeList.get())
+                .forEach(c -> {
+                    c.setChargeStatus(ChargeStatus.CUSTOMER_DECEASED);
+                    chargeRepository.save(c);
+                });
+
+        // Communicate to admin to terminate ongoing charges / matters for this customer
+        listChargesDecom.stream()
+                .map(Charge::getMatters)
+                .forEach(set -> set.forEach(matter -> adminClient.terminateMatter(matter)));
     }
 
     private void handleMatterWithdrawn(ExecInterrupRequest execInterrupRequest) {
