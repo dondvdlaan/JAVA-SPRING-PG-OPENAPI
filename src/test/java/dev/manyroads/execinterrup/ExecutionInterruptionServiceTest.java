@@ -142,23 +142,24 @@ public class ExecutionInterruptionServiceTest {
                         .customerNr(customerNr)
                         .execInterrupType(ExecInterrupEnum.CUSTOMER_DECEASED)
                         .matterID(null);
-        
+
         Charge existingCharge = new Charge();
         existingCharge.setChargeStatus(ChargeStatus.BOOKED);
         existingCharge.setCustomerNr(customerNr);
         List<Charge> listCharges = (List.of(existingCharge));
-        when(chargeRepository.findByCustomerNr(anyLong())).thenReturn(listCharges);
+        when(chargeRepository.findByCustomerNr(anyLong())).thenReturn(Optional.of(listCharges));
         ExecInterrupResponse expected = new ExecInterrupResponse();
 
         // activate
         ExecInterrupResponse result = executionInterruptionService.processIncomingExecutionInterruptions(happyCustomerInterruptRequest);
-        List<Charge> listCharge = chargeRepository.findByCustomerNr(customerNr);
+        Optional<List<Charge>> oListCharge = chargeRepository.findByCustomerNr(customerNr);
 
         // Verify
         verify(chargeRepository, times(2)).findByCustomerNr(anyLong());
         verify(execInterrupRepository, times(1)).save(any());
         verify(chargeRepository, times(1)).save(any());
-        listCharge.forEach(c -> assertEquals(ChargeStatus.CUSTOMER_DECEASED, c.getChargeStatus()));
+        oListCharge.ifPresent(cl -> cl.forEach(
+                c -> assertEquals(ChargeStatus.CUSTOMER_DECEASED, c.getChargeStatus())));
         assertEquals(expected, result);
     }
 }
