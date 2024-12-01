@@ -27,6 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -68,8 +69,6 @@ public class ExecutionInterruptionServiceTest {
         //existingMatter.setCharge(existingCharge);
 
         existingCharge.getMatters().add(existingMatter);
-
-        System.out.println("existingCharge: " + existingCharge);
         List<Charge> listCharges = List.of(existingCharge);
 
         ExecInterrupRequest happyCustomerInterruptRequest = new ExecInterrupRequest()
@@ -81,14 +80,85 @@ public class ExecutionInterruptionServiceTest {
 
         // activate
         ExecInterrupResponse result = executionInterruptionService.processIncomingExecutionInterruptions(happyCustomerInterruptRequest);
-        //Optional<Matter> oMatter = matterRepository.findById(UUID.fromString(matterId));
 
         // Verify
         verify(execInterrupRepository, times(1)).save(any());
         verify(chargeRepository, times(1)).findByCustomerNr(anyLong());
         verify(adminClient, times(1)).terminateMatter(eq(existingMatter));
-        //oMatter.ifPresent(m -> assertEquals(MatterStatus.WITHDRAWN, m.getMatterStatus()));
-        //assertEquals(expected, result);
+    }
+
+    @Test
+    void CustomerPaidButChargeInRejectPhaseTest() {
+        // prepare
+        Long customerNr = (long) (Math.random() * 99999);
+        UUID chargeId = UUID.randomUUID();
+        String matterId = UUID.randomUUID().toString();
+
+        Charge existingCharge = new Charge();
+        existingCharge.setChargeID(chargeId);
+        existingCharge.setChargeStatus(ChargeStatus.REJECTED);
+        existingCharge.setCustomerNr(customerNr);
+
+        Matter existingMatter = new Matter();
+        existingMatter.setMatterID(UUID.fromString(matterId));
+        existingMatter.setMatterStatus(MatterStatus.EXECUTABLE);
+        existingMatter.setCustomerNr(customerNr);
+        existingMatter.setCharge(existingCharge);
+
+        //existingCharge.getMatters().add(existingMatter);
+        List<Charge> listCharges = List.of(existingCharge);
+
+        ExecInterrupRequest happyCustomerInterruptRequest = new ExecInterrupRequest()
+                .customerNr(customerNr)
+                .execInterrupType(ExecInterrupEnum.PAID)
+                .matterID(matterId);
+
+        when(matterRepository.findById(any())).thenReturn(Optional.of(existingMatter));
+
+        // activate
+        ExecInterrupResponse result = executionInterruptionService.processIncomingExecutionInterruptions(happyCustomerInterruptRequest);
+
+        // Verify
+        verify(execInterrupRepository, times(1)).save(any());
+        verify(matterRepository, times(2)).findById(any());
+        verify(adminClient, never()).terminateMatter(eq(existingMatter));
+    }
+
+    @Test
+    void happyFlowCustomerDPaidTest() {
+        // prepare
+        Long customerNr = (long) (Math.random() * 99999);
+        UUID chargeId = UUID.randomUUID();
+        String matterId = UUID.randomUUID().toString();
+
+        Charge existingCharge = new Charge();
+        existingCharge.setChargeID(chargeId);
+        existingCharge.setChargeStatus(ChargeStatus.IN_PROCESS);
+        existingCharge.setCustomerNr(customerNr);
+
+        Matter existingMatter = new Matter();
+        existingMatter.setMatterID(UUID.fromString(matterId));
+        existingMatter.setMatterStatus(MatterStatus.EXECUTABLE);
+        existingMatter.setCustomerNr(customerNr);
+        existingMatter.setCharge(existingCharge);
+
+        //existingCharge.getMatters().add(existingMatter);
+        List<Charge> listCharges = List.of(existingCharge);
+
+        ExecInterrupRequest happyCustomerInterruptRequest = new ExecInterrupRequest()
+                .customerNr(customerNr)
+                .execInterrupType(ExecInterrupEnum.PAID)
+                .matterID(matterId);
+
+        when(matterRepository.findById(any())).thenReturn(Optional.of(existingMatter));
+
+        // activate
+        ExecInterrupResponse result = executionInterruptionService.processIncomingExecutionInterruptions(happyCustomerInterruptRequest);
+
+        // Verify
+        verify(execInterrupRepository, times(1)).save(any());
+        verify(matterRepository, times(2)).findById(any());
+        verify(adminClient, times(1)).terminateMatter(eq(existingMatter));
     }
 
     @Test
