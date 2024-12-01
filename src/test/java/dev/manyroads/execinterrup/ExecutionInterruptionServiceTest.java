@@ -111,7 +111,7 @@ public class ExecutionInterruptionServiceTest {
         ExecInterrupRequest happyCustomerInterruptRequest = new ExecInterrupRequest()
                 .customerNr(customerNr)
                 .execInterrupType(ExecInterrupEnum.PAID)
-                .matterID(matterId);
+                .matterNr(matterId);
 
         when(matterRepository.findById(any())).thenReturn(Optional.of(existingMatter));
 
@@ -148,7 +148,7 @@ public class ExecutionInterruptionServiceTest {
         ExecInterrupRequest happyCustomerInterruptRequest = new ExecInterrupRequest()
                 .customerNr(customerNr)
                 .execInterrupType(ExecInterrupEnum.PAID)
-                .matterID(matterId);
+                .matterNr(matterId);
 
         when(matterRepository.findById(any())).thenReturn(Optional.of(existingMatter));
 
@@ -181,7 +181,7 @@ public class ExecutionInterruptionServiceTest {
         ExecInterrupRequest matterCustomerNrMismatchInterruptRequest = new ExecInterrupRequest();
         matterCustomerNrMismatchInterruptRequest.setCustomerNr(wrongCustomerNr);
         matterCustomerNrMismatchInterruptRequest.setExecInterrupType(ExecInterrupEnum.WITHDRAWN);
-        matterCustomerNrMismatchInterruptRequest.setMatterID(matterId);
+        matterCustomerNrMismatchInterruptRequest.setMatterNr(matterId);
         when(matterRepository.findById(any())).thenReturn(Optional.of(existingMatter));
         ExecInterrupResponse expected = new ExecInterrupResponse();
 
@@ -213,7 +213,7 @@ public class ExecutionInterruptionServiceTest {
         ExecInterrupRequest happyCustomerInterruptRequest = new ExecInterrupRequest();
         happyCustomerInterruptRequest.setCustomerNr(customerNr);
         happyCustomerInterruptRequest.setExecInterrupType(ExecInterrupEnum.WITHDRAWN);
-        happyCustomerInterruptRequest.setMatterID(matterId);
+        happyCustomerInterruptRequest.setMatterNr(matterId);
         when(matterRepository.findById(any())).thenReturn(Optional.of(existingMatter));
         ExecInterrupResponse expected = new ExecInterrupResponse();
 
@@ -236,7 +236,7 @@ public class ExecutionInterruptionServiceTest {
         ExecInterrupRequest noChargeForCustomerInterruptRequest = new ExecInterrupRequest();
         noChargeForCustomerInterruptRequest.setCustomerNr(customerNr);
         noChargeForCustomerInterruptRequest.setExecInterrupType(ExecInterrupEnum.CUSTOMER_DECEASED);
-        noChargeForCustomerInterruptRequest.setMatterID(null);
+        noChargeForCustomerInterruptRequest.setMatterNr(null);
 
         when(chargeRepository.findByCustomerNr(anyLong())).thenReturn(Optional.empty());
 
@@ -257,7 +257,7 @@ public class ExecutionInterruptionServiceTest {
                 new ExecInterrupRequest()
                         .customerNr(customerNr)
                         .execInterrupType(ExecInterrupEnum.CUSTOMER_DECEASED)
-                        .matterID(null);
+                        .matterNr(null);
 
         Charge existingCharge = new Charge();
         existingCharge.setChargeStatus(ChargeStatus.BOOKED);

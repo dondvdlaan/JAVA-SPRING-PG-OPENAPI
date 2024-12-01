@@ -46,12 +46,12 @@ components:
       type: object
       required:
         - customerNr
-        - matterID
+        - matterNr
       properties:
         customerNr:
           type: integer
           format: int64
-        matterID:
+        matterNr:
           type: string
     MatterResponse:
       type: object
@@ -71,14 +71,14 @@ components:
       required:
         - customerNr
         - execInterrupType
-        - matterID
+        - matterNr
       properties:
         customerNr:
           type: integer
           format: int64
         execInterrupType:
           $ref: "#/components/schemas/ExecInterrupEnum"
-        matterID:
+        matterNr:
           type: string
     ExecInterrupResponse:
       type: object

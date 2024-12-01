@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,10 +40,10 @@ public class MatterReceptionService {
 
         MatterResponse matterResponse = new MatterResponse();
         matterResponse.setCustomerNr(matterRequest.getCustomerNr());
-        Charge charge;
+        Charge charge = new Charge();
 
         // Retrieve vehicle type from admin microservice
-        String vehicleType = retrieveVehicleType(matterRequest.getMatterID());
+        String vehicleType = retrieveVehicleType(matterRequest.getMatterNr());
 
         // Verify vehicle type in DCM domain
         VehicleTypeEnum vehicleTypeConfirmed;
@@ -64,18 +65,25 @@ public class MatterReceptionService {
                             return savedCustomer;
                         });
 
-        // Check if charge for customer exists, if so, check if matter can be added. Otherwise create new charge
-        Optional<Charge> oCharge = chargeRepository.findByCustomerNrAndChargeStatus(
+        // Check if charges for customer exists, if so, check if matter can be added, otherwise create new charge
+        Optional<List<Charge>> oListCharges = chargeRepository.findByCustomerNrAndChargeStatus(
                 ChargeStatus.IN_PROCESS,
                 ChargeStatus.BOOKED,
                 matterRequest.getCustomerNr());
-        if (oCharge.isPresent() && oCharge.get().getVehicleType().equals(vehicleTypeConfirmed)) {
-            charge = oCharge.get();
-            Matter newMatter = mapMatterRequest(matterRequest, charge);
-            matterRepository.save(newMatter);
-            charge.getMatters().add(newMatter);
-            chargeRepository.save(charge);
-            log.info("Vehicle type coincides, matter added to existing charge: {}", charge.getChargeID());
+        if (oListCharges.isPresent()) {
+            List<Charge> filteredListCharges = oListCharges.get().stream()
+                    .filter(c -> c.getVehicleType().equals(vehicleTypeConfirmed)).toList();
+            if (!filteredListCharges.isEmpty()) {
+                charge = filteredListCharges.get(0);
+                Matter newMatter = mapMatterRequest(matterRequest, charge);
+                matterRepository.save(newMatter);
+                charge.getMatters().add(newMatter);
+                chargeRepository.save(charge);
+                log.info("Vehicle type coincides, matter added to existing charge: {}", charge.getChargeID());
+            } else {
+                charge = createNewCharge(matterRequest, vehicleTypeConfirmed, customer);
+                log.info("New charge created {} for existing customer nr: {}", charge.getChargeID(), charge.getCustomer().getCustomerID());
+            }
         } else {
             charge = createNewCharge(matterRequest, vehicleTypeConfirmed, customer);
             log.info("New charge created {} for new customer nr: {}", charge.getChargeID(), charge.getCustomer().getCustomerID());
