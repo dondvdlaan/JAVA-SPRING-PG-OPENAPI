@@ -27,7 +27,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -75,6 +74,7 @@ public class ExecutionInterruptionService {
 
         switch (execInterrupRequest.getExecInterrupType()) {
             case WITHDRAWN -> handleMatterWithdrawn(execInterrupRequest);
+            case PAID -> handleMatterPaid(execInterrupRequest);
             default ->
                     throw new InternalException("handleMatterExecutionInterruption: Default ExecInterrup enums not matched ");
         }
@@ -113,6 +113,16 @@ public class ExecutionInterruptionService {
         }
         oMatter.get().setMatterStatus(MatterStatus.WITHDRAWN);
         matterRepository.save(oMatter.get());
+    }
+
+    private void handleMatterPaid(ExecInterrupRequest execInterrupRequest) {
+        log.info("Started handleMatterPaid for customer nr: {} ", execInterrupRequest.getCustomerNr());
+        Optional<Matter> oMatter = matterRepository.findById(UUID.fromString(execInterrupRequest.getMatterID()));
+        oMatter.orElseThrow(() -> new MatterMissingForCustomerNrException(execInterrupRequest.getMatterID(), execInterrupRequest.getCustomerNr()));
+        if (oMatter.get().getCharge().getChargeStatus() == ChargeStatus.DONE) {
+            throw new ChargeHasDoneStatusException(execInterrupRequest.getCustomerNr());
+        }
+        if (DCMutils.isBeingProcessed(oMatter.get().getCharge())) adminClient.terminateMatter(oMatter.get());
     }
 
     private void saveExecInterrupRequest(ExecInterrupRequest execInterrupRequest) {

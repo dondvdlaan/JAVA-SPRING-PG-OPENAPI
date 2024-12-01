@@ -105,6 +105,7 @@ components:
         - customer_deceased
         - rejected
         - withdrawn
+        - paid
 
 
 

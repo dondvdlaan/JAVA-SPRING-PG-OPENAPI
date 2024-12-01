@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @ToString
-public class Customer {
+public class    Customer {
     @Id
     @Builder.Default
     @Column(name = "customer_id")
