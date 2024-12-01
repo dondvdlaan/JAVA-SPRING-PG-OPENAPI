@@ -46,9 +46,9 @@ public class TestPostgresSqlTest {
         // prepare
         Long customerNr = (long) (Math.random() * 99999);
         MatterRequest matterRequest = new MatterRequest();
-        matterRequest.setMatterID("121212");
+        matterRequest.setMatterNr("121212");
         matterRequest.setCustomerNr(customerNr);
-        when(adminClient.searchVehicleType(matterRequest.getMatterID())).thenReturn("bulldozer");
+        when(adminClient.searchVehicleType(matterRequest.getMatterNr())).thenReturn("bulldozer");
         Customer existingCustomer = new Customer();
         existingCustomer.setCustomerNr(customerNr);
         customerRepository.save(existingCustomer);

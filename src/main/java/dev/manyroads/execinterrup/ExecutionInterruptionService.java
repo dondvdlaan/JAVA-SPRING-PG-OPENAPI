@@ -42,10 +42,10 @@ public class ExecutionInterruptionService {
         saveExecInterrupRequest(execInterrupRequest);
         ExecInterrupResponse execInterrupResponse = null;
 
-        if (!execInterrupRequest.getCustomerNr().toString().isEmpty() && (execInterrupRequest.getMatterID() == null || execInterrupRequest.getMatterID().isEmpty())) {
+        if (!execInterrupRequest.getCustomerNr().toString().isEmpty() && (execInterrupRequest.getMatterNr() == null || execInterrupRequest.getMatterNr().isEmpty())) {
             execInterrupResponse = handleCustomerExecutionInterruption(execInterrupRequest);
         }
-        if (!execInterrupRequest.getCustomerNr().toString().isEmpty() && execInterrupRequest.getMatterID() != null && !execInterrupRequest.getMatterID().isEmpty()) {
+        if (!execInterrupRequest.getCustomerNr().toString().isEmpty() && execInterrupRequest.getMatterNr() != null && !execInterrupRequest.getMatterNr().isEmpty()) {
             execInterrupResponse = handleMatterExecutionInterruption(execInterrupRequest);
         }
         return execInterrupResponse;
@@ -66,8 +66,8 @@ public class ExecutionInterruptionService {
 
     private ExecInterrupResponse handleMatterExecutionInterruption(ExecInterrupRequest execInterrupRequest) {
         log.info("Handling of matter Execution Interruption for customer nr: {} started.", execInterrupRequest.getCustomerNr());
-        Optional<Matter> oMatter = matterRepository.findById(UUID.fromString(execInterrupRequest.getMatterID()));
-        oMatter.orElseThrow(() -> new InternalException(String.format("Matter with id: %s not found", execInterrupRequest.getMatterID())));
+        Optional<Matter> oMatter = matterRepository.findById(UUID.fromString(execInterrupRequest.getMatterNr()));
+        oMatter.orElseThrow(() -> new InternalException(String.format("Matter with id: %s not found", execInterrupRequest.getMatterNr())));
         if (!Objects.equals(oMatter.get().getCustomerNr(), execInterrupRequest.getCustomerNr())) {
             throw new MatterCustomerNrMismatchException(oMatter.get().getMatterID().toString(), execInterrupRequest.getCustomerNr());
         }
@@ -106,8 +106,8 @@ public class ExecutionInterruptionService {
 
     private void handleMatterWithdrawn(ExecInterrupRequest execInterrupRequest) {
         log.info("Started handleMatterWithdrawn for customer nr: {} ", execInterrupRequest.getCustomerNr());
-        Optional<Matter> oMatter = matterRepository.findById(UUID.fromString(execInterrupRequest.getMatterID()));
-        oMatter.orElseThrow(() -> new MatterMissingForCustomerNrException(execInterrupRequest.getMatterID(), execInterrupRequest.getCustomerNr()));
+        Optional<Matter> oMatter = matterRepository.findById(UUID.fromString(execInterrupRequest.getMatterNr()));
+        oMatter.orElseThrow(() -> new MatterMissingForCustomerNrException(execInterrupRequest.getMatterNr(), execInterrupRequest.getCustomerNr()));
         if (oMatter.get().getCharge().getChargeStatus() == ChargeStatus.DONE) {
             throw new ChargeHasDoneStatusException(execInterrupRequest.getCustomerNr());
         }
@@ -117,8 +117,8 @@ public class ExecutionInterruptionService {
 
     private void handleMatterPaid(ExecInterrupRequest execInterrupRequest) {
         log.info("Started handleMatterPaid for customer nr: {} ", execInterrupRequest.getCustomerNr());
-        Optional<Matter> oMatter = matterRepository.findById(UUID.fromString(execInterrupRequest.getMatterID()));
-        oMatter.orElseThrow(() -> new MatterMissingForCustomerNrException(execInterrupRequest.getMatterID(), execInterrupRequest.getCustomerNr()));
+        Optional<Matter> oMatter = matterRepository.findById(UUID.fromString(execInterrupRequest.getMatterNr()));
+        oMatter.orElseThrow(() -> new MatterMissingForCustomerNrException(execInterrupRequest.getMatterNr(), execInterrupRequest.getCustomerNr()));
         if (oMatter.get().getCharge().getChargeStatus() == ChargeStatus.DONE) {
             throw new ChargeHasDoneStatusException(execInterrupRequest.getCustomerNr());
         }
@@ -129,7 +129,7 @@ public class ExecutionInterruptionService {
         ExecInterrup execInterrup = ExecInterrup
                 .builder()
                 .customerNr(execInterrupRequest.getCustomerNr())
-                .matterID(execInterrupRequest.getMatterID())
+                .matterID(execInterrupRequest.getMatterNr())
                 .execInterrupStatus(execInterrupRequest.getExecInterrupType())
                 .build();
         execInterrupRepository.save(execInterrup);

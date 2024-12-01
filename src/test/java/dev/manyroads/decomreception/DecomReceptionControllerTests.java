@@ -47,7 +47,7 @@ public class DecomReceptionControllerTests {
         // Prepare
         MatterRequest caseRequestCaseIDIsNull = new MatterRequest();
         caseRequestCaseIDIsNull.setCustomerNr(987654L);
-        caseRequestCaseIDIsNull.setMatterID(null);
+        caseRequestCaseIDIsNull.setMatterNr(null);
 
         // Activate
 
@@ -61,15 +61,14 @@ public class DecomReceptionControllerTests {
     void caseRequestPersonIDNullShouldThrowExceptionTest() {
         // Prepare
         MatterRequest caseRequestPersonIDIsNull = new MatterRequest();
-        caseRequestPersonIDIsNull.setMatterID(null);
-        caseRequestPersonIDIsNull.setMatterID("123654");
+        caseRequestPersonIDIsNull.setMatterNr(null);
 
         // Activate
 
         // Verify
         assertThatThrownBy(() -> verification.verifyMatterRequest(caseRequestPersonIDIsNull))
                 .isInstanceOf(CustomerNrIsMissingException.class)
-                .hasMessageStartingWith("DCM-002: CaseRequest PersonID is missing");
+                .hasMessageStartingWith("DCM-002: MatterRequest CustomerNr is missing");
     }
 
     @Test
@@ -100,7 +99,7 @@ public class DecomReceptionControllerTests {
         // Prepare
         MatterRequest matterRequest = new MatterRequest();
         matterRequest.setCustomerNr(123456L);
-        matterRequest.setMatterID("123456");
+        matterRequest.setMatterNr("123456");
         UUID chargeID = UUID.randomUUID();
         MatterResponse matterResponse = new MatterResponse();
         matterResponse.setChargeID(chargeID);
@@ -125,7 +124,7 @@ public class DecomReceptionControllerTests {
         // Prepare
         Long customerNr = (long) (Math.random() * 99999);
         MatterRequest matterRequest = new MatterRequest();
-        matterRequest.setMatterID("12345");
+        matterRequest.setMatterNr("12345");
         matterRequest.setCustomerNr(customerNr);
         MatterResponse matterResponse = new MatterResponse();
         matterResponse.setCustomerNr(customerNr);

@@ -20,6 +20,8 @@ public class Matter {
     @Builder.Default
     @Column(name="matter_id")
     private UUID matterID = UUID.randomUUID();
+    @Column(name = "matter_nr")
+    private String matterNr;
     @Column(name = "customer_nr")
     private Long customerNr;
     @Column(name = "matter_status")

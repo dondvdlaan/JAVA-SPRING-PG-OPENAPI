@@ -21,6 +21,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -51,23 +53,27 @@ public class MatterReceptionServiceTests {
     @Test
     void customerExistChargeExistOtherVehicleTypeShouldCreateNewChargeTest() {
         // prepare
+        when(adminClient.searchVehicleType(anyString())).thenReturn("bulldozer");
         Long customerNr = (long) (Math.random() * 99999);
-        MatterRequest matterRequest = new MatterRequest();
-        matterRequest.setMatterID("121212");
-        matterRequest.setCustomerNr(customerNr);
-        when(adminClient.searchVehicleType(matterRequest.getMatterID())).thenReturn("bulldozer");
         UUID customerID = UUID.randomUUID();
         Customer existingCustomer = new Customer();
         existingCustomer.setCustomerID(customerID);
         existingCustomer.setCustomerNr(customerNr);
         when(customerRepository.findByCustomerNr(anyLong())).thenReturn(existingCustomer);
+
+        MatterRequest matterRequest = new MatterRequest();
+        matterRequest.setMatterNr("121212");
+        matterRequest.setCustomerNr(customerNr);
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(UUID.randomUUID());
         existingCharge.setChargeStatus(ChargeStatus.BOOKED);
         existingCharge.setCustomerNr(matterRequest.getCustomerNr());
         existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
         existingCharge.setCustomer(existingCustomer);
-        when(chargeRepository.findByCustomerNrAndChargeStatus(any(), any(), anyLong())).thenReturn(Optional.of(existingCharge));
+        List<Charge> listCharge = new ArrayList<>();
+        listCharge.add(existingCharge);
+        when(chargeRepository.findByCustomerNrAndChargeStatus(any(), any(), anyLong())).thenReturn(Optional.of(listCharge));
+
         Charge newCharge = new Charge();
         UUID chargeID = UUID.randomUUID();
         newCharge.setChargeID(chargeID);
@@ -83,6 +89,7 @@ public class MatterReceptionServiceTests {
         when(matterRepository.save(any())).thenReturn(matter);
         newCharge.getMatters().add(matter);
         when(chargeRepository.save(any())).thenReturn(newCharge);
+        when(customerProcessingClient.sendMessageToCustomerProcessing()).thenReturn(true);
 
         // activate
         MatterResponse matterResponse = matterReceptionService.processIncomingMatterRequest(matterRequest);
@@ -103,17 +110,19 @@ public class MatterReceptionServiceTests {
     void customerNotExistsShoulCreateNewCustomerTest() {
         // prepare
         Long customerNr = (long) (Math.random() * 99999);
-        when(customerRepository.findByCustomerNr(anyLong())).thenReturn(null);
-        MatterRequest matterRequest = new MatterRequest();
-        matterRequest.setMatterID("121212");
-        matterRequest.setCustomerNr(customerNr);
-        when(adminClient.searchVehicleType(matterRequest.getMatterID())).thenReturn("bulldozer");
-        when(chargeRepository.findByCustomerNrAndChargeStatus(any(), any(), anyLong())).thenReturn(null);
         UUID customerID = UUID.randomUUID();
+
+        when(adminClient.searchVehicleType(anyString())).thenReturn("bulldozer");
+        when(customerRepository.findByCustomerNr(anyLong())).thenReturn(null);
+
+        MatterRequest matterRequest = new MatterRequest();
+        matterRequest.setMatterNr("121212");
+        matterRequest.setCustomerNr(customerNr);
         Customer newCustomer = new Customer();
         newCustomer.setCustomerID(customerID);
         newCustomer.setCustomerNr(matterRequest.getCustomerNr());
         when(customerRepository.save(any())).thenReturn(newCustomer);
+
         Charge newCharge = new Charge();
         UUID chargeID = UUID.randomUUID();
         newCharge.setChargeID(chargeID);
@@ -122,13 +131,15 @@ public class MatterReceptionServiceTests {
         newCharge.setVehicleType(VehicleTypeEnum.BULLDOZER);
         newCharge.setCustomer(newCustomer);
         newCharge.getMatters().add(Matter.builder().customerNr(matterRequest.getCustomerNr()).build());
+        List<Charge> listCharge = new ArrayList<>();
+        when(chargeRepository.findByCustomerNrAndChargeStatus(any(), any(), anyLong())).thenReturn(Optional.of(listCharge));
         when(chargeRepository.save(any())).thenReturn(newCharge);
+        when(customerProcessingClient.sendMessageToCustomerProcessing()).thenReturn(true);
 
         // activate
         MatterResponse matterResponse = matterReceptionService.processIncomingMatterRequest(matterRequest);
 
         // verify
-
         verify(customerRepository, times(1)).findByCustomerNr(anyLong());
         verify(customerRepository, times(1)).save(any());
         verify(chargeRepository, times(1)).findByCustomerNrAndChargeStatus(any(), any(), anyLong());
@@ -149,9 +160,9 @@ public class MatterReceptionServiceTests {
         existingCustomer.setCustomerNr(customerNr);
         when(customerRepository.findByCustomerNr(anyLong())).thenReturn(existingCustomer);
         MatterRequest matterRequest = new MatterRequest();
-        matterRequest.setMatterID("121212");
+        matterRequest.setMatterNr("121212");
         matterRequest.setCustomerNr(customerNr);
-        when(adminClient.searchVehicleType(matterRequest.getMatterID())).thenReturn("bulldozer");
+        when(adminClient.searchVehicleType(matterRequest.getMatterNr())).thenReturn("bulldozer");
         Charge newCharge = new Charge();
         newCharge.setChargeID(UUID.randomUUID());
         newCharge.setChargeStatus(ChargeStatus.BOOKED);
@@ -160,6 +171,7 @@ public class MatterReceptionServiceTests {
         newCharge.setCustomer(existingCustomer);
         newCharge.getMatters().add(Matter.builder().customerNr(matterRequest.getCustomerNr()).build());
         when(chargeRepository.save(any())).thenReturn(newCharge);
+        when(customerProcessingClient.sendMessageToCustomerProcessing()).thenReturn(true);
 
         // activate
         MatterResponse matterResponse = matterReceptionService.processIncomingMatterRequest(matterRequest);
@@ -174,10 +186,10 @@ public class MatterReceptionServiceTests {
     void adminClientReturnsIncorrectVehicleTypeShouldThrowVehicleTypeNotCoincideExceptionTest() {
         // prepare
         MatterRequest caseRequest = new MatterRequest();
-        caseRequest.setMatterID("121212");
+        caseRequest.setMatterNr("121212");
         caseRequest.setCustomerNr(343434L);
         String expected = "bulldozer";
-        when(adminClient.searchVehicleType(caseRequest.getMatterID())).thenReturn("Vouwfiets");
+        when(adminClient.searchVehicleType(caseRequest.getMatterNr())).thenReturn("Vouwfiets");
 
         // activate
 
@@ -192,12 +204,12 @@ public class MatterReceptionServiceTests {
     void adminClientReturnsFeignExceptionShouldThrowAdminClientExceptionTest() {
         // prepare
         MatterRequest caseRequest = new MatterRequest();
-        caseRequest.setMatterID("121212");
+        caseRequest.setMatterNr("121212");
         caseRequest.setCustomerNr(343434L);
         // Mock 404 BAD REQUEST return
         var feignException = Mockito.mock(FeignException.class);
         Mockito.when(feignException.status()).thenReturn(404);
-        when(adminClient.searchVehicleType(caseRequest.getMatterID())).thenThrow(feignException);
+        when(adminClient.searchVehicleType(caseRequest.getMatterNr())).thenThrow(feignException);
 
         // activate
 
@@ -212,9 +224,9 @@ public class MatterReceptionServiceTests {
     void adminClientReturnsNullShouldThrowVehicleTypeNotFoundExceptionTest() {
         // prepare
         MatterRequest matterRequest = new MatterRequest();
-        matterRequest.setMatterID("121212");
+        matterRequest.setMatterNr("121212");
         matterRequest.setCustomerNr(343434L);
-        when(adminClient.searchVehicleType(matterRequest.getMatterID())).thenReturn(null);
+        when(adminClient.searchVehicleType(matterRequest.getMatterNr())).thenReturn(null);
 
         // activate
 
@@ -229,10 +241,10 @@ public class MatterReceptionServiceTests {
     void shouldReturnCorrectCustomerNrTest() {
         // prepare
         MatterRequest matterRequest = new MatterRequest();
-        matterRequest.setMatterID("121212");
+        matterRequest.setMatterNr("121212");
         matterRequest.setCustomerNr(343434L);
         String expectedVehicle = "bulldozer";
-        when(adminClient.searchVehicleType(matterRequest.getMatterID())).thenReturn("bulldozer");
+        when(adminClient.searchVehicleType(matterRequest.getMatterNr())).thenReturn("bulldozer");
 
         UUID customerID = UUID.randomUUID();
         Customer existingCustomer = new Customer();
@@ -248,6 +260,7 @@ public class MatterReceptionServiceTests {
         newCharge.setVehicleType(VehicleTypeEnum.BULLDOZER);
         newCharge.getMatters().add(Matter.builder().customerNr(matterRequest.getCustomerNr()).build());
         when(chargeRepository.save(any())).thenReturn(newCharge);
+        when(customerProcessingClient.sendMessageToCustomerProcessing()).thenReturn(true);
 
         // activate
         MatterResponse matterResponse = matterReceptionService.processIncomingMatterRequest(matterRequest);

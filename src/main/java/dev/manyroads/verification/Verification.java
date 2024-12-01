@@ -28,7 +28,7 @@ public class Verification {
                 .orElseThrow(MatterRequestEmptyOrNullException::new);
         Optional.ofNullable(matterRequest.getCustomerNr())
                 .orElseThrow(CustomerNrIsMissingException::new);
-        Optional.ofNullable(matterRequest.getMatterID())
+        Optional.ofNullable(matterRequest.getMatterNr())
                 .orElseThrow(MatterIDIsMissingException::new);
     }
 

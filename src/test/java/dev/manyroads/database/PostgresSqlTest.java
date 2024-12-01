@@ -52,9 +52,9 @@ public class PostgresSqlTest {
         // prepare
         Long customerNr = (long) (Math.random() * 99999);
         MatterRequest matterRequest = new MatterRequest();
-        matterRequest.setMatterID("121212");
+        matterRequest.setMatterNr("121212");
         matterRequest.setCustomerNr(customerNr);
-        when(adminClient.searchVehicleType(matterRequest.getMatterID())).thenReturn("bulldozer");
+        when(adminClient.searchVehicleType(matterRequest.getMatterNr())).thenReturn("bulldozer");
         Customer existingCustomer = new Customer();
         existingCustomer.setCustomerNr(customerNr);
         customerRepository.save(existingCustomer);
@@ -81,7 +81,7 @@ public class PostgresSqlTest {
     void checkIfChargeIsBookedTest() {
         // prepare
         MatterRequest matterRequest = new MatterRequest();
-        matterRequest.setMatterID("121212");
+        matterRequest.setMatterNr("121212");
         matterRequest.setCustomerNr((long) (Math.random() * 9999999));
         Customer customer = new Customer();
         customer.setCustomerNr(matterRequest.getCustomerNr());
@@ -94,7 +94,7 @@ public class PostgresSqlTest {
         charge.setVehicleType(VehicleTypeEnum.BULLDOZER);
         Charge savedCharge = chargeRepository.save(charge);
         String expected = "bulldozer";
-        when(adminClient.searchVehicleType(matterRequest.getMatterID())).thenReturn("bulldozer");
+        when(adminClient.searchVehicleType(matterRequest.getMatterNr())).thenReturn("bulldozer");
 
         // activate
         MatterResponse result = matterReceptionService.processIncomingMatterRequest(matterRequest);
