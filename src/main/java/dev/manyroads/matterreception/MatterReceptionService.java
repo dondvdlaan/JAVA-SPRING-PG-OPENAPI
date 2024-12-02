@@ -6,13 +6,13 @@ import dev.manyroads.decomreception.exception.AdminClientException;
 import dev.manyroads.decomreception.exception.InternalException;
 import dev.manyroads.matterreception.exception.VehicleTypeNotCoincideWithDomainException;
 import dev.manyroads.decomreception.exception.VehicleTypeNotFoundException;
+import dev.manyroads.model.ChargeStatusEnum;
 import dev.manyroads.model.MatterRequest;
 import dev.manyroads.model.MatterResponse;
 import dev.manyroads.model.VehicleTypeEnum;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.Customer;
 import dev.manyroads.model.entity.Matter;
-import dev.manyroads.model.enums.ChargeStatus;
 import dev.manyroads.model.enums.MatterStatus;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.CustomerRepository;
@@ -67,8 +67,8 @@ public class MatterReceptionService {
 
         // Check if charges for customer exists, if so, check if matter can be added, otherwise create new charge
         Optional<List<Charge>> oListCharges = chargeRepository.findByCustomerNrAndChargeStatus(
-                ChargeStatus.IN_PROCESS,
-                ChargeStatus.BOOKED,
+                ChargeStatusEnum.IN_PROCESS_,
+                ChargeStatusEnum.BOOKED_,
                 matterRequest.getCustomerNr());
         if (oListCharges.isPresent()) {
             List<Charge> filteredListCharges = oListCharges.get().stream()
@@ -102,7 +102,7 @@ public class MatterReceptionService {
     // Submethods
     private Charge createNewCharge(MatterRequest matterRequest, VehicleTypeEnum vehicleTypeConfirmed, Customer customer) {
         Charge newCharge = new Charge();
-        newCharge.setChargeStatus(ChargeStatus.BOOKED);
+        newCharge.setChargeStatus(ChargeStatusEnum.BOOKED_);
         newCharge.setCustomerNr(matterRequest.getCustomerNr());
         newCharge.setVehicleType(vehicleTypeConfirmed);
         newCharge.setCustomer(customer);

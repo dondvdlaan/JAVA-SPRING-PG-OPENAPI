@@ -6,12 +6,12 @@ import dev.manyroads.execinterrup.exception.ChargeHasDoneStatusException;
 import dev.manyroads.execinterrup.exception.ChargeMissingForCustomerNrException;
 import dev.manyroads.execinterrup.exception.MatterCustomerNrMismatchException;
 import dev.manyroads.execinterrup.exception.MatterMissingForCustomerNrException;
+import dev.manyroads.model.ChargeStatusEnum;
 import dev.manyroads.model.ExecInterrupRequest;
 import dev.manyroads.model.ExecInterrupResponse;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.ExecInterrup;
 import dev.manyroads.model.entity.Matter;
-import dev.manyroads.model.enums.ChargeStatus;
 import dev.manyroads.model.enums.MatterStatus;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.ExecInterrupRepository;
@@ -21,7 +21,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -89,12 +88,12 @@ public class ExecutionInterruptionService {
 
         // Filter charges for status booked
         List<Charge> listChargesDecom =
-                oChargeList.get().stream().filter(c -> c.getChargeStatus() == ChargeStatus.BOOKED).toList();
+                oChargeList.get().stream().filter(c -> c.getChargeStatus() == ChargeStatusEnum.BOOKED_).toList();
 
         // Update status for active charges
         DCMutils.isActive(oChargeList.get())
                 .forEach(c -> {
-                    c.setChargeStatus(ChargeStatus.CUSTOMER_DECEASED);
+                    c.setChargeStatus(ChargeStatusEnum.CUSTOMER_DECEASED);
                     chargeRepository.save(c);
                 });
 
@@ -108,7 +107,7 @@ public class ExecutionInterruptionService {
         log.info("Started handleMatterWithdrawn for customer nr: {} ", execInterrupRequest.getCustomerNr());
         Optional<Matter> oMatter = matterRepository.findById(UUID.fromString(execInterrupRequest.getMatterNr()));
         oMatter.orElseThrow(() -> new MatterMissingForCustomerNrException(execInterrupRequest.getMatterNr(), execInterrupRequest.getCustomerNr()));
-        if (oMatter.get().getCharge().getChargeStatus() == ChargeStatus.DONE) {
+        if (oMatter.get().getCharge().getChargeStatus() == ChargeStatusEnum.DONE_) {
             throw new ChargeHasDoneStatusException(execInterrupRequest.getCustomerNr());
         }
         oMatter.get().setMatterStatus(MatterStatus.WITHDRAWN);
@@ -119,7 +118,7 @@ public class ExecutionInterruptionService {
         log.info("Started handleMatterPaid for customer nr: {} ", execInterrupRequest.getCustomerNr());
         Optional<Matter> oMatter = matterRepository.findById(UUID.fromString(execInterrupRequest.getMatterNr()));
         oMatter.orElseThrow(() -> new MatterMissingForCustomerNrException(execInterrupRequest.getMatterNr(), execInterrupRequest.getCustomerNr()));
-        if (oMatter.get().getCharge().getChargeStatus() == ChargeStatus.DONE) {
+        if (oMatter.get().getCharge().getChargeStatus() == ChargeStatusEnum.DONE_) {
             throw new ChargeHasDoneStatusException(execInterrupRequest.getCustomerNr());
         }
         if (DCMutils.isBeingProcessed(oMatter.get().getCharge())) adminClient.terminateMatter(oMatter.get());

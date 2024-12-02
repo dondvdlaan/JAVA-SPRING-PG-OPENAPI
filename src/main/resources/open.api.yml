@@ -39,6 +39,23 @@ paths:
               application/json:
                 schema:
                   $ref: "#/components/schemas/ExecInterrupResponse"
+  /v1/charges/intermediatereportstatus:
+    post:
+      summary: Receiving intermediate reports status updates for the charges
+      operationId: receiveIntermediateReportStatus
+      requestBody:
+        description: Intermediate reports status Post object to be received
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IntermediateReportStatusRequest"
+      responses:
+        '200':
+          description: Intermediate reports status received and saved
+        '400':
+          description: Failed request
+
 
 components:
   schemas:
@@ -66,6 +83,50 @@ components:
           type: string
           format: uuid
 
+    IntermediateReportStatusRequest:
+      type: object
+      required:
+        - chargeNr
+        - statusIntermediateReport
+        - mattersIntermediateReport
+        - startDate
+      properties:
+        chargeNr:
+          type: integer
+          format: int64
+        statusIntermediateReport:
+          $ref: "#/components/schemas/ChargeStatusEnum"
+        mattersIntermediateReport:
+          type: array
+          items:
+            $ref: "#/components/schemas/IntermediateReportMatterRequest"
+        startDate:
+          type: string
+          format: date
+    IntermediateReportMatterRequest:
+      type: object
+      required:
+        - matterNr
+        - explanation
+      properties:
+        matterNr:
+          type: string
+        IntermediateReportExplanation:
+          $ref: "#/components/schemas/IntermediateReportExplanationEnum"
+
+    ExecInterrupResponse:
+      type: object
+      required:
+        - customerNr
+        - chargeID
+      properties:
+        customerNr:
+          type: integer
+          format: int64
+        chargeID:
+          type: string
+          format: uuid
+
     ExecInterrupRequest:
       type: object
       required:
@@ -80,18 +141,6 @@ components:
           $ref: "#/components/schemas/ExecInterrupEnum"
         matterNr:
           type: string
-    ExecInterrupResponse:
-      type: object
-      required:
-        - customerNr
-        - chargeID
-      properties:
-        customerNr:
-          type: integer
-          format: int64
-        chargeID:
-          type: string
-          format: uuid
 
     VehicleTypeEnum:
       type: string
@@ -106,6 +155,21 @@ components:
         - rejected
         - withdrawn
         - paid
+    IntermediateReportExplanationEnum:
+      type: string
+      enum:
+        - not_executable
+        - processing_end
+        - released
+        - expired
+    ChargeStatusEnum:
+      type: string
+      enum:
+        - BOOKED,
+        - REJECTED,
+        - IN_PROCESS,
+        - DONE,
+        - CUSTOMER_DECEASED
 
 
 
