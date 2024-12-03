@@ -1,6 +1,7 @@
 package dev.manyroads.decomreception;
 
 import dev.manyroads.execinterrup.ExecutionInterruptionService;
+import dev.manyroads.intermediatereport.IntermediateReportStatusService;
 import dev.manyroads.matterreception.MatterReceptionService;
 import dev.manyroads.model.ExecInterrupRequest;
 import dev.manyroads.model.ExecInterrupResponse;
@@ -21,6 +22,7 @@ public class DecomReceptionController {
     Verification verification;
     MatterReceptionService matterReceptionService;
     ExecutionInterruptionService executionInterruptionService;
+    IntermediateReportStatusService intermediateReportStatusService;
 
     @RequestMapping(value = "/v1/matters", method = RequestMethod.POST)
     public ResponseEntity<MatterResponse> receiveMatter(@RequestBody MatterRequest matterRequest) {
@@ -42,14 +44,11 @@ public class DecomReceptionController {
         return ResponseEntity.ok(execInterrupResponse);
     }
 
-
     @RequestMapping(value = "/v1/charges/intermediatereportstatus", method = RequestMethod.POST)
     public ResponseEntity<?> receiveIntermediateReportStatus(@RequestBody IntermediateReportStatusRequest intermediateReportStatusRequest) {
 
-        //verification.verifyExecInterrupRequest(execInterrupRequest);
-        //ExecInterrupResponse execInterrupResponse = executionInterruptionService.processIncomingExecutionInterruptions(execInterrupRequest);
-
-        //log.info("execInterrupResponse returned: {}", execInterrupResponse);
+        verification.verifyIntermediateReportStatus(intermediateReportStatusRequest);
+        intermediateReportStatusService.processIntermediateReportStatusRequests(intermediateReportStatusRequest);
         return ResponseEntity.ok().build();
     }
 

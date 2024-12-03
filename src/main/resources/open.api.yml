@@ -86,14 +86,14 @@ components:
     IntermediateReportStatusRequest:
       type: object
       required:
-        - chargeNr
+        - chargeID
         - statusIntermediateReport
         - mattersIntermediateReport
         - startDate
       properties:
-        chargeNr:
-          type: integer
-          format: int64
+        chargeID:
+          type: string
+          format: uuid
         statusIntermediateReport:
           $ref: "#/components/schemas/ChargeStatusEnum"
         mattersIntermediateReport:
@@ -126,7 +126,6 @@ components:
         chargeID:
           type: string
           format: uuid
-
     ExecInterrupRequest:
       type: object
       required:
@@ -165,11 +164,13 @@ components:
     ChargeStatusEnum:
       type: string
       enum:
-        - BOOKED,
-        - REJECTED,
-        - IN_PROCESS,
-        - DONE,
+        - BOOKED
+        - REJECTED
+        - DCM_APPLIED
+        - DONE
         - CUSTOMER_DECEASED
+        - EXECUTABLE
+        - PARTIALLY_EXECUTABLE
 
 
 

@@ -62,7 +62,7 @@ public class TestDBService {
         Charge charge = Charge.builder()
                 .chargeID(chargeId)
                 .customerNr(customerNr)
-                .chargeStatus(ChargeStatusEnum.IN_PROCESS_)
+                .chargeStatus(ChargeStatusEnum.DCM_APPLIED)
                 .startDate(Instant.now())
                 .customer(customer)
                 .build();
@@ -85,7 +85,7 @@ public class TestDBService {
         Charge newCharge = Charge.builder()
                 .chargeID(chargeId)
                 .customerNr(customerNr)
-                .chargeStatus(ChargeStatusEnum.REJECTED_)
+                .chargeStatus(ChargeStatusEnum.REJECTED)
                 .startDate(Instant.now())
                 .customer(customer)
                 .build();

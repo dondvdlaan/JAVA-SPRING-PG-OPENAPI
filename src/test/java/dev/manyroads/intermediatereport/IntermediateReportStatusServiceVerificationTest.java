@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-public class IntermediateReportStatusVerificationTest {
+public class IntermediateReportStatusServiceVerificationTest {
 
     static Stream<ChargeStatusEnum> chargeStatuses() {
         return Stream.of(ChargeStatusEnum.values());

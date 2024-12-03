@@ -88,7 +88,7 @@ public class ExecutionInterruptionService {
 
         // Filter charges for status booked
         List<Charge> listChargesDecom =
-                oChargeList.get().stream().filter(c -> c.getChargeStatus() == ChargeStatusEnum.BOOKED_).toList();
+                oChargeList.get().stream().filter(c -> c.getChargeStatus() == ChargeStatusEnum.BOOKED).toList();
 
         // Update status for active charges
         DCMutils.isActive(oChargeList.get())
@@ -107,7 +107,7 @@ public class ExecutionInterruptionService {
         log.info("Started handleMatterWithdrawn for customer nr: {} ", execInterrupRequest.getCustomerNr());
         Optional<Matter> oMatter = matterRepository.findById(UUID.fromString(execInterrupRequest.getMatterNr()));
         oMatter.orElseThrow(() -> new MatterMissingForCustomerNrException(execInterrupRequest.getMatterNr(), execInterrupRequest.getCustomerNr()));
-        if (oMatter.get().getCharge().getChargeStatus() == ChargeStatusEnum.DONE_) {
+        if (oMatter.get().getCharge().getChargeStatus() == ChargeStatusEnum.DONE) {
             throw new ChargeHasDoneStatusException(execInterrupRequest.getCustomerNr());
         }
         oMatter.get().setMatterStatus(MatterStatus.WITHDRAWN);
@@ -118,7 +118,7 @@ public class ExecutionInterruptionService {
         log.info("Started handleMatterPaid for customer nr: {} ", execInterrupRequest.getCustomerNr());
         Optional<Matter> oMatter = matterRepository.findById(UUID.fromString(execInterrupRequest.getMatterNr()));
         oMatter.orElseThrow(() -> new MatterMissingForCustomerNrException(execInterrupRequest.getMatterNr(), execInterrupRequest.getCustomerNr()));
-        if (oMatter.get().getCharge().getChargeStatus() == ChargeStatusEnum.DONE_) {
+        if (oMatter.get().getCharge().getChargeStatus() == ChargeStatusEnum.DONE) {
             throw new ChargeHasDoneStatusException(execInterrupRequest.getCustomerNr());
         }
         if (DCMutils.isBeingProcessed(oMatter.get().getCharge())) adminClient.terminateMatter(oMatter.get());

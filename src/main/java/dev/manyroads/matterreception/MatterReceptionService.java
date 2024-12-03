@@ -67,8 +67,8 @@ public class MatterReceptionService {
 
         // Check if charges for customer exists, if so, check if matter can be added, otherwise create new charge
         Optional<List<Charge>> oListCharges = chargeRepository.findByCustomerNrAndChargeStatus(
-                ChargeStatusEnum.IN_PROCESS_,
-                ChargeStatusEnum.BOOKED_,
+                ChargeStatusEnum.DCM_APPLIED,
+                ChargeStatusEnum.BOOKED,
                 matterRequest.getCustomerNr());
         if (oListCharges.isPresent()) {
             List<Charge> filteredListCharges = oListCharges.get().stream()
@@ -102,7 +102,7 @@ public class MatterReceptionService {
     // Submethods
     private Charge createNewCharge(MatterRequest matterRequest, VehicleTypeEnum vehicleTypeConfirmed, Customer customer) {
         Charge newCharge = new Charge();
-        newCharge.setChargeStatus(ChargeStatusEnum.BOOKED_);
+        newCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
         newCharge.setCustomerNr(matterRequest.getCustomerNr());
         newCharge.setVehicleType(vehicleTypeConfirmed);
         newCharge.setCustomer(customer);

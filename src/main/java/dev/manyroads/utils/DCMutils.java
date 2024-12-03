@@ -8,10 +8,10 @@ import java.util.List;
 public class DCMutils {
 
     static public List<Charge> isActive(List<Charge> listCharges) {
-        return listCharges.stream().filter(c -> c.getChargeStatus() != ChargeStatusEnum.DONE_).toList();
+        return listCharges.stream().filter(c -> c.getChargeStatus() != ChargeStatusEnum.DONE).toList();
     }
 
     static public boolean isBeingProcessed(Charge charge) {
-        return charge.getChargeStatus() == ChargeStatusEnum.IN_PROCESS_;
+        return charge.getChargeStatus() == ChargeStatusEnum.DCM_APPLIED;
     }
 }
