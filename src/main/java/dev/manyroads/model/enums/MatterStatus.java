@@ -5,5 +5,6 @@ public enum MatterStatus {
     WITHDRAWN,
     PAYMENT_AGREEMENT,
     DISMISSED,
-    EXECUTABLE
+    EXECUTABLE,
+    NON_EXECUTABLE
 }

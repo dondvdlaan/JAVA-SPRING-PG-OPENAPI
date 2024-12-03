@@ -1,7 +1,7 @@
 package dev.manyroads.model.entity;
 
+import dev.manyroads.model.ChargeStatusEnum;
 import dev.manyroads.model.VehicleTypeEnum;
-import dev.manyroads.model.enums.ChargeStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -32,7 +32,7 @@ public class Charge {
     private UUID chargeID = UUID.randomUUID();
     @Column(name="charge_status")
     @Enumerated(EnumType.STRING)
-    private ChargeStatus chargeStatus;
+    private ChargeStatusEnum chargeStatus;
     @Column(name = "customer_nr")
     private Long customerNr;
     @Column(name = "vehicle_type")

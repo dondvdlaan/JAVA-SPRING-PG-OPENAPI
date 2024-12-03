@@ -3,12 +3,12 @@ package dev.manyroads.execinterrup;
 import dev.manyroads.client.AdminClient;
 import dev.manyroads.execinterrup.exception.ChargeMissingForCustomerNrException;
 import dev.manyroads.execinterrup.exception.MatterCustomerNrMismatchException;
+import dev.manyroads.model.ChargeStatusEnum;
 import dev.manyroads.model.ExecInterrupEnum;
 import dev.manyroads.model.ExecInterrupRequest;
 import dev.manyroads.model.ExecInterrupResponse;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.Matter;
-import dev.manyroads.model.enums.ChargeStatus;
 import dev.manyroads.model.enums.MatterStatus;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.ExecInterrupRepository;
@@ -59,7 +59,7 @@ public class ExecutionInterruptionServiceTest {
 
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(chargeId);
-        existingCharge.setChargeStatus(ChargeStatus.BOOKED);
+        existingCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
         existingCharge.setCustomerNr(customerNr);
 
         Matter existingMatter = new Matter();
@@ -96,7 +96,7 @@ public class ExecutionInterruptionServiceTest {
 
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(chargeId);
-        existingCharge.setChargeStatus(ChargeStatus.REJECTED);
+        existingCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
         existingCharge.setCustomerNr(customerNr);
 
         Matter existingMatter = new Matter();
@@ -133,7 +133,7 @@ public class ExecutionInterruptionServiceTest {
 
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(chargeId);
-        existingCharge.setChargeStatus(ChargeStatus.IN_PROCESS);
+        existingCharge.setChargeStatus(ChargeStatusEnum.DCM_APPLIED);
         existingCharge.setCustomerNr(customerNr);
 
         Matter existingMatter = new Matter();
@@ -171,7 +171,7 @@ public class ExecutionInterruptionServiceTest {
 
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(chargeId);
-        existingCharge.setChargeStatus(ChargeStatus.BOOKED);
+        existingCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
         existingCharge.setCustomerNr(customerNr);
         Matter existingMatter = new Matter();
         existingMatter.setMatterID(UUID.fromString(matterId));
@@ -203,7 +203,7 @@ public class ExecutionInterruptionServiceTest {
 
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(chargeId);
-        existingCharge.setChargeStatus(ChargeStatus.BOOKED);
+        existingCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
         existingCharge.setCustomerNr(customerNr);
         Matter existingMatter = new Matter();
         existingMatter.setMatterID(UUID.fromString(matterId));
@@ -260,7 +260,7 @@ public class ExecutionInterruptionServiceTest {
                         .matterNr(null);
 
         Charge existingCharge = new Charge();
-        existingCharge.setChargeStatus(ChargeStatus.BOOKED);
+        existingCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
         existingCharge.setCustomerNr(customerNr);
         List<Charge> listCharges = (List.of(existingCharge));
         when(chargeRepository.findByCustomerNr(anyLong())).thenReturn(Optional.of(listCharges));
@@ -275,7 +275,7 @@ public class ExecutionInterruptionServiceTest {
         verify(execInterrupRepository, times(1)).save(any());
         verify(chargeRepository, times(1)).save(any());
         oListCharge.ifPresent(cl -> cl.forEach(
-                c -> assertEquals(ChargeStatus.CUSTOMER_DECEASED, c.getChargeStatus())));
+                c -> assertEquals(ChargeStatusEnum.CUSTOMER_DECEASED, c.getChargeStatus())));
         assertEquals(expected, result);
     }
 }

@@ -1,9 +1,9 @@
 package dev.manyroads.debug;
 
+import dev.manyroads.model.ChargeStatusEnum;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.Customer;
 import dev.manyroads.model.entity.Matter;
-import dev.manyroads.model.enums.ChargeStatus;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.CustomerRepository;
 import dev.manyroads.model.repository.MatterRepository;
@@ -62,7 +62,7 @@ public class TestDBService {
         Charge charge = Charge.builder()
                 .chargeID(chargeId)
                 .customerNr(customerNr)
-                .chargeStatus(ChargeStatus.IN_PROCESS)
+                .chargeStatus(ChargeStatusEnum.DCM_APPLIED)
                 .startDate(Instant.now())
                 .customer(customer)
                 .build();
@@ -85,7 +85,7 @@ public class TestDBService {
         Charge newCharge = Charge.builder()
                 .chargeID(chargeId)
                 .customerNr(customerNr)
-                .chargeStatus(ChargeStatus.REJECTED)
+                .chargeStatus(ChargeStatusEnum.REJECTED)
                 .startDate(Instant.now())
                 .customer(customer)
                 .build();

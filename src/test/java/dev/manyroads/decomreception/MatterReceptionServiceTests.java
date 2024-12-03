@@ -6,13 +6,13 @@ import dev.manyroads.decomreception.exception.AdminClientException;
 import dev.manyroads.matterreception.exception.VehicleTypeNotCoincideWithDomainException;
 import dev.manyroads.decomreception.exception.VehicleTypeNotFoundException;
 import dev.manyroads.matterreception.MatterReceptionService;
+import dev.manyroads.model.ChargeStatusEnum;
 import dev.manyroads.model.MatterRequest;
 import dev.manyroads.model.MatterResponse;
 import dev.manyroads.model.VehicleTypeEnum;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.Customer;
 import dev.manyroads.model.entity.Matter;
-import dev.manyroads.model.enums.ChargeStatus;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.CustomerRepository;
 import dev.manyroads.model.repository.MatterRepository;
@@ -66,7 +66,7 @@ public class MatterReceptionServiceTests {
         matterRequest.setCustomerNr(customerNr);
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(UUID.randomUUID());
-        existingCharge.setChargeStatus(ChargeStatus.BOOKED);
+        existingCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
         existingCharge.setCustomerNr(matterRequest.getCustomerNr());
         existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
         existingCharge.setCustomer(existingCustomer);
@@ -77,7 +77,7 @@ public class MatterReceptionServiceTests {
         Charge newCharge = new Charge();
         UUID chargeID = UUID.randomUUID();
         newCharge.setChargeID(chargeID);
-        newCharge.setChargeStatus(ChargeStatus.BOOKED);
+        newCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
         newCharge.setCustomerNr(matterRequest.getCustomerNr());
         newCharge.setVehicleType(VehicleTypeEnum.BULLDOZER);
         newCharge.setCustomer(existingCustomer);
@@ -126,7 +126,7 @@ public class MatterReceptionServiceTests {
         Charge newCharge = new Charge();
         UUID chargeID = UUID.randomUUID();
         newCharge.setChargeID(chargeID);
-        newCharge.setChargeStatus(ChargeStatus.BOOKED);
+        newCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
         newCharge.setCustomerNr(matterRequest.getCustomerNr());
         newCharge.setVehicleType(VehicleTypeEnum.BULLDOZER);
         newCharge.setCustomer(newCustomer);
@@ -165,7 +165,7 @@ public class MatterReceptionServiceTests {
         when(adminClient.searchVehicleType(matterRequest.getMatterNr())).thenReturn("bulldozer");
         Charge newCharge = new Charge();
         newCharge.setChargeID(UUID.randomUUID());
-        newCharge.setChargeStatus(ChargeStatus.BOOKED);
+        newCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
         newCharge.setCustomerNr(matterRequest.getCustomerNr());
         newCharge.setVehicleType(VehicleTypeEnum.BULLDOZER);
         newCharge.setCustomer(existingCustomer);
@@ -254,7 +254,7 @@ public class MatterReceptionServiceTests {
 
         Charge newCharge = new Charge();
         newCharge.setChargeID(UUID.randomUUID());
-        newCharge.setChargeStatus(ChargeStatus.BOOKED);
+        newCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
         newCharge.setCustomer(existingCustomer);
         newCharge.setCustomerNr(matterRequest.getCustomerNr());
         newCharge.setVehicleType(VehicleTypeEnum.BULLDOZER);

@@ -1,5 +1,6 @@
 package dev.manyroads.model.entity;
 
+import dev.manyroads.model.IntermediateReportExplanationEnum;
 import dev.manyroads.model.enums.MatterStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,4 +31,7 @@ public class Matter {
     @ManyToOne()
     @JoinColumn(name="charge_id")
     private Charge charge;
+    @Column(name = "reason_termination")
+    @Enumerated(EnumType.STRING)
+    private IntermediateReportExplanationEnum reasonTermination;
 }

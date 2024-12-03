@@ -1,6 +1,6 @@
 package dev.manyroads.client;
 
-import dev.manyroads.model.VehicleTypeEnum;
+import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.Matter;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +16,12 @@ public interface AdminClient {
 
     @PostMapping("/terminate-matter")
     String terminateMatter(@RequestBody Matter matter);
+
+    @PostMapping("/applied")
+    String startDCMApplied(@RequestBody Charge charge);
+
+    @PostMapping("/executable")
+    String startExecutable(@RequestBody Charge charge);
 
 
 
