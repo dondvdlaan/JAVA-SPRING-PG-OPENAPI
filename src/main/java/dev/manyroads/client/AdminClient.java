@@ -1,6 +1,5 @@
 package dev.manyroads.client;
 
-import dev.manyroads.model.VehicleTypeEnum;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.Matter;
 import org.springframework.cloud.openfeign.FeignClient;

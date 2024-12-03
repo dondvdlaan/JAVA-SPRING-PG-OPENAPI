@@ -53,7 +53,7 @@ public class TestPostgresSqlTest {
         existingCustomer.setCustomerNr(customerNr);
         customerRepository.save(existingCustomer);
         Charge existingCharge = new Charge();
-        existingCharge.setChargeStatus(ChargeStatusEnum.BOOKED_);
+        existingCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
         existingCharge.setCustomerNr(matterRequest.getCustomerNr());
         existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
         existingCharge.setCustomer(existingCustomer);

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -53,13 +54,13 @@ public class IntermediateReportStatusServiceVerificationTest {
     @ParameterizedTest
     @MethodSource("chargeStatuses")
     void mattersArrayEmptyIntermediatReportStatusTest(ChargeStatusEnum chargeStatusEnum) {
-        Long chargerNr = (long) (Math.random() * 999999);
+        UUID chargerID = UUID.randomUUID();
         String matterNr = "1234567";
         IntermediateReportMatterRequest correctIntermediateReportMatterRequest = new IntermediateReportMatterRequest()
                 .matterNr(matterNr)
                 .intermediateReportExplanation(IntermediateReportExplanationEnum.RELEASED);
         IntermediateReportStatusRequest mattersArrayEmptyNrNullIntermediateReportStatusRequest = new IntermediateReportStatusRequest()
-                .chargeNr(chargerNr)
+                .chargeID(chargerID)
                 .statusIntermediateReport(chargeStatusEnum)
                 .mattersIntermediateReport(null);
 
@@ -71,13 +72,13 @@ public class IntermediateReportStatusServiceVerificationTest {
     @ParameterizedTest
     @MethodSource("chargeStatuses")
     void statusNullIntermediatReportStatusTest(ChargeStatusEnum chargeStatusEnum) {
-        Long chargerNr = (long) (Math.random() * 999999);
+        UUID chargerID = UUID.randomUUID();
         String matterNr = "1234567";
         IntermediateReportMatterRequest correctIntermediateReportMatterRequest = new IntermediateReportMatterRequest()
                 .matterNr(matterNr)
                 .intermediateReportExplanation(IntermediateReportExplanationEnum.RELEASED);
         IntermediateReportStatusRequest statusNullIntermediateReportStatusRequest = new IntermediateReportStatusRequest()
-                .chargeNr(chargerNr)
+                .chargeID(chargerID)
                 .statusIntermediateReport(null)
                 .addMattersIntermediateReportItem(correctIntermediateReportMatterRequest);
 
@@ -89,13 +90,13 @@ public class IntermediateReportStatusServiceVerificationTest {
     @ParameterizedTest
     @MethodSource("chargeStatuses")
     void chargeNrNullIntermediatReportStatusTest(ChargeStatusEnum chargeStatusEnum) {
-        Long chargerNr = (long) (Math.random() * 999999);
+        UUID chargerID = UUID.randomUUID();
         String matterNr = "1234567";
         IntermediateReportMatterRequest correctIntermediateReportMatterRequest = new IntermediateReportMatterRequest()
                 .matterNr(matterNr)
                 .intermediateReportExplanation(IntermediateReportExplanationEnum.RELEASED);
         IntermediateReportStatusRequest matterNrNullIntermediateReportStatusRequest = new IntermediateReportStatusRequest()
-                .chargeNr(null)
+                .chargeID(null)
                 .statusIntermediateReport(chargeStatusEnum)
                 .addMattersIntermediateReportItem(correctIntermediateReportMatterRequest);
 
@@ -107,13 +108,13 @@ public class IntermediateReportStatusServiceVerificationTest {
     @ParameterizedTest
     @MethodSource("chargeStatuses")
     void checkHappyFlowIntermediatReportStatusTest(ChargeStatusEnum chargeStatusEnum) {
-        Long chargerNr = (long) (Math.random() * 999999);
+        UUID chargerID = UUID.randomUUID();
         String matterNr = "1234567";
         IntermediateReportMatterRequest correctIntermediateReportMatterRequest = new IntermediateReportMatterRequest()
                 .matterNr(matterNr)
                 .intermediateReportExplanation(IntermediateReportExplanationEnum.RELEASED);
         IntermediateReportStatusRequest correctIntermediateReportStatusRequest = new IntermediateReportStatusRequest()
-                .chargeNr(chargerNr)
+                .chargeID(chargerID)
                 .statusIntermediateReport(chargeStatusEnum)
                 .addMattersIntermediateReportItem(correctIntermediateReportMatterRequest);
 

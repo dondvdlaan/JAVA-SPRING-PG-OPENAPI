@@ -57,7 +57,7 @@ public class CreateNewChargeTest {
         Charge newCharge = new Charge();
         UUID chargeID = UUID.randomUUID();
         newCharge.setChargeID(chargeID);
-        newCharge.setChargeStatus(ChargeStatusEnum.BOOKED_);
+        newCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
         newCharge.setCustomerNr(matterRequest.getCustomerNr());
         newCharge.setVehicleType(VehicleTypeEnum.BULLDOZER);
         newCharge.setCustomer(existingCustomer);

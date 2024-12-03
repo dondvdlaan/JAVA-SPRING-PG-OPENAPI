@@ -66,7 +66,7 @@ public class MatterReceptionServiceTests {
         matterRequest.setCustomerNr(customerNr);
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(UUID.randomUUID());
-        existingCharge.setChargeStatus(ChargeStatusEnum.BOOKED_);
+        existingCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
         existingCharge.setCustomerNr(matterRequest.getCustomerNr());
         existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
         existingCharge.setCustomer(existingCustomer);
@@ -77,7 +77,7 @@ public class MatterReceptionServiceTests {
         Charge newCharge = new Charge();
         UUID chargeID = UUID.randomUUID();
         newCharge.setChargeID(chargeID);
-        newCharge.setChargeStatus(ChargeStatusEnum.BOOKED_);
+        newCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
         newCharge.setCustomerNr(matterRequest.getCustomerNr());
         newCharge.setVehicleType(VehicleTypeEnum.BULLDOZER);
         newCharge.setCustomer(existingCustomer);
@@ -126,7 +126,7 @@ public class MatterReceptionServiceTests {
         Charge newCharge = new Charge();
         UUID chargeID = UUID.randomUUID();
         newCharge.setChargeID(chargeID);
-        newCharge.setChargeStatus(ChargeStatusEnum.BOOKED_);
+        newCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
         newCharge.setCustomerNr(matterRequest.getCustomerNr());
         newCharge.setVehicleType(VehicleTypeEnum.BULLDOZER);
         newCharge.setCustomer(newCustomer);
@@ -165,7 +165,7 @@ public class MatterReceptionServiceTests {
         when(adminClient.searchVehicleType(matterRequest.getMatterNr())).thenReturn("bulldozer");
         Charge newCharge = new Charge();
         newCharge.setChargeID(UUID.randomUUID());
-        newCharge.setChargeStatus(ChargeStatusEnum.BOOKED_);
+        newCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
         newCharge.setCustomerNr(matterRequest.getCustomerNr());
         newCharge.setVehicleType(VehicleTypeEnum.BULLDOZER);
         newCharge.setCustomer(existingCustomer);
@@ -254,7 +254,7 @@ public class MatterReceptionServiceTests {
 
         Charge newCharge = new Charge();
         newCharge.setChargeID(UUID.randomUUID());
-        newCharge.setChargeStatus(ChargeStatusEnum.BOOKED_);
+        newCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
         newCharge.setCustomer(existingCustomer);
         newCharge.setCustomerNr(matterRequest.getCustomerNr());
         newCharge.setVehicleType(VehicleTypeEnum.BULLDOZER);
