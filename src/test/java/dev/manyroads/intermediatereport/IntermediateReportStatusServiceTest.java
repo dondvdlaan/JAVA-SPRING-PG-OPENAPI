@@ -4,7 +4,6 @@ import dev.manyroads.client.AdminClient;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusChargeIDNotExistException;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusChargeTerminatedException;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusMattersNotBelongToChargeException;
-import dev.manyroads.intermediatereport.exception.IntermediateReportStatusMissingChargeNrException;
 import dev.manyroads.model.ChargeStatusEnum;
 import dev.manyroads.model.IntermediateReportExplanationEnum;
 import dev.manyroads.model.IntermediateReportMatterRequest;
