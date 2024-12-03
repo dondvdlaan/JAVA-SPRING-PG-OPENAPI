@@ -46,7 +46,7 @@ public class Verification {
     public void verifyIntermediateReportStatus(IntermediateReportStatusRequest intermediateReportStatusRequest) {
         if (Optional.ofNullable(intermediateReportStatusRequest).isEmpty())
             throw new IntermediateReportStatusEmptyOrNullException();
-        if (Optional.ofNullable(intermediateReportStatusRequest.getChargeNr()).isEmpty())
+        if (Optional.ofNullable(intermediateReportStatusRequest.getChargeID()).isEmpty())
             throw new IntermediateReportStatusMissingChargeNrException();
         if (Optional.ofNullable(intermediateReportStatusRequest.getStatusIntermediateReport()).isEmpty())
             throw new IntermediateReportStatusMissingStatusException();

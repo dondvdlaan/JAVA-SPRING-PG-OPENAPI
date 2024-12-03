@@ -21,6 +21,9 @@ public interface AdminClient {
     @PostMapping("/applied")
     String startDCMApplied(@RequestBody Charge charge);
 
+    @PostMapping("/executable")
+    String startExecutable(@RequestBody Charge charge);
+
 
 
 }
