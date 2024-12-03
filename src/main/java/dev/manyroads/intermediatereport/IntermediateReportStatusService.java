@@ -50,10 +50,10 @@ public class IntermediateReportStatusService {
     }
 
     private Charge getCharge(IntermediateReportStatusRequest intermediateReportStatusRequest) {
-        Optional<Charge> ocharge = chargeRepository.findById(intermediateReportStatusRequest.getChargeID());
-        ocharge.orElseThrow(() -> new IntermediateReportStatusChargeIDNotExistException(
+        Optional<Charge> oCharge = chargeRepository.findById(intermediateReportStatusRequest.getChargeID());
+        oCharge.orElseThrow(() -> new IntermediateReportStatusChargeIDNotExistException(
                 MessageFormat.format("DCM-305: ChargeID {0} does not exist.", intermediateReportStatusRequest.getChargeID().toString())));
-        return ocharge.get();
+        return oCharge.get();
     }
 
     private void processPartiallyExecutable(Charge charge, List<IntermediateReportMatterRequest> listMattersRequest) {
