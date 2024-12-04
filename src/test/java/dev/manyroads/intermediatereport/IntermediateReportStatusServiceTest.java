@@ -2,8 +2,8 @@ package dev.manyroads.intermediatereport;
 
 import dev.manyroads.client.AdminClient;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusChargeIDNotExistException;
-import dev.manyroads.intermediatereport.exception.IntermediateReportStatusChargeTerminatedException;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusMattersNotBelongToChargeException;
+import dev.manyroads.intermediatereport.exception.IntermediateReportStatusTransitionChargeStateException;
 import dev.manyroads.model.ChargeStatusEnum;
 import dev.manyroads.model.IntermediateReportExplanationEnum;
 import dev.manyroads.model.IntermediateReportMatterRequest;
@@ -14,6 +14,8 @@ import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.MatterRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.text.MessageFormat;
 import java.util.HashSet;
@@ -21,7 +23,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Stream;
 
+import static dev.manyroads.model.ChargeStatusEnum.DONE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -38,6 +42,9 @@ public class IntermediateReportStatusServiceTest {
     ChargeRepository chargeRepository;
     MatterRepository matterRepository;
 
+    static Stream<ChargeStatusEnum> allStatuses(){
+        return Stream.of(ChargeStatusEnum.values());
+    }
     @BeforeEach
     void setUp() {
         adminClient = mock(AdminClient.class);
@@ -45,6 +52,80 @@ public class IntermediateReportStatusServiceTest {
         matterRepository = mock(MatterRepository.class);
         this.intermediateReportStatusService = new IntermediateReportStatusService(
                 adminClient, chargeRepository, matterRepository);
+    }
+
+    @ParameterizedTest
+    @MethodSource("allStatuses")
+    void stepFunctionDeniedToStatusParameterizedThrowsExceptionTest(ChargeStatusEnum desiredStatus) {
+        UUID chargeID = UUID.randomUUID();
+        String matterNr = "12345";
+        ChargeStatusEnum currentStatus = DONE;
+
+        Matter matter = Matter.builder()
+                .matterNr(matterNr)
+                .build();
+        Set<Matter> setMatters = new HashSet<>();
+        setMatters.add(matter);
+        Charge charge = Charge.builder()
+                .chargeStatus(currentStatus)
+                .matters(setMatters)
+                .build();
+        when(chargeRepository.findById(any())).thenReturn(Optional.of(charge));
+        IntermediateReportStatusRequest intermediateReportStatusRequest = new IntermediateReportStatusRequest()
+                .chargeID(chargeID)
+                .statusIntermediateReport(desiredStatus)
+                .addMattersIntermediateReportItem(
+                        new IntermediateReportMatterRequest()
+                                .matterNr(matterNr)
+                                .intermediateReportExplanation(IntermediateReportExplanationEnum.RELEASED));
+
+        // Activate
+        assertThatThrownBy(() -> intermediateReportStatusService.processIntermediateReportStatusRequests(intermediateReportStatusRequest))
+                .isInstanceOf(IntermediateReportStatusTransitionChargeStateException.class)
+                .hasMessage(MessageFormat.format("DCM-308: Transition to {0} from {1} not allowed.",
+                        intermediateReportStatusRequest.getStatusIntermediateReport(), charge.getChargeStatus()));
+
+        // assert
+        verify(chargeRepository, times(1)).findById(any());
+        verify((adminClient), never()).startExecutable(any());
+        verify((adminClient), never()).startDCMApplied(any());
+        verify(matterRepository, never()).save(eq(matter));
+    }
+
+    @Test
+    void stepFunctionDeniedToStatusBookedThrowsExceptionTest() {
+        UUID chargeID = UUID.randomUUID();
+        String matterNr = "12345";
+
+        Matter matter = Matter.builder()
+                .matterNr(matterNr)
+                .build();
+        Set<Matter> setMatters = new HashSet<>();
+        setMatters.add(matter);
+        Charge charge = Charge.builder()
+                .chargeStatus(ChargeStatusEnum.EXECUTABLE)
+                .matters(setMatters)
+                .build();
+        when(chargeRepository.findById(any())).thenReturn(Optional.of(charge));
+        IntermediateReportStatusRequest intermediateReportStatusRequest = new IntermediateReportStatusRequest()
+                .chargeID(chargeID)
+                .statusIntermediateReport(ChargeStatusEnum.BOOKED)
+                .addMattersIntermediateReportItem(
+                        new IntermediateReportMatterRequest()
+                                .matterNr(matterNr)
+                                .intermediateReportExplanation(IntermediateReportExplanationEnum.RELEASED));
+
+        // Activate
+        assertThatThrownBy(() -> intermediateReportStatusService.processIntermediateReportStatusRequests(intermediateReportStatusRequest))
+                .isInstanceOf(IntermediateReportStatusTransitionChargeStateException.class)
+                .hasMessage(MessageFormat.format("DCM-308: Transition to {0} from {1} not allowed.",
+                        intermediateReportStatusRequest.getStatusIntermediateReport(), charge.getChargeStatus()));
+
+        // assert
+        verify(chargeRepository, times(1)).findById(any());
+        verify((adminClient), never()).startExecutable(any());
+        verify((adminClient), never()).startDCMApplied(any());
+        verify(matterRepository, never()).save(eq(matter));
     }
 
     @Test
@@ -122,43 +203,6 @@ public class IntermediateReportStatusServiceTest {
     }
 
     @Test
-    void chargeDONEThrowsExceptionTest() {
-        UUID chargeID = UUID.randomUUID();
-        String matterNr = "12345";
-
-        Matter matter = Matter.builder()
-                .matterNr(matterNr)
-                .build();
-        Set<Matter> setMatters = new HashSet<>();
-        setMatters.add(matter);
-        Charge charge = Charge.builder()
-                .chargeID(chargeID)
-                .chargeStatus(ChargeStatusEnum.DONE)
-                .matters(setMatters)
-                .build();
-        when(chargeRepository.findById(any())).thenReturn(Optional.of(charge));
-
-        IntermediateReportStatusRequest intermediateReportStatusRequest = new IntermediateReportStatusRequest()
-                .chargeID(chargeID)
-                .statusIntermediateReport(ChargeStatusEnum.PARTIALLY_EXECUTABLE)
-                .addMattersIntermediateReportItem(
-                        new IntermediateReportMatterRequest()
-                                .matterNr(matterNr)
-                                .intermediateReportExplanation(IntermediateReportExplanationEnum.RELEASED));
-
-        // Activate
-        assertThatThrownBy(() -> intermediateReportStatusService.processIntermediateReportStatusRequests(intermediateReportStatusRequest))
-                .isInstanceOf(IntermediateReportStatusChargeTerminatedException.class)
-                .hasMessage(MessageFormat.format("DCM-306: Charge {0} terminated with state {1}.", charge.getChargeID(), charge.getChargeStatus()));
-
-        // assert
-        verify(chargeRepository, times(1)).findById(any());
-        verify((adminClient), never()).startExecutable(any());
-        verify((adminClient), never()).startDCMApplied(any());
-        verify(matterRepository, never()).save(eq(matter));
-    }
-
-    @Test
     void happyFlowPARTIALLY_EXECUTABLETest() {
         UUID chargeID = UUID.randomUUID();
         String matterNr = "12345";
@@ -227,10 +271,10 @@ public class IntermediateReportStatusServiceTest {
                 .chargeStatus(ChargeStatusEnum.EXECUTABLE)
                 .build();
         when(chargeRepository.findById(any())).thenReturn(Optional.of(charge));
-        when(adminClient.startExecutable(any())).thenReturn(any());
+        when(adminClient.startDCMApplied(any())).thenReturn(any());
         IntermediateReportStatusRequest intermediateReportStatusRequest = new IntermediateReportStatusRequest()
                 .chargeID(chargeID)
-                .statusIntermediateReport(ChargeStatusEnum.EXECUTABLE)
+                .statusIntermediateReport(ChargeStatusEnum.DCM_APPLIED)
                 .addMattersIntermediateReportItem(
                         new IntermediateReportMatterRequest()
                                 .matterNr(matterNr)
@@ -241,6 +285,6 @@ public class IntermediateReportStatusServiceTest {
 
         // assert
         verify(chargeRepository, times(1)).findById(any());
-        verify((adminClient), never()).startDCMApplied(any());
+        verify((adminClient), times(1)).startDCMApplied(any());
     }
 }
