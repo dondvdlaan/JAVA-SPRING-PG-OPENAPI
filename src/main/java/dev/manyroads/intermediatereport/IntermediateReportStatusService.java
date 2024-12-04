@@ -5,6 +5,7 @@ import dev.manyroads.decomreception.exception.InternalException;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusChargeIDNotExistException;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusChargeTerminatedException;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusMattersNotBelongToChargeException;
+import dev.manyroads.intermediatereport.exception.IntermediateReportStatusTransitionChargeStateException;
 import dev.manyroads.model.ChargeStatusEnum;
 import dev.manyroads.model.IntermediateReportMatterRequest;
 import dev.manyroads.model.IntermediateReportStatusRequest;
@@ -13,6 +14,7 @@ import dev.manyroads.model.entity.Matter;
 import dev.manyroads.model.enums.MatterStatus;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.MatterRepository;
+import dev.manyroads.utils.DCMStepFunctions;
 import dev.manyroads.utils.DCMutils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,10 +36,11 @@ public class IntermediateReportStatusService {
     public void processIntermediateReportStatusRequests(IntermediateReportStatusRequest intermediateReportStatusRequest) {
         log.info("processIntermediateReportStatusRequests: Start processing incoming IntermediateReportStatusRequest ");
         Charge charge = getCharge(intermediateReportStatusRequest);
-        if (List.of(ChargeStatusEnum.DONE, ChargeStatusEnum.BOOKED, ChargeStatusEnum.REJECTED).contains(charge.getChargeStatus()))
-            throw new IntermediateReportStatusChargeTerminatedException(
-                    MessageFormat.format("DCM-306: Charge {0} terminated with state {1}.", charge.getChargeID(), charge.getChargeStatus())
-            );
+
+        if (!DCMStepFunctions.isTransitionAllowed(charge.getChargeStatus(), intermediateReportStatusRequest.getStatusIntermediateReport()))
+            throw new IntermediateReportStatusTransitionChargeStateException(
+                    MessageFormat.format("DCM-308: Transition to {0} from {1} not allowed.",
+                            intermediateReportStatusRequest.getStatusIntermediateReport(), charge.getChargeStatus()));
 
         switch (intermediateReportStatusRequest.getStatusIntermediateReport()) {
             case DCM_APPLIED -> adminClient.startDCMApplied(charge);
@@ -53,7 +56,13 @@ public class IntermediateReportStatusService {
         Optional<Charge> oCharge = chargeRepository.findById(intermediateReportStatusRequest.getChargeID());
         oCharge.orElseThrow(() -> new IntermediateReportStatusChargeIDNotExistException(
                 MessageFormat.format("DCM-305: ChargeID {0} does not exist.", intermediateReportStatusRequest.getChargeID().toString())));
-        return oCharge.get();
+        Charge charge = oCharge.get();
+
+        if (List.of(ChargeStatusEnum.DONE, ChargeStatusEnum.BOOKED, ChargeStatusEnum.REJECTED).contains(charge.getChargeStatus()))
+            throw new IntermediateReportStatusChargeTerminatedException(
+                    MessageFormat.format("DCM-306: Charge {0} terminated with state {1}.", charge.getChargeID(), charge.getChargeStatus())
+            );
+        return charge;
     }
 
     private void processPartiallyExecutable(Charge charge, List<IntermediateReportMatterRequest> listMattersRequest) {
