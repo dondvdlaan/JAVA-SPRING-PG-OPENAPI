@@ -21,16 +21,16 @@ public class DCMStepFunctions {
 
         var all = List.of(REJECTED, DCM_APPLIED, DONE, CUSTOMER_DECEASED, EXECUTABLE, PARTIALLY_EXECUTABLE);
         var terminating = List.of(REJECTED, DONE, CUSTOMER_DECEASED);
-        var allReduced = List.of(REJECTED,DCM_APPLIED, DONE, CUSTOMER_DECEASED);
+        var allReduced = List.of(REJECTED, DCM_APPLIED, DONE, CUSTOMER_DECEASED, PARTIALLY_EXECUTABLE);
 
         switch (chargeStatus) {
             case BOOKED -> allowed = all.contains(intermediateReportStatus);
             case REJECTED, CUSTOMER_DECEASED -> allowed = Objects.equals(DONE, intermediateReportStatus);
             case DCM_APPLIED -> allowed = terminating.contains(intermediateReportStatus);
-            case DONE -> {} // Do nothing, allowed is false
+            case DONE -> {
+            } // Do nothing, allowed is false
             case EXECUTABLE, PARTIALLY_EXECUTABLE -> allowed = allReduced.contains(intermediateReportStatus);
-            default ->
-                    throw new InternalException("isTransitionAllowed: Default ChargeStatusEnum enums not matched ");
+            default -> throw new InternalException("isTransitionAllowed: Default ChargeStatusEnum enums not matched ");
         }
 
         return allowed;
