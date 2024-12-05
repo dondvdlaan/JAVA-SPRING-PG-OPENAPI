@@ -89,7 +89,7 @@ public class MatterReceptionServiceTests {
         when(matterRepository.save(any())).thenReturn(matter);
         newCharge.getMatters().add(matter);
         when(chargeRepository.save(any())).thenReturn(newCharge);
-        when(customerProcessingClient.sendMessageToCustomerProcessing()).thenReturn(true);
+        when(customerProcessingClient.sendMessageToCustomerProcessing(eq(newCharge))).thenReturn(true);
 
         // activate
         MatterResponse matterResponse = matterReceptionService.processIncomingMatterRequest(matterRequest);
@@ -134,7 +134,7 @@ public class MatterReceptionServiceTests {
         List<Charge> listCharge = new ArrayList<>();
         when(chargeRepository.findByCustomerNrAndChargeStatus(any(), any(), anyLong())).thenReturn(Optional.of(listCharge));
         when(chargeRepository.save(any())).thenReturn(newCharge);
-        when(customerProcessingClient.sendMessageToCustomerProcessing()).thenReturn(true);
+        when(customerProcessingClient.sendMessageToCustomerProcessing(eq(newCharge))).thenReturn(true);
 
         // activate
         MatterResponse matterResponse = matterReceptionService.processIncomingMatterRequest(matterRequest);
@@ -171,7 +171,7 @@ public class MatterReceptionServiceTests {
         newCharge.setCustomer(existingCustomer);
         newCharge.getMatters().add(Matter.builder().customerNr(matterRequest.getCustomerNr()).build());
         when(chargeRepository.save(any())).thenReturn(newCharge);
-        when(customerProcessingClient.sendMessageToCustomerProcessing()).thenReturn(true);
+        when(customerProcessingClient.sendMessageToCustomerProcessing(eq(newCharge))).thenReturn(true);
 
         // activate
         MatterResponse matterResponse = matterReceptionService.processIncomingMatterRequest(matterRequest);
@@ -260,7 +260,7 @@ public class MatterReceptionServiceTests {
         newCharge.setVehicleType(VehicleTypeEnum.BULLDOZER);
         newCharge.getMatters().add(Matter.builder().customerNr(matterRequest.getCustomerNr()).build());
         when(chargeRepository.save(any())).thenReturn(newCharge);
-        when(customerProcessingClient.sendMessageToCustomerProcessing()).thenReturn(true);
+        when(customerProcessingClient.sendMessageToCustomerProcessing(eq(newCharge))).thenReturn(true);
 
         // activate
         MatterResponse matterResponse = matterReceptionService.processIncomingMatterRequest(matterRequest);

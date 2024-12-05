@@ -37,7 +37,7 @@ public class MatterReceptionService {
     private final CustomerProcessingClient customerProcessingClient;
 
     public MatterResponse processIncomingMatterRequest(MatterRequest matterRequest) {
-
+        log.info("processIncomingMatterRequest: started to process incoming matter Request");
         MatterResponse matterResponse = new MatterResponse();
         matterResponse.setCustomerNr(matterRequest.getCustomerNr());
         Charge charge = new Charge();
@@ -91,7 +91,7 @@ public class MatterReceptionService {
         matterResponse.setChargeID(charge.getChargeID());
 
         // Pass on data to customer processing
-        if (!customerProcessingClient.sendMessageToCustomerProcessing()) {
+        if (!customerProcessingClient.sendMessageToCustomerProcessing(charge)) {
             log.info("Failed to send message to customerProcessingClient for customer: {} ", customer.getCustomerNr());
             throw (new InternalException("DCM 101: customerProcessingClient not responsive"));
         }
