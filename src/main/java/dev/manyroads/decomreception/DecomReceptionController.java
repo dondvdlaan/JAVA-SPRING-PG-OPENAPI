@@ -52,5 +52,9 @@ public class DecomReceptionController {
         return ResponseEntity.ok().build();
     }
 
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public String testing(){
+        return "Holita";
+    }
 
 }

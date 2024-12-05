@@ -11,11 +11,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients
 public class DecomApplication implements CommandLineRunner {
 
-    TestDBService testDBService;
 
-    public DecomApplication(TestDBService testDBService) {
-        this.testDBService = testDBService;
-    }
 
     public static void main(String[] args) {
         SpringApplication.run(DecomApplication.class, args);
@@ -23,11 +19,11 @@ public class DecomApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        /*
         Customer customerSaved = testDBService.savingOneToManyManyToOne();
 
         System.out.println("Yesss: " + customerSaved.getCustomerID());
         System.out.println("Nr. Charges: " + testDBService.addNewChargeToCustomerAndSave(customerSaved));
-
-
+         */
     }
 }
