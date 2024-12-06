@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient("Decom-Admin")
+@FeignClient(name = "Decom-Admin")
 public interface AdminClient {
 
-    @GetMapping("/vehicles/{matterNr}")
+    @GetMapping("/vehicles")
+        //@GetMapping("/vehicles/{matterNr}")
     String searchVehicleType(@PathVariable("matterNr") String matterNr);
+    // String searchVehicleType(@PathVariable("matterNr") String matterNr);
 
     @PostMapping("/terminate-matter")
     String terminateMatter(@RequestBody Matter matter);
@@ -22,7 +24,6 @@ public interface AdminClient {
 
     @PostMapping("/executable")
     String startExecutable(@RequestBody Charge charge);
-
 
 
 }

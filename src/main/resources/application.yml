@@ -14,7 +14,20 @@ spring:
     enabled:  true
     schemas:  decom
     locations:  db/migration
+  application:
+    name: Decom-Admin
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+    discovery:
+      client:
+        simple:
+          instances:
+            Decom-Admin:
+              uri: http://localhost:7090
 
+Decom-Admin.ribbon.listOfServers: localhost:7090
 logging:
   level:
     ROOT: INFO

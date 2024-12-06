@@ -54,6 +54,7 @@ public class DecomReceptionController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public String testing(){
+        log.info("testing: GET test started");
         return "Holita";
     }
 
