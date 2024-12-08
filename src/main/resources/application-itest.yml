@@ -1,23 +1,2 @@
-spring:
-  jpa:
-    database: POSTGRESQL
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-  datasource:
-    platform: postgres
-    url: jdbc:postgresql://localhost:5432/postgres?stringtype=unspecified
-    username: decom
-    password: decom
-    driverClassName: org.postgresql.Driver
-  flyway:
-    enabled:  true
-    schemas:  decom
-    locations:  db/migration
-
-
 Decom-Admin.ribbon.listOfServers: localhost:7090
 
-logging:
-  level:
-    ROOT: INFO

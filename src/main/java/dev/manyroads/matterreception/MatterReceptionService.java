@@ -58,7 +58,7 @@ public class MatterReceptionService {
         Customer customer = Optional.ofNullable(oCustomer)
                 .orElseGet(
                         () -> {
-                            log.info("Optional.ofNullable(oCustomer): creting new customer");
+                            log.info("Optional.ofNullable(oCustomer): creating new customer");
                             Customer newCustomer = new Customer();
                             newCustomer.setCustomerNr(matterRequest.getCustomerNr());
                             Customer savedCustomer = customerRepository.save(newCustomer);

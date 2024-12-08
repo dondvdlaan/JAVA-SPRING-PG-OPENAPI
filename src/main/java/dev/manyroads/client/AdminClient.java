@@ -17,8 +17,8 @@ public interface AdminClient {
     // String searchVehicleType(@PathVariable("matterNr") String matterNr);
 
     @GetMapping("/vehicles")
-        //@GetMapping("/vehicles/{matterNr}")
     String searchVehicleType();
+
     @PostMapping("/terminate-matter")
     String terminateMatter(@RequestBody Matter matter);
 
