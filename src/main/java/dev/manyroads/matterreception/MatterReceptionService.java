@@ -66,29 +66,33 @@ public class MatterReceptionService {
                             return savedCustomer;
                         });
 
-        // Check if charges for customer exists, if so, check if matter can be added, otherwise create new charge
+        log.info("findByCustomerNrAndChargeStatus");
         Optional<List<Charge>> oListCharges = chargeRepository.findByCustomerNrAndChargeStatus(
                 ChargeStatusEnum.DCM_APPLIED,
                 ChargeStatusEnum.BOOKED,
                 matterRequest.getCustomerNr());
+        // Check if charges for customer exists
         if (oListCharges.isPresent() && !oListCharges.get().isEmpty()) {
             log.info("oListCharges.isPresent() : {}", oListCharges.get());
-            List<Charge> filteredListCharges = oListCharges.get().stream()
+            List<Charge> listChargesSameVehicleType = oListCharges.get().stream()
                     .filter(c -> c.getVehicleType().equals(vehicleTypeConfirmed)).toList();
-            if (!filteredListCharges.isEmpty()) {
-                charge = filteredListCharges.get(0);
+            // Check if matter can be added
+            if (!listChargesSameVehicleType.isEmpty()) {
+                log.info("!listChargesSameVehicleType.isEmpty(): matter {} to be added to existing charge: {}",matterRequest.getMatterNr(), charge.getChargeID());
+                charge = listChargesSameVehicleType.get(0);
                 Matter newMatter = mapMatterRequest(matterRequest, charge);
                 matterRepository.save(newMatter);
                 charge.getMatters().add(newMatter);
                 chargeRepository.save(charge);
                 log.info("Vehicle type coincides, matter added to existing charge: {}", charge.getChargeID());
             } else {
+                log.info("Create new charge for new vehicle type existing customer");
                 charge = createNewCharge(matterRequest, vehicleTypeConfirmed, customer);
                 log.info("New charge created {} for existing customer nr: {}", charge.getChargeID(), charge.getCustomer().getCustomerID());
             }
         // Creating new charge
         } else {
-            log.info("About to createNewCharge, matterRequest {}, vehicleTypeConfirmed {}, customer {}",
+            log.info("About to createNewCharge new customer: matterRequest {}, vehicleTypeConfirmed {}, customer {}",
                     matterRequest, vehicleTypeConfirmed, customer);
             charge = createNewCharge(matterRequest, vehicleTypeConfirmed, customer);
             log.info("New charge created {} for new customer nr: {}", charge.getChargeID(), charge.getCustomer().getCustomerNr());
@@ -139,14 +143,13 @@ public class MatterReceptionService {
      */
     private Optional<String> getVehicleTypeEnum(String matterID) {
         log.info("getVehicleTypeEnum: sending to adminClient.searchVehicleType ");
-        return Optional.ofNullable(adminClient.searchVehicleType());
-        //return Optional.ofNullable(adminClient.searchVehicleType(matterID));
+        //return Optional.ofNullable(adminClient.searchVehicleType());
+        return Optional.ofNullable(adminClient.searchVehicleType(matterID));
     }
 
     private Matter mapMatterRequest(MatterRequest matterRequest, Charge charge) {
         Matter newMatter = new Matter();
         newMatter.setMatterNr(matterRequest.getMatterNr());
-        newMatter.setCustomerNr(matterRequest.getCustomerNr());
         newMatter.setMatterStatus(MatterStatus.EXECUTABLE);
         newMatter.setCharge(charge);
         return newMatter;

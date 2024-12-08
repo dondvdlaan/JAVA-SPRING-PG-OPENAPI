@@ -14,7 +14,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
 public class    Customer {
     @Id
     @Builder.Default
@@ -25,4 +24,12 @@ public class    Customer {
     @OneToMany(mappedBy = "customer")
     private List<Charge> charge = new ArrayList<>();
 
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "customerID=" + customerID +
+                ", customerNr=" + customerNr +
+                ", charge=" + charge +
+                '}';
+    }
 }

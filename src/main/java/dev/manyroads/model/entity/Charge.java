@@ -23,7 +23,6 @@ import java.util.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class Charge {
 
     @Id
@@ -45,5 +44,6 @@ public class Charge {
     private Customer customer;
     @OneToMany(mappedBy = "charge")
     private Set<Matter> matters = new HashSet<>();
+
 
 }
