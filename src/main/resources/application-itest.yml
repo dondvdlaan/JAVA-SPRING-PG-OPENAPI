@@ -15,6 +15,7 @@ spring:
     schemas:  decom
     locations:  db/migration
 
+
 Decom-Admin.ribbon.listOfServers: localhost:7090
 
 logging:
