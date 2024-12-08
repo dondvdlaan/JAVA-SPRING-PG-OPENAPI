@@ -23,7 +23,6 @@ CREATE TABLE IF NOT EXISTS matters
 -- matterId is to make each row unique, whereas matterNr is not unique
 matter_id       uuid NOT NULL UNIQUE,
 matter_nr       character varying(255) COLLATE pg_catalog."default" NOT NULL,
-customer_nr     bigint NOT NULL UNIQUE,
 charge_id       uuid NOT NULL,
 matter_status   character varying(255) COLLATE pg_catalog."default" NOT NULL,
 

@@ -23,8 +23,6 @@ public class Matter {
     private UUID matterID = UUID.randomUUID();
     @Column(name = "matter_nr")
     private String matterNr;
-    @Column(name = "customer_nr")
-    private Long customerNr;
     @Column(name = "matter_status")
     @Enumerated(EnumType.STRING)
     private MatterStatus matterStatus;

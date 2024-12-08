@@ -150,7 +150,6 @@ public class MatterReceptionService {
     private Matter mapMatterRequest(MatterRequest matterRequest, Charge charge) {
         Matter newMatter = new Matter();
         newMatter.setMatterNr(matterRequest.getMatterNr());
-        newMatter.setCustomerNr(matterRequest.getCustomerNr());
         newMatter.setMatterStatus(MatterStatus.EXECUTABLE);
         newMatter.setCharge(charge);
         return newMatter;

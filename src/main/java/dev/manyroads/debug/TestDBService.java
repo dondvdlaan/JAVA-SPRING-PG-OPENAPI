@@ -31,7 +31,6 @@ public class TestDBService {
 
 
         Customer newCustomer = new Customer();
-        newCustomer.setCustomerNr(matter.getCustomerNr());
         Customer savedCustomer = customerRepository.save(newCustomer);
         log.info("savedCustomer: {}", savedCustomer);
         log.debug("savedCustomer: {}", savedCustomer);
@@ -39,7 +38,6 @@ public class TestDBService {
         matterRepository.save(matter);
 
         Charge charge = new Charge();
-        charge.setCustomerNr(matter.getCustomerNr());
         charge.setCustomer(newCustomer);
         Charge savedCharge = chargeRepository.save(charge);
         log.info("savedCharge: {}", savedCharge);
