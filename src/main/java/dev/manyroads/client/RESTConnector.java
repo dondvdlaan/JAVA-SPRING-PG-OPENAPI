@@ -1,10 +1,14 @@
 package dev.manyroads.client;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
+@AllArgsConstructor
 @RequiredArgsConstructor
 @Slf4j
 public abstract class RESTConnector {
@@ -17,6 +21,7 @@ public abstract class RESTConnector {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("x-user-role", userRole);
         HttpEntity<?> requestEntity = new HttpEntity<>(messageBody, headers);
+        log.info("url: {}", url);
         return restTemplate.exchange(url, method, requestEntity, Void.class);
     }
 
