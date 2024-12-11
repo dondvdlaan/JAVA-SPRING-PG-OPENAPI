@@ -100,7 +100,7 @@ public class MatterReceptionService {
         matterResponse.setChargeID(charge.getChargeID());
 
         // Pass on data to customer processing
-        if (!customerProcessingClient.sendMessageToCustomerProcessing(charge)) {
+        if (!customerProcessingClient.sendMessageToCustomerProcessing(charge.getChargeID())) {
             log.info("Failed to send message to customerProcessingClient for customer: {} ", customer.getCustomerNr());
             throw (new InternalException("DCM 101: customerProcessingClient not responsive"));
         }
