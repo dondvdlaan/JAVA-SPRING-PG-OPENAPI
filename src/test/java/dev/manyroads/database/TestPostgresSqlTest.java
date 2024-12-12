@@ -1,6 +1,7 @@
 package dev.manyroads.database;
 
 import dev.manyroads.client.AdminClient;
+import dev.manyroads.client.CustomerProcessingClient;
 import dev.manyroads.decomreception.DecomReceptionController;
 import dev.manyroads.matterreception.MatterReceptionService;
 import dev.manyroads.model.ChargeStatusEnum;
@@ -39,6 +40,8 @@ public class TestPostgresSqlTest {
     MatterReceptionService matterReceptionService;
     @MockBean
     AdminClient adminClient;
+    @MockBean
+    CustomerProcessingClient customerProcessingClient;
 
     @Test
     @Transactional
@@ -49,6 +52,7 @@ public class TestPostgresSqlTest {
         matterRequest.setMatterNr("121212");
         matterRequest.setCustomerNr(customerNr);
         when(adminClient.searchVehicleType(matterRequest.getMatterNr())).thenReturn("bulldozer");
+        when(customerProcessingClient.sendMessageToCustomerProcessing(any())).thenReturn(true);
         Customer existingCustomer = new Customer();
         existingCustomer.setCustomerNr(customerNr);
         customerRepository.save(existingCustomer);
@@ -64,6 +68,7 @@ public class TestPostgresSqlTest {
 
         // verify
         verify(adminClient, times(1)).searchVehicleType(anyString());
+        verify(customerProcessingClient, times(1)).sendMessageToCustomerProcessing(any());
         assertEquals(customerNr, matterResponse.getCustomerNr());
         assertNotEquals(savedExistingCharge.getChargeID(), matterResponse.getChargeID());
     }

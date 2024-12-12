@@ -1,5 +1,6 @@
 package dev.manyroads.database;
 
+import dev.manyroads.client.CustomerProcessingClient;
 import dev.manyroads.decomreception.DecomReceptionController;
 import dev.manyroads.matterreception.MatterReceptionService;
 import dev.manyroads.client.AdminClient;
@@ -44,8 +45,9 @@ public class PostgresSqlTest {
     MatterReceptionService matterReceptionService;
     @MockBean
     AdminClient adminClient;
+    @MockBean
+    CustomerProcessingClient customerProcessingClient;
 
-    @Disabled
     @Test
     @Transactional
     void customerExistChargeExistOtherVehicleTypeShouldNotAddMattterToExistingChargeTest() {
@@ -55,6 +57,7 @@ public class PostgresSqlTest {
         matterRequest.setMatterNr("121212");
         matterRequest.setCustomerNr(customerNr);
         when(adminClient.searchVehicleType(matterRequest.getMatterNr())).thenReturn("bulldozer");
+        when(customerProcessingClient.sendMessageToCustomerProcessing(any())).thenReturn(true);
         Customer existingCustomer = new Customer();
         existingCustomer.setCustomerNr(customerNr);
         customerRepository.save(existingCustomer);
@@ -69,8 +72,8 @@ public class PostgresSqlTest {
         MatterResponse matterResponse = matterReceptionService.processIncomingMatterRequest(matterRequest);
 
         // verify
-
         verify(adminClient, times(1)).searchVehicleType(anyString());
+        verify(customerProcessingClient, times(1)).sendMessageToCustomerProcessing(any());
         assertEquals(customerNr, matterResponse.getCustomerNr());
         assertNotEquals(savedExistingCharge.getChargeID(), matterResponse.getChargeID());
     }
@@ -95,6 +98,7 @@ public class PostgresSqlTest {
         Charge savedCharge = chargeRepository.save(charge);
         String expected = "bulldozer";
         when(adminClient.searchVehicleType(matterRequest.getMatterNr())).thenReturn("bulldozer");
+        when(customerProcessingClient.sendMessageToCustomerProcessing(any())).thenReturn(true);
 
         // activate
         MatterResponse result = matterReceptionService.processIncomingMatterRequest(matterRequest);
@@ -104,19 +108,18 @@ public class PostgresSqlTest {
 
     }
 
-    @Disabled
     @Test
     void chargeRepoTest() {
 
         // Prepare
         Customer customer = new Customer();
         customer.setCustomerNr((long) (Math.random() * 99999999));
-        Customer customerSaved = customerRepository.save(customer);
+        customerRepository.save(customer);
         Charge job = new Charge();
         ChargeStatusEnum status = ChargeStatusEnum.BOOKED;
         job.setChargeStatus(status);
-        job.setCustomerNr(customerSaved.getCustomerNr());
-        job.setCustomer(customerSaved);
+        job.setCustomerNr(customer.getCustomerNr());
+        job.setCustomer(customer);
         Charge savedJob = chargeRepository.save(job);
 
         // Act

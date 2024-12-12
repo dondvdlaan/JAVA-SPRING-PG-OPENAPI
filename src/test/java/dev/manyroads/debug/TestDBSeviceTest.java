@@ -38,15 +38,16 @@ public class TestDBSeviceTest {
 
         // Prepare
         Long customerNr = (long) (Math.random() * 999999);
+        String matterNr = "258963";
         Matter newMatter = new Matter();
-        newMatter.setCustomerNr(customerNr);
+        newMatter.setMatterNr(matterNr);
 
         Customer newCustomer = new Customer();
-        newCustomer.setCustomerNr(newMatter.getCustomerNr());
+        newCustomer.setCustomerNr(customerNr);
         when(customerRepository.save(any())).thenReturn(newCustomer);
 
         Charge charge = new Charge();
-        charge.setCustomerNr(newMatter.getCustomerNr());
+        charge.setCustomerNr(customerNr);
         charge.setCustomer(newCustomer);
         when(chargeRepository.save(any())).thenReturn(charge);
 
