@@ -2,6 +2,7 @@ package dev.manyroads.client;
 
 import dev.manyroads.decomreception.exception.InternalException;
 import dev.manyroads.model.entity.Charge;
+import dev.manyroads.model.messages.CustomerProcessingClientMessage;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,11 @@ public class CustomerProcessingClient extends RESTConnector {
     private final static String DCM_ROLE = "DCM-SUPER";
     private final static String CUSTOMER_PROCESSING_URL = "http://localhost:7090/v1/process_charge";
 
-    public boolean sendMessageToCustomerProcessing(UUID chargeID) {
+    public boolean sendMessageToCustomerProcessing(CustomerProcessingClientMessage customerProcessingClientMessage) {
 
         ResponseEntity<?> response= null;
         try {
-            response = sendMessage(chargeID, DCM_ROLE, CUSTOMER_PROCESSING_URL, HttpMethod.POST);
+            response = sendMessage(customerProcessingClientMessage, DCM_ROLE, CUSTOMER_PROCESSING_URL, HttpMethod.POST);
         } catch (Exception e) {
             log.info("response: {}", response);
             throw new InternalException(String.format("sendMessageToCustomerProcessing: %s", e.getMessage()));
