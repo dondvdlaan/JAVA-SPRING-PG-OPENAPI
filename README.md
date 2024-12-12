@@ -19,5 +19,10 @@ error message.</p>
 <h3>FeignClient for communication with microservices</h3>
 <p>For the outgoing REST communication with other microservices we use the Spring @FeignClient on an interface </p>
 
+<h3>Integration test</h3>
+An independent integration test [[JAVA-SPRING-PG-OPENAPI-itest](https://github.com/dondvdlaan/JAVA-SPRING-PG-OPENAPI-itest.git "JAVA-SPRING-PG-OPENAPI-itest")
+is based on Cucumber, WireMock and RESTAssured.
+
+
 
 

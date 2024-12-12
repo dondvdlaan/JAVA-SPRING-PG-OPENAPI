@@ -56,6 +56,7 @@ public class ExecutionInterruptionServiceTest {
         Long customerNr = (long) (Math.random() * 99999);
         UUID chargeId = UUID.randomUUID();
         String matterId = UUID.randomUUID().toString();
+        String matterNr = "147852";
 
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(chargeId);
@@ -65,7 +66,7 @@ public class ExecutionInterruptionServiceTest {
         Matter existingMatter = new Matter();
         existingMatter.setMatterID(UUID.fromString(matterId));
         existingMatter.setMatterStatus(MatterStatus.EXECUTABLE);
-        existingMatter.setCustomerNr(customerNr);
+        existingMatter.setMatterNr(matterNr);
         //existingMatter.setCharge(existingCharge);
 
         existingCharge.getMatters().add(existingMatter);
@@ -93,6 +94,7 @@ public class ExecutionInterruptionServiceTest {
         Long customerNr = (long) (Math.random() * 99999);
         UUID chargeId = UUID.randomUUID();
         String matterId = UUID.randomUUID().toString();
+        String matterNr = "147852";
 
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(chargeId);
@@ -102,7 +104,7 @@ public class ExecutionInterruptionServiceTest {
         Matter existingMatter = new Matter();
         existingMatter.setMatterID(UUID.fromString(matterId));
         existingMatter.setMatterStatus(MatterStatus.EXECUTABLE);
-        existingMatter.setCustomerNr(customerNr);
+        existingMatter.setMatterNr(matterNr);
         existingMatter.setCharge(existingCharge);
 
         //existingCharge.getMatters().add(existingMatter);
@@ -130,6 +132,7 @@ public class ExecutionInterruptionServiceTest {
         Long customerNr = (long) (Math.random() * 99999);
         UUID chargeId = UUID.randomUUID();
         String matterId = UUID.randomUUID().toString();
+        String matterNr = "147852";
 
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(chargeId);
@@ -139,7 +142,7 @@ public class ExecutionInterruptionServiceTest {
         Matter existingMatter = new Matter();
         existingMatter.setMatterID(UUID.fromString(matterId));
         existingMatter.setMatterStatus(MatterStatus.EXECUTABLE);
-        existingMatter.setCustomerNr(customerNr);
+        existingMatter.setMatterNr(matterNr);
         existingMatter.setCharge(existingCharge);
 
         //existingCharge.getMatters().add(existingMatter);
@@ -168,6 +171,7 @@ public class ExecutionInterruptionServiceTest {
         Long wrongCustomerNr = (long) (Math.random() * 99999);
         UUID chargeId = UUID.randomUUID();
         String matterId = UUID.randomUUID().toString();
+        String matterNr = "147852";
 
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(chargeId);
@@ -176,7 +180,7 @@ public class ExecutionInterruptionServiceTest {
         Matter existingMatter = new Matter();
         existingMatter.setMatterID(UUID.fromString(matterId));
         existingMatter.setMatterStatus(MatterStatus.EXECUTABLE);
-        existingMatter.setCustomerNr(customerNr);
+        existingMatter.setMatterNr(matterNr);
         existingMatter.setCharge(existingCharge);
         ExecInterrupRequest matterCustomerNrMismatchInterruptRequest = new ExecInterrupRequest();
         matterCustomerNrMismatchInterruptRequest.setCustomerNr(wrongCustomerNr);
@@ -200,6 +204,7 @@ public class ExecutionInterruptionServiceTest {
         Long customerNr = (long) (Math.random() * 99999);
         UUID chargeId = UUID.randomUUID();
         String matterId = UUID.randomUUID().toString();
+        String matterNr = "147852";
 
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(chargeId);
@@ -208,7 +213,7 @@ public class ExecutionInterruptionServiceTest {
         Matter existingMatter = new Matter();
         existingMatter.setMatterID(UUID.fromString(matterId));
         existingMatter.setMatterStatus(MatterStatus.EXECUTABLE);
-        existingMatter.setCustomerNr(customerNr);
+        existingMatter.setMatterNr(matterNr);
         existingMatter.setCharge(existingCharge);
         ExecInterrupRequest happyCustomerInterruptRequest = new ExecInterrupRequest();
         happyCustomerInterruptRequest.setCustomerNr(customerNr);
