@@ -14,6 +14,8 @@ import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.Customer;
 import dev.manyroads.model.entity.Matter;
 import dev.manyroads.model.enums.MatterStatus;
+import dev.manyroads.model.messages.CustomerProcessingClientMessage;
+import dev.manyroads.model.messages.MatterMessage;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.CustomerRepository;
 import dev.manyroads.model.repository.MatterRepository;
@@ -22,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,7 +81,7 @@ public class MatterReceptionService {
                     .filter(c -> c.getVehicleType().equals(vehicleTypeConfirmed)).toList();
             // Check if matter can be added
             if (!listChargesSameVehicleType.isEmpty()) {
-                log.info("!listChargesSameVehicleType.isEmpty(): matter {} to be added to existing charge: {}",matterRequest.getMatterNr(), charge.getChargeID());
+                log.info("!listChargesSameVehicleType.isEmpty(): matter {} to be added to existing charge: {}", matterRequest.getMatterNr(), charge.getChargeID());
                 charge = listChargesSameVehicleType.get(0);
                 Matter newMatter = mapMatterRequest(matterRequest, charge);
                 matterRepository.save(newMatter);
@@ -90,7 +93,7 @@ public class MatterReceptionService {
                 charge = createNewCharge(matterRequest, vehicleTypeConfirmed, customer);
                 log.info("New charge created {} for existing customer nr: {}", charge.getChargeID(), charge.getCustomer().getCustomerID());
             }
-        // Creating new charge
+            // Creating new charge
         } else {
             log.info("About to createNewCharge new customer: matterRequest {}, vehicleTypeConfirmed {}, customer {}",
                     matterRequest, vehicleTypeConfirmed, customer);
@@ -100,7 +103,7 @@ public class MatterReceptionService {
         matterResponse.setChargeID(charge.getChargeID());
 
         // Pass on data to customer processing
-        if (!customerProcessingClient.sendMessageToCustomerProcessing(charge.getChargeID())) {
+        if (!customerProcessingClient.sendMessageToCustomerProcessing(getCustomerProcessingClientMessage(charge))) {
             log.info("Failed to send message to customerProcessingClient for customer: {} ", customer.getCustomerNr());
             throw (new InternalException("DCM 101: customerProcessingClient not responsive"));
         }
@@ -108,7 +111,16 @@ public class MatterReceptionService {
         return matterResponse;
     }
 
-    // Submethods
+    // Sub methods
+    private static CustomerProcessingClientMessage getCustomerProcessingClientMessage(Charge charge) {
+        List<MatterMessage> listMatterMessage = new ArrayList<>();
+        charge.getMatters().forEach(matter -> {
+            MatterMessage matterMessage = new MatterMessage(matter.getMatterNr(), matter.getMatterStatus());
+            listMatterMessage.add(matterMessage);
+        });
+        return new CustomerProcessingClientMessage(charge.getChargeID(), listMatterMessage);
+    }
+
     private Charge createNewCharge(MatterRequest matterRequest, VehicleTypeEnum vehicleTypeConfirmed, Customer customer) {
         Charge newCharge = new Charge();
         newCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
