@@ -3,7 +3,7 @@ package dev.manyroads.debug;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
-@Service
+//@Service
 public class StartTests implements CommandLineRunner {
 
     TestDBService testDBService;
