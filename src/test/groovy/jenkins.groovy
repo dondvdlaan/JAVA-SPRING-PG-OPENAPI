@@ -2,45 +2,45 @@ pipeline {
     agent any
 
     tools {
-        // Install the Maven version configured as "M3" and add it to the path.
+        // Maven_Home is configured at Jenkins
         maven "Maven_Home"
     }
-
     stages {
         stage('Compile') {
             steps {
-                // Get some code from a GitHub repository
+                // Get Decom application from a GitHub repository
                 git branch: 'main', url: 'https://github.com/dondvdlaan/JAVA-SPRING-PG-OPENAPI'
-
-
-                // To run Maven on a Windows agent, use
                 bat "mvn clean compile"
             }
         }
-        stage('Test') {
+        stage('Unit Tests') {
             steps {
-                // To run Maven on a Windows agent, use
+                // Run unit tests
                 bat "mvn test"
             }
         }
         stage('Build') {
             steps {
-                // To run Maven on a Windows agent, use
                 bat "mvn package"
             }
         }
-
+        // TODO: alternative is to start / stop Docker container with Decom application to run test with iTest
         stage('Integration test') {
             parallel {
                 stage('DECOM') {
                     steps {
-                        bat "mvn spring-boot:run"
+                        git branch: 'main', url: 'https://github.com/dondvdlaan/JAVA-SPRING-PG-OPENAPI'
+                        bat "mvn spring-boot:run -DskipTests"
                     }
                 }
                 stage('iTEST') {
                     steps {
-                        git branch: 'main', url: 'https://github.com/dondvdlaan/JAVA-SPRING-PG-OPENAPI-itest'
-                        bat "mvn test"
+                        dir('./itest') {
+                            sleep(time: 15, unit: "SECONDS")
+                            git branch: 'main', url: 'https://github.com/dondvdlaan/JAVA-SPRING-PG-OPENAPI-itest'
+                            bat "mvn clean test"
+                            echo "iTest finished"
+                        }
                     }
                 }
             }
@@ -48,14 +48,11 @@ pipeline {
     }
     post {
         success {
-            // Start
             junit '**/target/surefire-reports/TEST-*.xml'
             archiveArtifacts 'target/*.jar'
         }
         failure {
-            echo "Foutje"
+            echo "Failure occured"
         }
     }
-
-
 }
