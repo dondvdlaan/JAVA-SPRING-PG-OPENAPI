@@ -1,7 +1,6 @@
 package dev.manyroads.client;
 
 import dev.manyroads.model.entity.Charge;
-import dev.manyroads.model.entity.Matter;
 import dev.manyroads.model.messages.MatterMessage;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
