@@ -2,6 +2,7 @@ package dev.manyroads.model.entity;
 
 import dev.manyroads.model.IntermediateReportExplanationEnum;
 import dev.manyroads.model.enums.MatterStatus;
+import dev.manyroads.model.messages.MatterMessage;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,7 +20,7 @@ public class Matter {
 
     @Id
     @Builder.Default
-    @Column(name="matter_id")
+    @Column(name = "matter_id")
     private UUID matterID = UUID.randomUUID();
     @Column(name = "matter_nr")
     private String matterNr;
@@ -27,9 +28,13 @@ public class Matter {
     @Enumerated(EnumType.STRING)
     private MatterStatus matterStatus;
     @ManyToOne()
-    @JoinColumn(name="charge_id")
+    @JoinColumn(name = "charge_id")
     private Charge charge;
     @Column(name = "reason_termination")
     @Enumerated(EnumType.STRING)
     private IntermediateReportExplanationEnum reasonTermination;
+
+    public MatterMessage convertToMessage() {
+        return new MatterMessage(this.matterNr, this.matterStatus);
+    }
 }

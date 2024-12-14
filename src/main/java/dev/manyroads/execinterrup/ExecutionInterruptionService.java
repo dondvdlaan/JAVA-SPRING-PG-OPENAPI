@@ -101,7 +101,7 @@ public class ExecutionInterruptionService {
         // Communicate to admin to terminate ongoing charges / matters for this customer
         listChargesDecom.stream()
                 .map(Charge::getMatters)
-                .forEach(set -> set.forEach(matter -> adminClient.terminateMatter(matter)));
+                .forEach(set -> set.forEach(matter -> adminClient.terminateMatter(matter.convertToMessage())));
     }
 
     private void handleMatterWithdrawn(ExecInterrupRequest execInterrupRequest) {
@@ -122,7 +122,7 @@ public class ExecutionInterruptionService {
         if (oMatter.get().getCharge().getChargeStatus() == ChargeStatusEnum.DONE) {
             throw new ChargeHasDoneStatusException(execInterrupRequest.getCustomerNr());
         }
-        if (DCMutils.isBeingProcessed(oMatter.get().getCharge())) adminClient.terminateMatter(oMatter.get());
+        if (DCMutils.isBeingProcessed(oMatter.get().getCharge())) adminClient.terminateMatter(oMatter.get().convertToMessage());
     }
 
     // sub methods
