@@ -6,6 +6,7 @@ import dev.manyroads.execinterrup.exception.ChargeHasDoneStatusException;
 import dev.manyroads.execinterrup.exception.ChargeMissingForCustomerNrException;
 import dev.manyroads.execinterrup.exception.MatterCustomerNrMismatchException;
 import dev.manyroads.execinterrup.exception.MatterMissingForCustomerNrException;
+import dev.manyroads.execinterrup.exception.MatterNotFoundException;
 import dev.manyroads.model.ChargeStatusEnum;
 import dev.manyroads.model.ExecInterrupRequest;
 import dev.manyroads.model.ExecInterrupResponse;
@@ -60,7 +61,7 @@ public class ExecutionInterruptionService {
                     throw new InternalException("handleCustomerExecutionInterruption: Default ExecInterrup enums not matched ");
         }
 
-        return new ExecInterrupResponse();
+        return new ExecInterrupResponse(execInterrupRequest.getCustomerNr());
     }
 
     private ExecInterrupResponse handleMatterExecutionInterruption(ExecInterrupRequest execInterrupRequest) {
@@ -124,6 +125,7 @@ public class ExecutionInterruptionService {
         if (DCMutils.isBeingProcessed(oMatter.get().getCharge())) adminClient.terminateMatter(oMatter.get());
     }
 
+    // sub methods
     private void saveExecInterrupRequest(ExecInterrupRequest execInterrupRequest) {
         ExecInterrup execInterrup = ExecInterrup
                 .builder()
