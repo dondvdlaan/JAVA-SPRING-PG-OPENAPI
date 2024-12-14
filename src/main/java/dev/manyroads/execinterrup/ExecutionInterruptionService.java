@@ -61,7 +61,7 @@ public class ExecutionInterruptionService {
                     throw new InternalException("handleCustomerExecutionInterruption: Default ExecInterrup enums not matched ");
         }
 
-        return compileResponse(execInterrupRequest);
+        return new ExecInterrupResponse(execInterrupRequest.getCustomerNr());
     }
 
     private ExecInterrupResponse handleMatterExecutionInterruption(ExecInterrupRequest execInterrupRequest) {
@@ -134,11 +134,5 @@ public class ExecutionInterruptionService {
                 .execInterrupStatus(execInterrupRequest.getExecInterrupType())
                 .build();
         execInterrupRepository.save(execInterrup);
-    }
-
-    private ExecInterrupResponse compileResponse(ExecInterrupRequest execInterrupRequest) {
-        Optional<List<Matter>> oListMatters = matterRepository.findByMatterNr(execInterrupRequest.getMatterNr());
-        oListMatters.orElseThrow(() -> new MatterNotFoundException(execInterrupRequest.getMatterNr(), execInterrupRequest.getCustomerNr()));
-        return new ExecInterrupResponse(execInterrupRequest.getCustomerNr(), oListMatters.get().getFirst().getMatterID());
     }
 }

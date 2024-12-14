@@ -118,7 +118,6 @@ components:
       type: object
       required:
         - customerNr
-        - chargeID
       properties:
         customerNr:
           type: integer

@@ -11,9 +11,9 @@ spring:
     password: decom
     driverClassName: org.postgresql.Driver
   flyway:
-    enabled:  true
-    schemas:  decom
-    locations:  db/migration
+    enabled: true
+    schemas: decom
+    locations: classpath:db/migration
 
 logging:
   level:

@@ -66,7 +66,6 @@ public class ExecutionInterruptionServiceTest {
         Matter existingMatter = new Matter();
         existingMatter.setMatterID(UUID.fromString(matterId));
         existingMatter.setMatterStatus(MatterStatus.EXECUTABLE);
-        existingMatter.setMatterNr(matterNr);
         //existingMatter.setCharge(existingCharge);
 
         existingCharge.getMatters().add(existingMatter);
@@ -269,7 +268,7 @@ public class ExecutionInterruptionServiceTest {
         existingCharge.setCustomerNr(customerNr);
         List<Charge> listCharges = (List.of(existingCharge));
         when(chargeRepository.findByCustomerNr(anyLong())).thenReturn(Optional.of(listCharges));
-        ExecInterrupResponse expected = new ExecInterrupResponse();
+        ExecInterrupResponse expected = new ExecInterrupResponse(customerNr);
 
         // activate
         ExecInterrupResponse result = executionInterruptionService.processIncomingExecutionInterruptions(happyCustomerInterruptRequest);
