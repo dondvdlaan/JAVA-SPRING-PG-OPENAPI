@@ -23,6 +23,10 @@ error message.</p>
 An independent integration test [[JAVA-SPRING-PG-OPENAPI-itest](https://github.com/dondvdlaan/JAVA-SPRING-PG-OPENAPI-itest.git "JAVA-SPRING-PG-OPENAPI-itest")
 is based on Cucumber, WireMock and RESTAssured.
 
+<h3>CI / CD Jenkins pipeline</h3>
+A Jenkins file has been added for a pipeline to execute automatically unit testing, integration testing and building of the
+application.
+
 
 
 
