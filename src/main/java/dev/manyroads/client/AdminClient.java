@@ -1,6 +1,7 @@
 package dev.manyroads.client;
 
 import dev.manyroads.model.entity.Charge;
+import dev.manyroads.model.messages.ChargeMessage;
 import dev.manyroads.model.messages.MatterMessage;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +19,7 @@ public interface AdminClient {
     String terminateMatter(@RequestBody MatterMessage matterMessage);
 
     @PostMapping("/applied")
-    String startDCMApplied(@RequestBody Charge charge);
+    String startDCMApplied(@RequestBody ChargeMessage chargeMessage);
 
     @PostMapping("/executable")
     String startExecutable(@RequestBody Charge charge);

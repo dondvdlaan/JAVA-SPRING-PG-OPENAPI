@@ -34,6 +34,7 @@ public class IntermediateReportStatusService {
     public void processIntermediateReportStatusRequests(IntermediateReportStatusRequest intermediateReportStatusRequest) {
         log.info("processIntermediateReportStatusRequests: Start processing incoming IntermediateReportStatusRequest ");
         Charge charge = getCharge(intermediateReportStatusRequest);
+        log.info("charge: recovered {} ", charge);
 
         if (!DCMStepFunctions.isTransitionAllowed(charge.getChargeStatus(), intermediateReportStatusRequest.getStatusIntermediateReport()))
             throw new IntermediateReportStatusTransitionChargeStateException(
@@ -41,7 +42,7 @@ public class IntermediateReportStatusService {
                             intermediateReportStatusRequest.getStatusIntermediateReport(), charge.getChargeStatus()));
 
         switch (intermediateReportStatusRequest.getStatusIntermediateReport()) {
-            case DCM_APPLIED -> adminClient.startDCMApplied(charge);
+            case DCM_APPLIED -> adminClient.startDCMApplied(charge.getChargeMessage());
             case EXECUTABLE -> adminClient.startExecutable(charge);
             case PARTIALLY_EXECUTABLE ->
                     processPartiallyExecutable(charge, intermediateReportStatusRequest.getMattersIntermediateReport());
@@ -52,6 +53,7 @@ public class IntermediateReportStatusService {
 
     private Charge getCharge(IntermediateReportStatusRequest intermediateReportStatusRequest) {
         Optional<Charge> oCharge = chargeRepository.findById(intermediateReportStatusRequest.getChargeID());
+        log.info("getCharge: {}", oCharge);
         oCharge.orElseThrow(() -> new IntermediateReportStatusChargeIDNotExistException(
                 MessageFormat.format("DCM-305: ChargeID {0} does not exist.", intermediateReportStatusRequest.getChargeID().toString())));
         return oCharge.get();

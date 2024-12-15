@@ -2,6 +2,7 @@ package dev.manyroads.model.entity;
 
 import dev.manyroads.model.ChargeStatusEnum;
 import dev.manyroads.model.VehicleTypeEnum;
+import dev.manyroads.model.messages.ChargeMessage;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -45,5 +46,8 @@ public class Charge {
     @OneToMany(mappedBy = "charge")
     private Set<Matter> matters = new HashSet<>();
 
+    public ChargeMessage getChargeMessage(){
+        return new ChargeMessage(chargeID,chargeStatus);
+    }
 
 }
