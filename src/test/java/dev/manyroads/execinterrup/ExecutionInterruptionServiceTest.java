@@ -10,6 +10,7 @@ import dev.manyroads.model.ExecInterrupResponse;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.Matter;
 import dev.manyroads.model.enums.MatterStatus;
+import dev.manyroads.model.messages.MatterMessage;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.ExecInterrupRepository;
 import dev.manyroads.model.repository.MatterRepository;
@@ -84,7 +85,7 @@ public class ExecutionInterruptionServiceTest {
         // Verify
         verify(execInterrupRepository, times(1)).save(any());
         verify(chargeRepository, times(1)).findByCustomerNr(anyLong());
-        verify(adminClient, times(1)).terminateMatter(eq(existingMatter));
+        verify(adminClient, times(1)).terminateMatter(any());
     }
 
     @Test
@@ -122,7 +123,7 @@ public class ExecutionInterruptionServiceTest {
         // Verify
         verify(execInterrupRepository, times(1)).save(any());
         verify(matterRepository, times(2)).findById(any());
-        verify(adminClient, never()).terminateMatter(eq(existingMatter));
+        verify(adminClient, never()).terminateMatter(any());
     }
 
     @Test
@@ -160,7 +161,7 @@ public class ExecutionInterruptionServiceTest {
         // Verify
         verify(execInterrupRepository, times(1)).save(any());
         verify(matterRepository, times(2)).findById(any());
-        verify(adminClient, times(1)).terminateMatter(eq(existingMatter));
+        verify(adminClient, times(1)).terminateMatter(any());
     }
 
     @Test
