@@ -89,7 +89,6 @@ components:
         - chargeID
         - statusIntermediateReport
         - mattersIntermediateReport
-        - startDate
       properties:
         chargeID:
           type: string
