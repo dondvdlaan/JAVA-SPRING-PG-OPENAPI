@@ -28,10 +28,10 @@ public class DecomReceptionController {
     public ResponseEntity<MatterResponse> receiveMatter(@RequestBody MatterRequest matterRequest) {
 
         verification.verifyMatterRequest(matterRequest);
-        MatterResponse caseResponse = matterReceptionService.processIncomingMatterRequest(matterRequest);
+        MatterResponse matterResponse = matterReceptionService.processIncomingMatterRequest(matterRequest);
 
-        log.info("Response returned: {}", caseResponse);
-        return ResponseEntity.ok(caseResponse);
+        log.info("Response returned: {}", matterResponse);
+        return ResponseEntity.ok(matterResponse);
     }
 
     @RequestMapping(value = "/v1/execinterrup", method = RequestMethod.POST)
