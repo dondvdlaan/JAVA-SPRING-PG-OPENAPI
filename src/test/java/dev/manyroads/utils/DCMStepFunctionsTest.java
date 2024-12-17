@@ -47,7 +47,7 @@ public class DCMStepFunctionsTest {
         // prepare
         ChargeStatusEnum currentStatus = CUSTOMER_DECEASED;
         // activate
-        boolean result = DCMStepFunctions.isTransitionAllowed(currentStatus, desiredStatus);
+        boolean result = DCMStepFunctions.isChargeTransitionAllowed(currentStatus, desiredStatus);
         // Verify
         assertFalse(result);
     }
@@ -59,7 +59,7 @@ public class DCMStepFunctionsTest {
         // prepare
         ChargeStatusEnum currentStatus = PARTIALLY_EXECUTABLE;
         // activate
-        boolean result = DCMStepFunctions.isTransitionAllowed(currentStatus, desiredStatus);
+        boolean result = DCMStepFunctions.isChargeTransitionAllowed(currentStatus, desiredStatus);
         // Verify
         assertTrue(result);
     }
@@ -71,7 +71,7 @@ public class DCMStepFunctionsTest {
         // prepare
         ChargeStatusEnum currentStatus = EXECUTABLE;
         // activate
-        boolean result = DCMStepFunctions.isTransitionAllowed(currentStatus, desiredStatus);
+        boolean result = DCMStepFunctions.isChargeTransitionAllowed(currentStatus, desiredStatus);
         // Verify
         assertTrue(result);
     }
@@ -82,7 +82,7 @@ public class DCMStepFunctionsTest {
         ChargeStatusEnum currentStatus = CUSTOMER_DECEASED;
         ChargeStatusEnum desiredStatus = DONE;
         // activate
-        boolean result = DCMStepFunctions.isTransitionAllowed(currentStatus, desiredStatus);
+        boolean result = DCMStepFunctions.isChargeTransitionAllowed(currentStatus, desiredStatus);
         // Verify
         assertTrue(result);
     }
@@ -94,7 +94,7 @@ public class DCMStepFunctionsTest {
         // prepare
         ChargeStatusEnum currentStatus = DONE;
         // activate
-        boolean result = DCMStepFunctions.isTransitionAllowed(currentStatus, desiredStatus);
+        boolean result = DCMStepFunctions.isChargeTransitionAllowed(currentStatus, desiredStatus);
         // Verify
         assertFalse(result);
     }
@@ -106,7 +106,7 @@ public class DCMStepFunctionsTest {
         // prepare
         ChargeStatusEnum currentStatus = DCM_APPLIED;
         // activate
-        boolean result = DCMStepFunctions.isTransitionAllowed(currentStatus, desiredStatus);
+        boolean result = DCMStepFunctions.isChargeTransitionAllowed(currentStatus, desiredStatus);
         // Verify
         assertTrue(result);
     }
@@ -118,7 +118,7 @@ public class DCMStepFunctionsTest {
         ChargeStatusEnum currentStatus = REJECTED;
         ChargeStatusEnum desiredStatus = DONE;
         // activate
-        boolean result = DCMStepFunctions.isTransitionAllowed(currentStatus, desiredStatus);
+        boolean result = DCMStepFunctions.isChargeTransitionAllowed(currentStatus, desiredStatus);
         // Verify
         assertTrue(result);
     }
@@ -130,7 +130,7 @@ public class DCMStepFunctionsTest {
         // prepare
         ChargeStatusEnum currentStatus = BOOKED;
         // activate
-        boolean result = DCMStepFunctions.isTransitionAllowed(currentStatus, desiredStatus);
+        boolean result = DCMStepFunctions.isChargeTransitionAllowed(currentStatus, desiredStatus);
         // Verify
         assertTrue(result);
     }
@@ -141,7 +141,7 @@ public class DCMStepFunctionsTest {
         ChargeStatusEnum currentStatus = REJECTED;
         ChargeStatusEnum desiredStatus = DCM_APPLIED;
         // activate
-        boolean result = DCMStepFunctions.isTransitionAllowed(currentStatus, desiredStatus);
+        boolean result = DCMStepFunctions.isChargeTransitionAllowed(currentStatus, desiredStatus);
         // Verify
         assertFalse(result);
     }
@@ -152,7 +152,7 @@ public class DCMStepFunctionsTest {
         ChargeStatusEnum currentStatus = BOOKED;
         ChargeStatusEnum desiredStatus = DCM_APPLIED;
         // activate
-        boolean result = DCMStepFunctions.isTransitionAllowed(currentStatus, desiredStatus);
+        boolean result = DCMStepFunctions.isChargeTransitionAllowed(currentStatus, desiredStatus);
         // Verify
         assertTrue(result);
     }

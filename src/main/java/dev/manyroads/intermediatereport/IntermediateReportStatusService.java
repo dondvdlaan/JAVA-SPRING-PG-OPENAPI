@@ -34,9 +34,9 @@ public class IntermediateReportStatusService {
     public void processIntermediateReportStatusRequests(IntermediateReportStatusRequest intermediateReportStatusRequest) {
         log.info("processIntermediateReportStatusRequests: Start processing incoming IntermediateReportStatusRequest ");
         Charge charge = getCharge(intermediateReportStatusRequest);
-        log.info("charge: recovered {} ", charge);
+        log.info("charge: recovered {} ", charge.getChargeID());
 
-        if (!DCMStepFunctions.isTransitionAllowed(charge.getChargeStatus(), intermediateReportStatusRequest.getStatusIntermediateReport()))
+        if (!DCMStepFunctions.isChargeTransitionAllowed(charge.getChargeStatus(), intermediateReportStatusRequest.getStatusIntermediateReport()))
             throw new IntermediateReportStatusTransitionChargeStateException(
                     MessageFormat.format("DCM-308: Transition to {0} from {1} not allowed.",
                             intermediateReportStatusRequest.getStatusIntermediateReport(), charge.getChargeStatus()));

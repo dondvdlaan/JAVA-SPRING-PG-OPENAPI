@@ -15,7 +15,7 @@ import java.util.Objects;
 
 public class DCMStepFunctions {
 
-    static public boolean isTransitionAllowed(ChargeStatusEnum chargeStatus, ChargeStatusEnum intermediateReportStatus) {
+    static public boolean isChargeTransitionAllowed(ChargeStatusEnum chargeStatus, ChargeStatusEnum intermediateReportStatus) {
 
         boolean allowed = false;
 
@@ -27,8 +27,8 @@ public class DCMStepFunctions {
             case BOOKED -> allowed = all.contains(intermediateReportStatus);
             case REJECTED, CUSTOMER_DECEASED -> allowed = Objects.equals(DONE, intermediateReportStatus);
             case DCM_APPLIED -> allowed = terminating.contains(intermediateReportStatus);
-            case DONE -> {
-            } // Do nothing, allowed is false
+            case DONE -> { // Do nothing, allowed is false
+            }
             case EXECUTABLE, PARTIALLY_EXECUTABLE -> allowed = allReduced.contains(intermediateReportStatus);
             default -> throw new InternalException("isTransitionAllowed: Default ChargeStatusEnum enums not matched ");
         }

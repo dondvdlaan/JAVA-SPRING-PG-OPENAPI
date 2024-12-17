@@ -5,6 +5,8 @@ import dev.manyroads.execinterrup.exception.ChargeMissingForCustomerNrException;
 import dev.manyroads.execinterrup.exception.MatterCustomerNrMismatchException;
 import dev.manyroads.execinterrup.exception.MatterMissingForCustomerNrException;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusChargeIDNotExistException;
+import dev.manyroads.intermediatereport.exception.IntermediateReportStatusMattersNotBelongToChargeException;
+import dev.manyroads.intermediatereport.exception.IntermediateReportStatusTransitionChargeStateException;
 import dev.manyroads.matterreception.exception.CustomerNrIsMissingException;
 import dev.manyroads.matterreception.exception.MatterIDIsMissingException;
 import dev.manyroads.matterreception.exception.MatterRequestEmptyOrNullException;
@@ -31,7 +33,9 @@ public class DCMExceptionHandler {
             MatterMissingForCustomerNrException.class,
             ChargeHasDoneStatusException.class,
             MatterCustomerNrMismatchException.class,
-            IntermediateReportStatusChargeIDNotExistException.class
+            IntermediateReportStatusChargeIDNotExistException.class,
+            IntermediateReportStatusTransitionChargeStateException.class,
+            IntermediateReportStatusMattersNotBelongToChargeException.class
     })
     public ResponseEntity<ErrorData> handleException(final DCMException ex) {
         log.error(String.format("Error from handleException: %s %s", ex.getClass().getSimpleName(), ex.getMessage()));
