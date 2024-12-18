@@ -6,7 +6,6 @@ import dev.manyroads.execinterrup.exception.ChargeHasDoneStatusException;
 import dev.manyroads.execinterrup.exception.ChargeMissingForCustomerNrException;
 import dev.manyroads.execinterrup.exception.MatterCustomerNrMismatchException;
 import dev.manyroads.execinterrup.exception.MatterMissingForCustomerNrException;
-import dev.manyroads.execinterrup.exception.MatterNotFoundException;
 import dev.manyroads.model.ChargeStatusEnum;
 import dev.manyroads.model.ExecInterrupRequest;
 import dev.manyroads.model.ExecInterrupResponse;
@@ -101,7 +100,7 @@ public class ExecutionInterruptionService {
         // Communicate to admin to terminate ongoing charges / matters for this customer
         listChargesDecom.stream()
                 .map(Charge::getMatters)
-                .forEach(set -> set.forEach(matter -> adminClient.terminateMatter(matter.convertToMessage())));
+                .forEach(set -> set.forEach(matter -> adminClient.terminateMatter(matter.convertToMatterMessage())));
     }
 
     private void handleMatterWithdrawn(ExecInterrupRequest execInterrupRequest) {
@@ -122,7 +121,7 @@ public class ExecutionInterruptionService {
         if (oMatter.get().getCharge().getChargeStatus() == ChargeStatusEnum.DONE) {
             throw new ChargeHasDoneStatusException(execInterrupRequest.getCustomerNr());
         }
-        if (DCMutils.isBeingProcessed(oMatter.get().getCharge())) adminClient.terminateMatter(oMatter.get().convertToMessage());
+        if (DCMutils.isBeingProcessed(oMatter.get().getCharge())) adminClient.terminateMatter(oMatter.get().convertToMatterMessage());
     }
 
     // sub methods

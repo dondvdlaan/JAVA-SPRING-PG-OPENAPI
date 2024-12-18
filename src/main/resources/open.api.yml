@@ -7,6 +7,12 @@ paths:
     post:
       summary: Receiving matters
       operationId: receiveMatter
+      parameters:
+        - in: header
+          name: Termination-Call-Back-Url
+          schema:
+            type: string
+          required: true
       requestBody:
         description: Matter Post object to be received
         required: true

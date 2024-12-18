@@ -11,6 +11,7 @@ import dev.manyroads.matterreception.exception.CustomerNrIsMissingException;
 import dev.manyroads.matterreception.exception.MatterIDIsMissingException;
 import dev.manyroads.matterreception.exception.MatterRequestEmptyOrNullException;
 import dev.manyroads.matterreception.exception.VehicleTypeNotCoincideWithDomainException;
+import dev.manyroads.matterreception.exception.MatterRequestHeaderEmptyOrNullException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ public class DCMExceptionHandler {
             AdminClientException.class,
             VehicleTypeNotCoincideWithDomainException.class,
             VehicleTypeNotFoundException.class,
+            MatterRequestHeaderEmptyOrNullException.class,
             InternalException.class,
             ChargeMissingForCustomerNrException.class,
             MatterMissingForCustomerNrException.class,

@@ -33,8 +33,10 @@ public class Matter {
     @Column(name = "reason_termination")
     @Enumerated(EnumType.STRING)
     private IntermediateReportExplanationEnum reasonTermination;
+    @Column(name = "termination_call_back_url")
+    private String terminationCallBackUrl;
 
-    public MatterMessage convertToMessage() {
+    public MatterMessage convertToMatterMessage() {
         return new MatterMessage(this.matterNr, this.matterStatus);
     }
 }

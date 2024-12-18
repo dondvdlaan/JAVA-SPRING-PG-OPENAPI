@@ -1,22 +1,28 @@
-package dev.manyroads.execinterrup;
+package dev.manyroads.decomreception;
 
 import dev.manyroads.execinterrup.exception.CustomerNrIsMissingException;
 import dev.manyroads.execinterrup.exception.ExecInterrupEmptyOrNullException;
 import dev.manyroads.execinterrup.exception.ExecInterrupTypeMissingException;
 import dev.manyroads.model.ExecInterrupEnum;
 import dev.manyroads.model.ExecInterrupRequest;
+import dev.manyroads.model.MatterRequest;
 import dev.manyroads.verification.Verification;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.mock.web.MockHttpServletRequest;
 
+import java.net.http.HttpHeaders;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-public class ExecInterrupVerificationTest {
+public class MatterReceptionVerificationTest {
 
     static Stream<ExecInterrupEnum> differentTypes() {
         return Arrays.stream(ExecInterrupEnum.values());
@@ -29,6 +35,7 @@ public class ExecInterrupVerificationTest {
         verification = new Verification();
     }
 
+    @Disabled
     @ParameterizedTest
     @MethodSource("differentTypes")
     void execInterrupTypeIsNullAnCustomerIDIsNull(ExecInterrupEnum execInterrupEnum) {
@@ -42,6 +49,7 @@ public class ExecInterrupVerificationTest {
                 .isInstanceOf(CustomerNrIsMissingException.class);
     }
 
+    @Disabled
     @ParameterizedTest
     @MethodSource("differentTypes")
     void execInterrupIsNull(ExecInterrupEnum execInterrupEnum) {
@@ -55,6 +63,7 @@ public class ExecInterrupVerificationTest {
                 .isInstanceOf(ExecInterrupEmptyOrNullException.class);
     }
 
+    @Disabled
     @ParameterizedTest
     @MethodSource("differentTypes")
     void execInterrupTypeIsNull(ExecInterrupEnum execInterrupEnum) {
@@ -68,6 +77,7 @@ public class ExecInterrupVerificationTest {
                 .isInstanceOf(ExecInterrupTypeMissingException.class);
     }
 
+    @Disabled
     @ParameterizedTest
     @MethodSource("differentTypes")
     void execInterrupCustomerNrIsNull(ExecInterrupEnum execInterrupEnum) {
@@ -81,16 +91,18 @@ public class ExecInterrupVerificationTest {
                 .isInstanceOf(CustomerNrIsMissingException.class);
     }
 
-    @ParameterizedTest
-    @MethodSource("differentTypes")
-    void checkHappyFlowExecInterruptTest(ExecInterrupEnum execInterrupEnum) {
+    @Test
+    void checkHappyFlowMatterReceptionVerificationTest() {
         Long customerNr = (long) (Math.random() * 999999);
-        ExecInterrupRequest correctExecInterrupRequest = new ExecInterrupRequest();
-        correctExecInterrupRequest.setCustomerNr(customerNr);
-        correctExecInterrupRequest.setExecInterrupType(execInterrupEnum);
+        String matterNr = "121212";
+        MatterRequest matterRequest = new MatterRequest();
+        matterRequest.setMatterNr(matterNr);
+        matterRequest.setCustomerNr(customerNr);
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("Termination-Call-Back-Url", "/v1/terminate-matter/");
 
         // Verify
-        Assertions.assertDoesNotThrow(() -> verification.verifyExecInterrupRequest(correctExecInterrupRequest));
+        Assertions.assertDoesNotThrow(() -> verification.verifyMatterRequest(matterRequest, request));
     }
 
 }

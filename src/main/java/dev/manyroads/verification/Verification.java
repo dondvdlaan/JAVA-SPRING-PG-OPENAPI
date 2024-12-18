@@ -10,10 +10,12 @@ import dev.manyroads.matterreception.exception.MatterIDIsMissingException;
 import dev.manyroads.matterreception.exception.MatterRequestEmptyOrNullException;
 import dev.manyroads.matterreception.exception.CustomerNrIsMissingException;
 import dev.manyroads.execinterrup.exception.ExecInterrupEmptyOrNullException;
+import dev.manyroads.matterreception.exception.MatterRequestHeaderEmptyOrNullException;
 import dev.manyroads.model.ExecInterrupEnum;
 import dev.manyroads.model.ExecInterrupRequest;
 import dev.manyroads.model.IntermediateReportStatusRequest;
 import dev.manyroads.model.MatterRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -22,9 +24,11 @@ import java.util.Optional;
 @Service
 public class Verification {
 
-    public void verifyMatterRequest(MatterRequest matterRequest) {
+    public void verifyMatterRequest(MatterRequest matterRequest, HttpServletRequest httpServletRequest) {
         Optional.ofNullable(matterRequest)
                 .orElseThrow(MatterRequestEmptyOrNullException::new);
+        Optional.ofNullable(httpServletRequest.getHeader("Termination-Call-Back-Url"))
+                .orElseThrow(MatterRequestHeaderEmptyOrNullException::new);
         Optional.ofNullable(matterRequest.getCustomerNr())
                 .orElseThrow(CustomerNrIsMissingException::new);
         Optional.ofNullable(matterRequest.getMatterNr())
