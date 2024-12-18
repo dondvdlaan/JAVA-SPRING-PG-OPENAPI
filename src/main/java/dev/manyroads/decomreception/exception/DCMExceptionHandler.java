@@ -7,7 +7,7 @@ import dev.manyroads.execinterrup.exception.MatterMissingForCustomerNrException;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusChargeIDNotExistException;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusMattersNotBelongToChargeException;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusTransitionChargeStateException;
-import dev.manyroads.matterreception.exception.CustomerNrIsMissingException;
+import dev.manyroads.matterreception.exception.MatterRequestCustomerNrIsMissingException;
 import dev.manyroads.matterreception.exception.MatterIDIsMissingException;
 import dev.manyroads.matterreception.exception.MatterRequestEmptyOrNullException;
 import dev.manyroads.matterreception.exception.VehicleTypeNotCoincideWithDomainException;
@@ -24,7 +24,7 @@ public class DCMExceptionHandler {
 
     @ExceptionHandler({
             MatterRequestEmptyOrNullException.class,
-            CustomerNrIsMissingException.class,
+            MatterRequestCustomerNrIsMissingException.class,
             MatterIDIsMissingException.class,
             AdminClientException.class,
             VehicleTypeNotCoincideWithDomainException.class,

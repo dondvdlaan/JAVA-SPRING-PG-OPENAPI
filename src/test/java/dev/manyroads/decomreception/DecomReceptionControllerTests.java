@@ -2,7 +2,7 @@ package dev.manyroads.decomreception;
 
 import dev.manyroads.matterreception.exception.MatterIDIsMissingException;
 import dev.manyroads.matterreception.exception.MatterRequestEmptyOrNullException;
-import dev.manyroads.matterreception.exception.CustomerNrIsMissingException;
+import dev.manyroads.matterreception.exception.MatterRequestCustomerNrIsMissingException;
 import dev.manyroads.matterreception.MatterReceptionService;
 import dev.manyroads.model.MatterRequest;
 import dev.manyroads.model.MatterResponse;
@@ -72,7 +72,7 @@ public class DecomReceptionControllerTests {
 
         // Verify
         assertThatThrownBy(() -> verification.verifyMatterRequest(caseRequestPersonIDIsNull,request))
-                .isInstanceOf(CustomerNrIsMissingException.class)
+                .isInstanceOf(MatterRequestCustomerNrIsMissingException.class)
                 .hasMessageStartingWith("DCM-002: MatterRequest CustomerNr is missing");
     }
 

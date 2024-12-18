@@ -8,7 +8,7 @@ import dev.manyroads.intermediatereport.exception.IntermediateReportStatusMissin
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusMissingStatusException;
 import dev.manyroads.matterreception.exception.MatterIDIsMissingException;
 import dev.manyroads.matterreception.exception.MatterRequestEmptyOrNullException;
-import dev.manyroads.matterreception.exception.CustomerNrIsMissingException;
+import dev.manyroads.matterreception.exception.MatterRequestCustomerNrIsMissingException;
 import dev.manyroads.execinterrup.exception.ExecInterrupEmptyOrNullException;
 import dev.manyroads.matterreception.exception.MatterRequestHeaderEmptyOrNullException;
 import dev.manyroads.model.ExecInterrupEnum;
@@ -30,7 +30,7 @@ public class Verification {
         Optional.ofNullable(httpServletRequest.getHeader("Termination-Call-Back-Url"))
                 .orElseThrow(MatterRequestHeaderEmptyOrNullException::new);
         Optional.ofNullable(matterRequest.getCustomerNr())
-                .orElseThrow(CustomerNrIsMissingException::new);
+                .orElseThrow(MatterRequestCustomerNrIsMissingException::new);
         Optional.ofNullable(matterRequest.getMatterNr())
                 .orElseThrow(MatterIDIsMissingException::new);
     }
