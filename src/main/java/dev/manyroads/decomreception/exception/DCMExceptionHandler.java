@@ -7,10 +7,11 @@ import dev.manyroads.execinterrup.exception.MatterMissingForCustomerNrException;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusChargeIDNotExistException;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusMattersNotBelongToChargeException;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusTransitionChargeStateException;
-import dev.manyroads.matterreception.exception.CustomerNrIsMissingException;
+import dev.manyroads.matterreception.exception.MatterRequestCustomerNrIsMissingException;
 import dev.manyroads.matterreception.exception.MatterIDIsMissingException;
 import dev.manyroads.matterreception.exception.MatterRequestEmptyOrNullException;
 import dev.manyroads.matterreception.exception.VehicleTypeNotCoincideWithDomainException;
+import dev.manyroads.matterreception.exception.MatterRequestHeaderEmptyOrNullException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +24,12 @@ public class DCMExceptionHandler {
 
     @ExceptionHandler({
             MatterRequestEmptyOrNullException.class,
-            CustomerNrIsMissingException.class,
+            MatterRequestCustomerNrIsMissingException.class,
             MatterIDIsMissingException.class,
             AdminClientException.class,
             VehicleTypeNotCoincideWithDomainException.class,
             VehicleTypeNotFoundException.class,
+            MatterRequestHeaderEmptyOrNullException.class,
             InternalException.class,
             ChargeMissingForCustomerNrException.class,
             MatterMissingForCustomerNrException.class,

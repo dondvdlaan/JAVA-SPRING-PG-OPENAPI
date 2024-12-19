@@ -9,6 +9,7 @@ import dev.manyroads.model.IntermediateReportStatusRequest;
 import dev.manyroads.model.MatterRequest;
 import dev.manyroads.model.MatterResponse;
 import dev.manyroads.verification.Verification;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +26,11 @@ public class DecomReceptionController {
     IntermediateReportStatusService intermediateReportStatusService;
 
     @RequestMapping(value = "/v1/matters", method = RequestMethod.POST)
-    public ResponseEntity<MatterResponse> receiveMatter(@RequestBody MatterRequest matterRequest) {
+    public ResponseEntity<MatterResponse> receiveMatter(@RequestBody MatterRequest matterRequest, HttpServletRequest httpServletRequest) {
 
-        verification.verifyMatterRequest(matterRequest);
+        verification.verifyMatterRequest(matterRequest,httpServletRequest);
+        var terminationCallBackUrl = httpServletRequest.getHeader("Termination-Call-Back-Url");
+        System.out.println("terminationCallBackUrl: " + terminationCallBackUrl);
         MatterResponse matterResponse = matterReceptionService.processIncomingMatterRequest(matterRequest);
 
         log.info("Response returned: {}", matterResponse);

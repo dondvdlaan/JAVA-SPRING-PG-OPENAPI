@@ -27,7 +27,6 @@ public class ExecInterrupVerificationTest {
     @BeforeEach
     void setUp() {
         verification = new Verification();
-
     }
 
     @ParameterizedTest
