@@ -1,6 +1,7 @@
 package dev.manyroads.execinterrup;
 
 import dev.manyroads.client.AdminClient;
+import dev.manyroads.client.ParentMicroserviceClient;
 import dev.manyroads.execinterrup.exception.ChargeMissingForCustomerNrException;
 import dev.manyroads.execinterrup.exception.MatterCustomerNrMismatchException;
 import dev.manyroads.model.ChargeStatusEnum;
@@ -10,11 +11,11 @@ import dev.manyroads.model.ExecInterrupResponse;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.Matter;
 import dev.manyroads.model.enums.MatterStatus;
-import dev.manyroads.model.messages.MatterMessage;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.ExecInterrupRepository;
 import dev.manyroads.model.repository.MatterRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -40,6 +41,7 @@ public class ExecutionInterruptionServiceTest {
     MatterRepository matterRepository;
     ExecInterrupRepository execInterrupRepository;
     AdminClient adminClient;
+    ParentMicroserviceClient parentMicroserviceClient;
 
     @BeforeEach
     void setup() {
@@ -47,8 +49,9 @@ public class ExecutionInterruptionServiceTest {
         matterRepository = mock(MatterRepository.class);
         execInterrupRepository = mock(ExecInterrupRepository.class);
         adminClient = mock(AdminClient.class);
+        parentMicroserviceClient = mock(ParentMicroserviceClient.class);
         executionInterruptionService = new ExecutionInterruptionService(
-                chargeRepository, matterRepository, execInterrupRepository, adminClient);
+                chargeRepository, matterRepository, execInterrupRepository, adminClient, parentMicroserviceClient);
     }
 
     @Test
@@ -77,6 +80,7 @@ public class ExecutionInterruptionServiceTest {
                 .execInterrupType(ExecInterrupEnum.CUSTOMER_DECEASED);
 
         when(chargeRepository.findByCustomerNr(anyLong())).thenReturn(Optional.of(listCharges));
+        when(parentMicroserviceClient.sendMessageToParentMicroservice(eq(existingMatter))).thenReturn(true);
         ExecInterrupResponse expected = new ExecInterrupResponse();
 
         // activate
@@ -86,6 +90,7 @@ public class ExecutionInterruptionServiceTest {
         verify(execInterrupRepository, times(1)).save(any());
         verify(chargeRepository, times(1)).findByCustomerNr(anyLong());
         verify(adminClient, times(1)).terminateMatter(any());
+        verify(parentMicroserviceClient, times(1)).sendMessageToParentMicroservice(any());
     }
 
     @Test
@@ -124,6 +129,8 @@ public class ExecutionInterruptionServiceTest {
         verify(execInterrupRepository, times(1)).save(any());
         verify(matterRepository, times(2)).findById(any());
         verify(adminClient, never()).terminateMatter(any());
+        verify(parentMicroserviceClient, never()).sendMessageToParentMicroservice(any());
+
     }
 
     @Test
@@ -162,6 +169,8 @@ public class ExecutionInterruptionServiceTest {
         verify(execInterrupRepository, times(1)).save(any());
         verify(matterRepository, times(2)).findById(any());
         verify(adminClient, times(1)).terminateMatter(any());
+        verify(parentMicroserviceClient, never()).sendMessageToParentMicroservice(any());
+
     }
 
     @Test
@@ -196,6 +205,8 @@ public class ExecutionInterruptionServiceTest {
                         existingMatter.getMatterID(), matterCustomerNrMismatchInterruptRequest.getCustomerNr()));
         verify(matterRepository, times(1)).findById(any());
         verify(execInterrupRepository, times(1)).save(any());
+        verify(adminClient, never()).terminateMatter(any());
+        verify(parentMicroserviceClient, never()).sendMessageToParentMicroservice(any());
     }
 
     @Test
@@ -232,6 +243,9 @@ public class ExecutionInterruptionServiceTest {
         verify(matterRepository, times(1)).save(any());
         oMatter.ifPresent(m -> assertEquals(MatterStatus.WITHDRAWN, m.getMatterStatus()));
         assertEquals(expected, result);
+        verify(adminClient, never()).terminateMatter(any());
+        verify(parentMicroserviceClient, never()).sendMessageToParentMicroservice(any());
+
     }
 
     @Test
@@ -252,10 +266,13 @@ public class ExecutionInterruptionServiceTest {
         verify(chargeRepository, times(1)).findByCustomerNr(anyLong());
         verify(execInterrupRepository, times(1)).save(any());
         verify(chargeRepository, times(0)).save(any());
+        verify(adminClient, never()).terminateMatter(any());
+        verify(parentMicroserviceClient, never()).sendMessageToParentMicroservice(any());
     }
 
     @Test
-    void customerNrCorrectMatterIdEmptyShallReturnExecInterrupResponseNotNull() {
+    @DisplayName("Charge without Matters")
+    void customerNrCorrectMatterNrNullShallReturnExecInterrupResponseNotNull() {
         // prepare
         Long customerNr = (long) (Math.random() * 99999);
         ExecInterrupRequest happyCustomerInterruptRequest =
@@ -279,6 +296,8 @@ public class ExecutionInterruptionServiceTest {
         verify(chargeRepository, times(2)).findByCustomerNr(anyLong());
         verify(execInterrupRepository, times(1)).save(any());
         verify(chargeRepository, times(1)).save(any());
+        verify(adminClient, never()).terminateMatter(any());
+        verify(parentMicroserviceClient, never()).sendMessageToParentMicroservice(any());
         oListCharge.ifPresent(cl -> cl.forEach(
                 c -> assertEquals(ChargeStatusEnum.CUSTOMER_DECEASED, c.getChargeStatus())));
         assertEquals(expected, result);

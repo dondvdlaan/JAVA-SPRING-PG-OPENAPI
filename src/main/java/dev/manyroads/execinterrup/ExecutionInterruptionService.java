@@ -1,6 +1,7 @@
 package dev.manyroads.execinterrup;
 
 import dev.manyroads.client.AdminClient;
+import dev.manyroads.client.ParentMicroserviceClient;
 import dev.manyroads.decomreception.exception.InternalException;
 import dev.manyroads.execinterrup.exception.ChargeHasDoneStatusException;
 import dev.manyroads.execinterrup.exception.ChargeMissingForCustomerNrException;
@@ -35,6 +36,7 @@ public class ExecutionInterruptionService {
     MatterRepository matterRepository;
     ExecInterrupRepository execInterrupRepository;
     AdminClient adminClient;
+    ParentMicroserviceClient parentMicroserviceClient;
 
     public ExecInterrupResponse processIncomingExecutionInterruptions(ExecInterrupRequest execInterrupRequest) {
         log.info("Processing of Execution Interruption for customer nr: {} started.", execInterrupRequest.getCustomerNr());
@@ -85,10 +87,14 @@ public class ExecutionInterruptionService {
         log.info("Started handleCustomerDeceased for customer nr: {} ", execInterrupRequest.getCustomerNr());
         Optional<List<Charge>> oChargeList = chargeRepository.findByCustomerNr(execInterrupRequest.getCustomerNr());
         oChargeList.orElseThrow(() -> new ChargeMissingForCustomerNrException(execInterrupRequest.getCustomerNr()));
+        oChargeList.get().forEach(System.out::println);
 
         // Filter charges for status booked
         List<Charge> listChargesDecom =
-                oChargeList.get().stream().filter(c -> c.getChargeStatus() == ChargeStatusEnum.BOOKED).toList();
+                oChargeList.get()
+                        .stream()
+                        .peek(c->System.out.println("c.getChargeStatus(): " + c.getChargeStatus()))
+                        .filter(c -> c.getChargeStatus() == ChargeStatusEnum.BOOKED).toList();
 
         // Update status for active charges
         DCMutils.isActive(oChargeList.get())
@@ -101,6 +107,12 @@ public class ExecutionInterruptionService {
         listChargesDecom.stream()
                 .map(Charge::getMatters)
                 .forEach(set -> set.forEach(matter -> adminClient.terminateMatter(matter.convertToMatterMessage())));
+
+        // Request to parent microservice to send a termination matter request
+        boolean result = oChargeList.get()
+                .stream()
+                .allMatch(this::requestTerminateMatter);
+        log.info("handleCustomerDeceased Requests to parent microservice went correctly: " + result);
     }
 
     private void handleMatterWithdrawn(ExecInterrupRequest execInterrupRequest) {
@@ -121,7 +133,8 @@ public class ExecutionInterruptionService {
         if (oMatter.get().getCharge().getChargeStatus() == ChargeStatusEnum.DONE) {
             throw new ChargeHasDoneStatusException(execInterrupRequest.getCustomerNr());
         }
-        if (DCMutils.isBeingProcessed(oMatter.get().getCharge())) adminClient.terminateMatter(oMatter.get().convertToMatterMessage());
+        if (DCMutils.isBeingProcessed(oMatter.get().getCharge()))
+            adminClient.terminateMatter(oMatter.get().convertToMatterMessage());
     }
 
     // sub methods
@@ -133,5 +146,13 @@ public class ExecutionInterruptionService {
                 .execInterrupStatus(execInterrupRequest.getExecInterrupType())
                 .build();
         execInterrupRepository.save(execInterrup);
+    }
+
+    private boolean requestTerminateMatter(Charge charge) {
+        boolean result = false;
+        for (Matter matter : charge.getMatters()) {
+            result = parentMicroserviceClient.sendMessageToParentMicroservice(matter);
+        }
+        return result;
     }
 }
