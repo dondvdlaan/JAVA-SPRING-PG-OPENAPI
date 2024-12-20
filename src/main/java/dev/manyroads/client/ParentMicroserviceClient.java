@@ -4,7 +4,6 @@ import dev.manyroads.decomreception.exception.InternalException;
 import dev.manyroads.model.entity.Matter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

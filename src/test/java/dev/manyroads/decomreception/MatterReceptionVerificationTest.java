@@ -8,7 +8,6 @@ import dev.manyroads.verification.Verification;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
