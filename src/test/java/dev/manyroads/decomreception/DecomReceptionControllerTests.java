@@ -46,16 +46,16 @@ public class DecomReceptionControllerTests {
     @Test
     void caseRequestCaseIDNullShouldThrowExceptionTest() {
         // Prepare
-        MatterRequest caseRequestCaseIDIsNull = new MatterRequest();
-        caseRequestCaseIDIsNull.setCustomerNr(987654L);
-        caseRequestCaseIDIsNull.setMatterNr(null);
+        MatterRequest matterRequestMatterIDIsNull = new MatterRequest();
+        matterRequestMatterIDIsNull.setCustomerNr(987654L);
+        matterRequestMatterIDIsNull.setMatterNr(null);
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setParameter("Termination-Call-Back-Url", "/v1/terminate-matter/");
+        request.setH("Termination-Call-Back-Url", "/v1/terminate-matter/");
 
         // Activate
 
         // Verify
-        assertThatThrownBy(() -> verification.verifyMatterRequest(caseRequestCaseIDIsNull,request))
+        assertThatThrownBy(() -> verification.verifyMatterRequest(matterRequestMatterIDIsNull,request))
                 .isInstanceOf(MatterIDIsMissingException.class)
                 .hasMessageStartingWith("DCM-003: CaseRequest CaseID is missing");
     }

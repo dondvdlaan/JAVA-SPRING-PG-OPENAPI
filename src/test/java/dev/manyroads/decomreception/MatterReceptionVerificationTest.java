@@ -30,7 +30,7 @@ public class MatterReceptionVerificationTest {
         matterRequestMatterIDNull.setMatterNr(null);
         matterRequestMatterIDNull.setCustomerNr(customerNr);
         MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
-        httpServletRequest.addHeader("Termination-Call-Back-Url", "/v1/terminate-matter/");
+        httpServletRequest.addHeader("Termination-Call-Back-Url", "/v1/terminate-matter");
 
         // Verify
         assertThatThrownBy(() -> verification.verifyMatterRequest(matterRequestMatterIDNull, httpServletRequest))

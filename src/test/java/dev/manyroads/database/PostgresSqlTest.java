@@ -29,6 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * Main test file
+ */
 @SpringBootTest
 public class PostgresSqlTest {
 
