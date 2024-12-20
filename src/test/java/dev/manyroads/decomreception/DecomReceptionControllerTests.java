@@ -5,6 +5,7 @@ import dev.manyroads.matterreception.exception.MatterRequestEmptyOrNullException
 import dev.manyroads.matterreception.exception.MatterRequestCustomerNrIsMissingException;
 import dev.manyroads.matterreception.MatterReceptionService;
 import dev.manyroads.model.MatterRequest;
+import dev.manyroads.model.MatterRequestCallback;
 import dev.manyroads.model.MatterResponse;
 import dev.manyroads.verification.Verification;
 import org.junit.jupiter.api.DisplayName;
@@ -96,11 +97,14 @@ public class DecomReceptionControllerTests {
     }
 
     @Test
-    void caseRequestShouldReturnStatusCose200Test() {
+    void matterRequestShouldReturnStatusCode200Test() {
         // Prepare
         MatterRequest matterRequest = new MatterRequest();
         matterRequest.setCustomerNr(123456L);
-        matterRequest.setMatterNr("123456");
+        matterRequest.setMatterNr("7890123");
+        MatterRequestCallback matterRequestCallback = new MatterRequestCallback();
+        matterRequestCallback.setTerminationCallBackUrl("een/eindpunt");
+        matterRequest.setCallback(matterRequestCallback);
         UUID chargeID = UUID.randomUUID();
         MatterResponse matterResponse = new MatterResponse();
         matterResponse.setChargeID(chargeID);
@@ -129,6 +133,9 @@ public class DecomReceptionControllerTests {
         MatterRequest matterRequest = new MatterRequest();
         matterRequest.setMatterNr("12345");
         matterRequest.setCustomerNr(customerNr);
+        MatterRequestCallback matterRequestCallback = new MatterRequestCallback();
+        matterRequestCallback.setTerminationCallBackUrl("mooi/wel");
+        matterRequest.setCallback(matterRequestCallback);
         MatterResponse matterResponse = new MatterResponse();
         matterResponse.setCustomerNr(customerNr);
         Long expected = matterResponse.getCustomerNr();

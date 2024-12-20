@@ -6,6 +6,7 @@ import dev.manyroads.decomreception.DecomReceptionController;
 import dev.manyroads.matterreception.MatterReceptionService;
 import dev.manyroads.model.ChargeStatusEnum;
 import dev.manyroads.model.MatterRequest;
+import dev.manyroads.model.MatterRequestCallback;
 import dev.manyroads.model.MatterResponse;
 import dev.manyroads.model.VehicleTypeEnum;
 import dev.manyroads.model.entity.Charge;
@@ -54,6 +55,9 @@ public class TestPostgresSqlTest {
         MatterRequest matterRequest = new MatterRequest();
         matterRequest.setMatterNr("121212");
         matterRequest.setCustomerNr(customerNr);
+        MatterRequestCallback matterRequestCallback = new MatterRequestCallback();
+        matterRequestCallback.setTerminationCallBackUrl("tatata/wel");
+        matterRequest.setCallback(matterRequestCallback);
         when(adminClient.searchVehicleType(matterRequest.getMatterNr())).thenReturn("bulldozer");
         when(customerProcessingClient.sendMessageToCustomerProcessing(any())).thenReturn(true);
         Customer existingCustomer = new Customer();
