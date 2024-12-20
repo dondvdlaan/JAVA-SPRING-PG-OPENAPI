@@ -49,13 +49,11 @@ public class DecomReceptionControllerTests {
         MatterRequest matterRequestMatterIDIsNull = new MatterRequest();
         matterRequestMatterIDIsNull.setCustomerNr(987654L);
         matterRequestMatterIDIsNull.setMatterNr(null);
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setH("Termination-Call-Back-Url", "/v1/terminate-matter/");
 
         // Activate
 
         // Verify
-        assertThatThrownBy(() -> verification.verifyMatterRequest(matterRequestMatterIDIsNull,request))
+        assertThatThrownBy(() -> verification.verifyMatterRequest(matterRequestMatterIDIsNull))
                 .isInstanceOf(MatterIDIsMissingException.class)
                 .hasMessageStartingWith("DCM-003: CaseRequest CaseID is missing");
     }
@@ -65,13 +63,11 @@ public class DecomReceptionControllerTests {
         // Prepare
         MatterRequest caseRequestPersonIDIsNull = new MatterRequest();
         caseRequestPersonIDIsNull.setMatterNr(null);
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setParameter("Termination-Call-Back-Url", "/v1/terminate-matter/");
 
         // Activate
 
         // Verify
-        assertThatThrownBy(() -> verification.verifyMatterRequest(caseRequestPersonIDIsNull,request))
+        assertThatThrownBy(() -> verification.verifyMatterRequest(caseRequestPersonIDIsNull))
                 .isInstanceOf(MatterRequestCustomerNrIsMissingException.class)
                 .hasMessageStartingWith("DCM-002: MatterRequest CustomerNr is missing");
     }
@@ -81,8 +77,6 @@ public class DecomReceptionControllerTests {
         // Prepare
         MatterRequest matterRequestIsNull = null;
         HttpHeaders headers = new HttpHeaders();
-        MockHttpServletRequest HttpServletRequest = new MockHttpServletRequest();
-        HttpServletRequest.setParameter("Termination-Call-Back-Url", "/v1/terminate-matter/");
         headers.set("content-type", "application/json");
         HttpEntity<MatterRequest> request = new HttpEntity<>(matterRequestIsNull, headers);
         String expectedStatusCode = "400 BAD_REQUEST";
@@ -97,7 +91,7 @@ public class DecomReceptionControllerTests {
         // Verify
         System.out.println("result: " + result);
         assertEquals(expectedStatusCode, result.getStatusCode().toString());
-        assertThatThrownBy(() -> verification.verifyMatterRequest(matterRequestIsNull, HttpServletRequest))
+        assertThatThrownBy(() -> verification.verifyMatterRequest(matterRequestIsNull))
                 .isInstanceOf(MatterRequestEmptyOrNullException.class)
                 .hasMessageStartingWith("DCM-001: CaseRequest empty or Null");
     }

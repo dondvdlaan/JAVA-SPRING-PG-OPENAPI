@@ -3,7 +3,6 @@ package dev.manyroads.decomreception;
 import dev.manyroads.matterreception.exception.MatterIDIsMissingException;
 import dev.manyroads.matterreception.exception.MatterRequestCustomerNrIsMissingException;
 import dev.manyroads.matterreception.exception.MatterRequestEmptyOrNullException;
-import dev.manyroads.matterreception.exception.MatterRequestHeaderEmptyOrNullException;
 import dev.manyroads.model.MatterRequest;
 import dev.manyroads.verification.Verification;
 import org.junit.jupiter.api.Assertions;
@@ -29,11 +28,9 @@ public class MatterReceptionVerificationTest {
         MatterRequest matterRequestMatterIDNull = new MatterRequest();
         matterRequestMatterIDNull.setMatterNr(null);
         matterRequestMatterIDNull.setCustomerNr(customerNr);
-        MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
-        httpServletRequest.addHeader("Termination-Call-Back-Url", "/v1/terminate-matter");
 
         // Verify
-        assertThatThrownBy(() -> verification.verifyMatterRequest(matterRequestMatterIDNull, httpServletRequest))
+        assertThatThrownBy(() -> verification.verifyMatterRequest(matterRequestMatterIDNull))
                 .isInstanceOf(MatterIDIsMissingException.class)
                 .hasMessage("DCM-003: CaseRequest CaseID is missing");
     }
@@ -45,11 +42,9 @@ public class MatterReceptionVerificationTest {
         MatterRequest matterRequestCustomerNrNull = new MatterRequest();
         matterRequestCustomerNrNull.setMatterNr(matterNr);
         matterRequestCustomerNrNull.setCustomerNr(null);
-        MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
-        httpServletRequest.addHeader("Termination-Call-Back-Url", "/v1/terminate-matter/");
 
         // Verify
-        assertThatThrownBy(() -> verification.verifyMatterRequest(matterRequestCustomerNrNull, httpServletRequest))
+        assertThatThrownBy(() -> verification.verifyMatterRequest(matterRequestCustomerNrNull))
                 .isInstanceOf(MatterRequestCustomerNrIsMissingException.class)
                 .hasMessage("DCM-002: MatterRequest CustomerNr is missing");
     }
@@ -60,30 +55,10 @@ public class MatterReceptionVerificationTest {
         String matterNr = "121212";
         MatterRequest matterRequestNull = null;
 
-        MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
-        httpServletRequest.addHeader("Termination-Call-Back-Url", "/v1/terminate-matter/");
-
         // Verify
-        assertThatThrownBy(() -> verification.verifyMatterRequest(matterRequestNull, httpServletRequest))
+        assertThatThrownBy(() -> verification.verifyMatterRequest(matterRequestNull))
                 .isInstanceOf(MatterRequestEmptyOrNullException.class)
                 .hasMessage("DCM-001: CaseRequest empty or Null");
-    }
-
-    @Test
-    void matterRequestHeaderIsNull() {
-
-        Long customerNr = (long) (Math.random() * 999999);
-        String matterNr = "121212";
-        MatterRequest matterRequest = new MatterRequest();
-        matterRequest.setMatterNr(matterNr);
-        matterRequest.setCustomerNr(customerNr);
-        MockHttpServletRequest requestWoHeader = new MockHttpServletRequest();
-        requestWoHeader.addHeader("", "");
-
-        // Verify
-        assertThatThrownBy(() -> verification.verifyMatterRequest(matterRequest, requestWoHeader))
-                .isInstanceOf(MatterRequestHeaderEmptyOrNullException.class)
-                .hasMessage("DCM-005: matterRequest header empty or Null");
     }
 
     @Test
@@ -93,10 +68,8 @@ public class MatterReceptionVerificationTest {
         MatterRequest matterRequest = new MatterRequest();
         matterRequest.setMatterNr(matterNr);
         matterRequest.setCustomerNr(customerNr);
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.addHeader("Termination-Call-Back-Url", "/v1/terminate-matter/");
 
         // Verify
-        Assertions.assertDoesNotThrow(() -> verification.verifyMatterRequest(matterRequest, request));
+        Assertions.assertDoesNotThrow(() -> verification.verifyMatterRequest(matterRequest));
     }
 }
