@@ -163,6 +163,7 @@ public class MatterReceptionService {
         Matter newMatter = new Matter();
         newMatter.setMatterNr(matterRequest.getMatterNr());
         newMatter.setMatterStatus(MatterStatus.EXECUTABLE);
+        newMatter.setTerminationCallBackUrl(matterRequest.getCallback().getTerminationCallBackUrl());
         newMatter.setCharge(charge);
         return newMatter;
     }

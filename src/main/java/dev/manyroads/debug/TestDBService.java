@@ -29,7 +29,6 @@ public class TestDBService {
 
     public void savingCustomer(Matter matter) {
 
-
         Customer newCustomer = new Customer();
         Customer savedCustomer = customerRepository.save(newCustomer);
         log.info("savedCustomer: {}", savedCustomer);
