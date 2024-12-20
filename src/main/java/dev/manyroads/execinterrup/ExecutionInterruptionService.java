@@ -151,7 +151,7 @@ public class ExecutionInterruptionService {
     private boolean requestTerminateMatter(Charge charge) {
         boolean result = false;
         for (Matter matter : charge.getMatters()) {
-            result = parentMicroserviceClient.sendMessageToParentMicroservice(matter);
+            result = parentMicroserviceClient.requestParentMicroserviceToacticateTermination(matter);
         }
         return result;
     }
