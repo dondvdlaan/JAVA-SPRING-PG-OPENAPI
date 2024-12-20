@@ -80,7 +80,7 @@ public class ExecutionInterruptionServiceTest {
                 .execInterrupType(ExecInterrupEnum.CUSTOMER_DECEASED);
 
         when(chargeRepository.findByCustomerNr(anyLong())).thenReturn(Optional.of(listCharges));
-        when(parentMicroserviceClient.sendMessageToParentMicroservice(eq(existingMatter))).thenReturn(true);
+        when(parentMicroserviceClient.requestParentMicroserviceToacticateTermination(eq(existingMatter))).thenReturn(true);
         ExecInterrupResponse expected = new ExecInterrupResponse();
 
         // activate
@@ -90,7 +90,7 @@ public class ExecutionInterruptionServiceTest {
         verify(execInterrupRepository, times(1)).save(any());
         verify(chargeRepository, times(1)).findByCustomerNr(anyLong());
         verify(adminClient, times(1)).terminateMatter(any());
-        verify(parentMicroserviceClient, times(1)).sendMessageToParentMicroservice(any());
+        verify(parentMicroserviceClient, times(1)).requestParentMicroserviceToacticateTermination(any());
     }
 
     @Test
@@ -129,7 +129,7 @@ public class ExecutionInterruptionServiceTest {
         verify(execInterrupRepository, times(1)).save(any());
         verify(matterRepository, times(2)).findById(any());
         verify(adminClient, never()).terminateMatter(any());
-        verify(parentMicroserviceClient, never()).sendMessageToParentMicroservice(any());
+        verify(parentMicroserviceClient, never()).requestParentMicroserviceToacticateTermination(any());
 
     }
 
@@ -169,7 +169,7 @@ public class ExecutionInterruptionServiceTest {
         verify(execInterrupRepository, times(1)).save(any());
         verify(matterRepository, times(2)).findById(any());
         verify(adminClient, times(1)).terminateMatter(any());
-        verify(parentMicroserviceClient, never()).sendMessageToParentMicroservice(any());
+        verify(parentMicroserviceClient, never()).requestParentMicroserviceToacticateTermination(any());
 
     }
 
@@ -206,7 +206,7 @@ public class ExecutionInterruptionServiceTest {
         verify(matterRepository, times(1)).findById(any());
         verify(execInterrupRepository, times(1)).save(any());
         verify(adminClient, never()).terminateMatter(any());
-        verify(parentMicroserviceClient, never()).sendMessageToParentMicroservice(any());
+        verify(parentMicroserviceClient, never()).requestParentMicroserviceToacticateTermination(any());
     }
 
     @Test
@@ -244,7 +244,7 @@ public class ExecutionInterruptionServiceTest {
         oMatter.ifPresent(m -> assertEquals(MatterStatus.WITHDRAWN, m.getMatterStatus()));
         assertEquals(expected, result);
         verify(adminClient, never()).terminateMatter(any());
-        verify(parentMicroserviceClient, never()).sendMessageToParentMicroservice(any());
+        verify(parentMicroserviceClient, never()).requestParentMicroserviceToacticateTermination(any());
 
     }
 
@@ -267,7 +267,7 @@ public class ExecutionInterruptionServiceTest {
         verify(execInterrupRepository, times(1)).save(any());
         verify(chargeRepository, times(0)).save(any());
         verify(adminClient, never()).terminateMatter(any());
-        verify(parentMicroserviceClient, never()).sendMessageToParentMicroservice(any());
+        verify(parentMicroserviceClient, never()).requestParentMicroserviceToacticateTermination(any());
     }
 
     @Test
@@ -297,7 +297,7 @@ public class ExecutionInterruptionServiceTest {
         verify(execInterrupRepository, times(1)).save(any());
         verify(chargeRepository, times(1)).save(any());
         verify(adminClient, never()).terminateMatter(any());
-        verify(parentMicroserviceClient, never()).sendMessageToParentMicroservice(any());
+        verify(parentMicroserviceClient, never()).requestParentMicroserviceToacticateTermination(any());
         oListCharge.ifPresent(cl -> cl.forEach(
                 c -> assertEquals(ChargeStatusEnum.CUSTOMER_DECEASED, c.getChargeStatus())));
         assertEquals(expected, result);

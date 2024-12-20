@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value= HttpStatus.BAD_REQUEST)
-public final class MatterRequestHeaderEmptyOrNullException extends DCMException {
-    public MatterRequestHeaderEmptyOrNullException() {
-        super("DCM-005: matterRequest header empty or Null");
+public final class MatterCallbackUrlIsMissingException extends DCMException {
+    public MatterCallbackUrlIsMissingException() {
+        super("DCM-005: MatterRequest callback URL is missing");
     }
 }

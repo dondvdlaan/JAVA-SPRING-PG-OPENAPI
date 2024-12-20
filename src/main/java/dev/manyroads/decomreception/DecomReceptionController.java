@@ -9,11 +9,13 @@ import dev.manyroads.model.IntermediateReportStatusRequest;
 import dev.manyroads.model.MatterRequest;
 import dev.manyroads.model.MatterResponse;
 import dev.manyroads.verification.Verification;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
@@ -26,11 +28,9 @@ public class DecomReceptionController {
     IntermediateReportStatusService intermediateReportStatusService;
 
     @RequestMapping(value = "/v1/matters", method = RequestMethod.POST)
-    public ResponseEntity<MatterResponse> receiveMatter(@RequestBody MatterRequest matterRequest, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<MatterResponse> receiveMatter(@RequestBody MatterRequest matterRequest) {
 
-        verification.verifyMatterRequest(matterRequest,httpServletRequest);
-        var terminationCallBackUrl = httpServletRequest.getHeader("Termination-Call-Back-Url");
-        System.out.println("terminationCallBackUrl: " + terminationCallBackUrl);
+        verification.verifyMatterRequest(matterRequest);
         MatterResponse matterResponse = matterReceptionService.processIncomingMatterRequest(matterRequest);
 
         log.info("Response returned: {}", matterResponse);
@@ -56,7 +56,7 @@ public class DecomReceptionController {
     }
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public String testing(){
+    public String testing() {
         log.info("testing: GET test started");
         return "Holita";
     }

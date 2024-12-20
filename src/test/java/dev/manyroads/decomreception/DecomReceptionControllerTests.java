@@ -5,6 +5,7 @@ import dev.manyroads.matterreception.exception.MatterRequestEmptyOrNullException
 import dev.manyroads.matterreception.exception.MatterRequestCustomerNrIsMissingException;
 import dev.manyroads.matterreception.MatterReceptionService;
 import dev.manyroads.model.MatterRequest;
+import dev.manyroads.model.MatterRequestCallback;
 import dev.manyroads.model.MatterResponse;
 import dev.manyroads.verification.Verification;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +23,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -46,16 +46,14 @@ public class DecomReceptionControllerTests {
     @Test
     void caseRequestCaseIDNullShouldThrowExceptionTest() {
         // Prepare
-        MatterRequest caseRequestCaseIDIsNull = new MatterRequest();
-        caseRequestCaseIDIsNull.setCustomerNr(987654L);
-        caseRequestCaseIDIsNull.setMatterNr(null);
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setParameter("Termination-Call-Back-Url", "/v1/terminate-matter/");
+        MatterRequest matterRequestMatterIDIsNull = new MatterRequest();
+        matterRequestMatterIDIsNull.setCustomerNr(987654L);
+        matterRequestMatterIDIsNull.setMatterNr(null);
 
         // Activate
 
         // Verify
-        assertThatThrownBy(() -> verification.verifyMatterRequest(caseRequestCaseIDIsNull,request))
+        assertThatThrownBy(() -> verification.verifyMatterRequest(matterRequestMatterIDIsNull))
                 .isInstanceOf(MatterIDIsMissingException.class)
                 .hasMessageStartingWith("DCM-003: CaseRequest CaseID is missing");
     }
@@ -65,13 +63,11 @@ public class DecomReceptionControllerTests {
         // Prepare
         MatterRequest caseRequestPersonIDIsNull = new MatterRequest();
         caseRequestPersonIDIsNull.setMatterNr(null);
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setParameter("Termination-Call-Back-Url", "/v1/terminate-matter/");
 
         // Activate
 
         // Verify
-        assertThatThrownBy(() -> verification.verifyMatterRequest(caseRequestPersonIDIsNull,request))
+        assertThatThrownBy(() -> verification.verifyMatterRequest(caseRequestPersonIDIsNull))
                 .isInstanceOf(MatterRequestCustomerNrIsMissingException.class)
                 .hasMessageStartingWith("DCM-002: MatterRequest CustomerNr is missing");
     }
@@ -81,8 +77,6 @@ public class DecomReceptionControllerTests {
         // Prepare
         MatterRequest matterRequestIsNull = null;
         HttpHeaders headers = new HttpHeaders();
-        MockHttpServletRequest HttpServletRequest = new MockHttpServletRequest();
-        HttpServletRequest.setParameter("Termination-Call-Back-Url", "/v1/terminate-matter/");
         headers.set("content-type", "application/json");
         HttpEntity<MatterRequest> request = new HttpEntity<>(matterRequestIsNull, headers);
         String expectedStatusCode = "400 BAD_REQUEST";
@@ -97,17 +91,20 @@ public class DecomReceptionControllerTests {
         // Verify
         System.out.println("result: " + result);
         assertEquals(expectedStatusCode, result.getStatusCode().toString());
-        assertThatThrownBy(() -> verification.verifyMatterRequest(matterRequestIsNull, HttpServletRequest))
+        assertThatThrownBy(() -> verification.verifyMatterRequest(matterRequestIsNull))
                 .isInstanceOf(MatterRequestEmptyOrNullException.class)
                 .hasMessageStartingWith("DCM-001: CaseRequest empty or Null");
     }
 
     @Test
-    void caseRequestShouldReturnStatusCose200Test() {
+    void matterRequestShouldReturnStatusCode200Test() {
         // Prepare
         MatterRequest matterRequest = new MatterRequest();
         matterRequest.setCustomerNr(123456L);
-        matterRequest.setMatterNr("123456");
+        matterRequest.setMatterNr("7890123");
+        MatterRequestCallback matterRequestCallback = new MatterRequestCallback();
+        matterRequestCallback.setTerminationCallBackUrl("een/eindpunt");
+        matterRequest.setCallback(matterRequestCallback);
         UUID chargeID = UUID.randomUUID();
         MatterResponse matterResponse = new MatterResponse();
         matterResponse.setChargeID(chargeID);
@@ -136,6 +133,9 @@ public class DecomReceptionControllerTests {
         MatterRequest matterRequest = new MatterRequest();
         matterRequest.setMatterNr("12345");
         matterRequest.setCustomerNr(customerNr);
+        MatterRequestCallback matterRequestCallback = new MatterRequestCallback();
+        matterRequestCallback.setTerminationCallBackUrl("mooi/wel");
+        matterRequest.setCallback(matterRequestCallback);
         MatterResponse matterResponse = new MatterResponse();
         matterResponse.setCustomerNr(customerNr);
         Long expected = matterResponse.getCustomerNr();

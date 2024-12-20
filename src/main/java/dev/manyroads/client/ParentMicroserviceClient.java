@@ -2,7 +2,6 @@ package dev.manyroads.client;
 
 import dev.manyroads.decomreception.exception.InternalException;
 import dev.manyroads.model.entity.Matter;
-import dev.manyroads.model.messages.CustomerProcessingClientMessage;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +22,9 @@ public class ParentMicroserviceClient extends RESTConnector {
 
     private final static String DCM_ROLE = "DCM-SUPER";
 
-    public boolean sendMessageToParentMicroservice(Matter matter) {
+    public boolean requestParentMicroserviceToacticateTermination(Matter matter) {
 
-        String CUSTOMER_PROCESSING_URL = "http://localhost:7090/v1/" + matter.getTerminationCallBackUrl();
+        String CUSTOMER_PROCESSING_URL = "http://localhost:7090" + matter.getTerminationCallBackUrl();
         System.out.println("CUSTOMER_PROCESSING_URL: " + CUSTOMER_PROCESSING_URL);
         ResponseEntity<?> response = null;
         try {
