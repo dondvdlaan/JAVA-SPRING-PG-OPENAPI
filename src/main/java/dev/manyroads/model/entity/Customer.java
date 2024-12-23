@@ -23,6 +23,8 @@ public class Customer {
     private Long customerNr;
     @OneToMany(mappedBy = "customer")
     private List<Charge> charge = new ArrayList<>();
+    @Column(name = "stand_by_flag")
+    private boolean standByFlag;
 
     @Override
     public String toString() {
@@ -30,6 +32,7 @@ public class Customer {
                 "customerID=" + customerID +
                 ", customerNr=" + customerNr +
                 ", charge=" + charge +
+                ", standByFlag=" + standByFlag +
                 '}';
     }
 }
