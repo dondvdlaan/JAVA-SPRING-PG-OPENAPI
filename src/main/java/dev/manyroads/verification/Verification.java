@@ -6,9 +6,10 @@ import dev.manyroads.intermediatereport.exception.IntermediateReportStatusEmptyO
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusMissingChargeNrException;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusMissingMattersException;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusMissingStatusException;
+import dev.manyroads.matterreception.exception.MatterCallbackUrlIsMissingException;
 import dev.manyroads.matterreception.exception.MatterIDIsMissingException;
 import dev.manyroads.matterreception.exception.MatterRequestEmptyOrNullException;
-import dev.manyroads.matterreception.exception.CustomerNrIsMissingException;
+import dev.manyroads.matterreception.exception.MatterRequestCustomerNrIsMissingException;
 import dev.manyroads.execinterrup.exception.ExecInterrupEmptyOrNullException;
 import dev.manyroads.model.ExecInterrupEnum;
 import dev.manyroads.model.ExecInterrupRequest;
@@ -26,9 +27,13 @@ public class Verification {
         Optional.ofNullable(matterRequest)
                 .orElseThrow(MatterRequestEmptyOrNullException::new);
         Optional.ofNullable(matterRequest.getCustomerNr())
-                .orElseThrow(CustomerNrIsMissingException::new);
+                .orElseThrow(MatterRequestCustomerNrIsMissingException::new);
         Optional.ofNullable(matterRequest.getMatterNr())
                 .orElseThrow(MatterIDIsMissingException::new);
+        Optional.ofNullable(matterRequest.getCallback())
+                .orElseThrow(MatterCallbackUrlIsMissingException::new);
+        Optional.ofNullable(matterRequest.getCallback().getTerminationCallBackUrl())
+                .orElseThrow(MatterCallbackUrlIsMissingException::new);
     }
 
     public void verifyExecInterrupRequest(ExecInterrupRequest execInterrupRequest) {
@@ -50,7 +55,7 @@ public class Verification {
             throw new IntermediateReportStatusMissingChargeNrException();
         if (Optional.ofNullable(intermediateReportStatusRequest.getStatusIntermediateReport()).isEmpty())
             throw new IntermediateReportStatusMissingStatusException();
-        if (intermediateReportStatusRequest.getMattersIntermediateReport()== null || intermediateReportStatusRequest.getMattersIntermediateReport().isEmpty() )
+        if (intermediateReportStatusRequest.getMattersIntermediateReport() == null || intermediateReportStatusRequest.getMattersIntermediateReport().isEmpty())
             throw new IntermediateReportStatusMissingMattersException();
     }
 }

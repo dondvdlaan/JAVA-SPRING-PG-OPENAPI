@@ -7,6 +7,12 @@ paths:
     post:
       summary: Receiving matters
       operationId: receiveMatter
+      parameters:
+        - in: header
+          name: Termination-Call-Back-Url
+          schema:
+            type: string
+          required: true
       requestBody:
         description: Matter Post object to be received
         required: true
@@ -64,12 +70,21 @@ components:
       required:
         - customerNr
         - matterNr
+        - callback
       properties:
         customerNr:
           type: integer
           format: int64
         matterNr:
           type: string
+        callback:
+          type: object
+          properties:
+            intermediateReportUrl:
+              type: string
+            terminationCallBackUrl:
+              type: string
+
     MatterResponse:
       type: object
       required:

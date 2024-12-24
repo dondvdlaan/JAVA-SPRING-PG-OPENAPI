@@ -8,6 +8,7 @@ import dev.manyroads.decomreception.exception.VehicleTypeNotFoundException;
 import dev.manyroads.matterreception.MatterReceptionService;
 import dev.manyroads.model.ChargeStatusEnum;
 import dev.manyroads.model.MatterRequest;
+import dev.manyroads.model.MatterRequestCallback;
 import dev.manyroads.model.MatterResponse;
 import dev.manyroads.model.VehicleTypeEnum;
 import dev.manyroads.model.entity.Charge;
@@ -65,6 +66,9 @@ public class MatterReceptionServiceTests {
         MatterRequest matterRequest = new MatterRequest();
         matterRequest.setMatterNr(matterNr);
         matterRequest.setCustomerNr(customerNr);
+        MatterRequestCallback matterRequestCallback = new MatterRequestCallback();
+        matterRequestCallback.setTerminationCallBackUrl("mooi/wel");
+        matterRequest.setCallback(matterRequestCallback);
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(UUID.randomUUID());
         existingCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
@@ -120,6 +124,9 @@ public class MatterReceptionServiceTests {
         MatterRequest matterRequest = new MatterRequest();
         matterRequest.setMatterNr(matterNr);
         matterRequest.setCustomerNr(customerNr);
+        MatterRequestCallback matterRequestCallback = new MatterRequestCallback();
+        matterRequestCallback.setTerminationCallBackUrl("mooi/wel");
+        matterRequest.setCallback(matterRequestCallback);
         Customer newCustomer = new Customer();
         newCustomer.setCustomerID(customerID);
         newCustomer.setCustomerNr(matterRequest.getCustomerNr());
@@ -165,6 +172,9 @@ public class MatterReceptionServiceTests {
         MatterRequest matterRequest = new MatterRequest();
         matterRequest.setMatterNr(matterNr);
         matterRequest.setCustomerNr(customerNr);
+        MatterRequestCallback matterRequestCallback = new MatterRequestCallback();
+        matterRequestCallback.setTerminationCallBackUrl("mooi/wel");
+        matterRequest.setCallback(matterRequestCallback);
         when(adminClient.searchVehicleType(matterRequest.getMatterNr())).thenReturn("bulldozer");
         Charge newCharge = new Charge();
         newCharge.setChargeID(UUID.randomUUID());
@@ -188,16 +198,19 @@ public class MatterReceptionServiceTests {
     @Test
     void adminClientReturnsIncorrectVehicleTypeShouldThrowVehicleTypeNotCoincideExceptionTest() {
         // prepare
-        MatterRequest caseRequest = new MatterRequest();
-        caseRequest.setMatterNr("121212");
-        caseRequest.setCustomerNr(343434L);
+        MatterRequest matterRequest = new MatterRequest();
+        matterRequest.setMatterNr("121212");
+        matterRequest.setCustomerNr(343434L);
+        MatterRequestCallback matterRequestCallback = new MatterRequestCallback();
+        matterRequestCallback.setTerminationCallBackUrl("mooi/wel");
+        matterRequest.setCallback(matterRequestCallback);
         String expected = "bulldozer";
-        when(adminClient.searchVehicleType(caseRequest.getMatterNr())).thenReturn("Vouwfiets");
+        when(adminClient.searchVehicleType(matterRequest.getMatterNr())).thenReturn("Vouwfiets");
 
         // activate
 
         // verify
-        assertThatThrownBy(() -> matterReceptionService.processIncomingMatterRequest(caseRequest))
+        assertThatThrownBy(() -> matterReceptionService.processIncomingMatterRequest(matterRequest))
                 .isInstanceOf(VehicleTypeNotCoincideWithDomainException.class)
                 .hasMessageStartingWith("DCM-006: Vehicle type does not coincide with domain");
         verify(adminClient, times(1)).searchVehicleType(anyString());
@@ -206,18 +219,21 @@ public class MatterReceptionServiceTests {
     @Test
     void adminClientReturnsFeignExceptionShouldThrowAdminClientExceptionTest() {
         // prepare
-        MatterRequest caseRequest = new MatterRequest();
-        caseRequest.setMatterNr("121212");
-        caseRequest.setCustomerNr(343434L);
+        MatterRequest matterRequest = new MatterRequest();
+        matterRequest.setMatterNr("121212");
+        matterRequest.setCustomerNr(343434L);
+        MatterRequestCallback matterRequestCallback = new MatterRequestCallback();
+        matterRequestCallback.setTerminationCallBackUrl("mooi/wel");
+        matterRequest.setCallback(matterRequestCallback);
         // Mock 404 BAD REQUEST return
         var feignException = Mockito.mock(FeignException.class);
         Mockito.when(feignException.status()).thenReturn(404);
-        when(adminClient.searchVehicleType(caseRequest.getMatterNr())).thenThrow(feignException);
+        when(adminClient.searchVehicleType(matterRequest.getMatterNr())).thenThrow(feignException);
 
         // activate
 
         // verify
-        assertThatThrownBy(() -> matterReceptionService.processIncomingMatterRequest(caseRequest))
+        assertThatThrownBy(() -> matterReceptionService.processIncomingMatterRequest(matterRequest))
                 .isInstanceOf(AdminClientException.class)
                 .hasMessageStartingWith("DCM-004: No vehice type received");
         verify(adminClient, times(1)).searchVehicleType(anyString());
@@ -229,6 +245,9 @@ public class MatterReceptionServiceTests {
         MatterRequest matterRequest = new MatterRequest();
         matterRequest.setMatterNr("121212");
         matterRequest.setCustomerNr(343434L);
+        MatterRequestCallback matterRequestCallback = new MatterRequestCallback();
+        matterRequestCallback.setTerminationCallBackUrl("mooi/wel");
+        matterRequest.setCallback(matterRequestCallback);
         when(adminClient.searchVehicleType(matterRequest.getMatterNr())).thenReturn(null);
 
         // activate
@@ -247,6 +266,9 @@ public class MatterReceptionServiceTests {
         MatterRequest matterRequest = new MatterRequest();
         matterRequest.setMatterNr(matterNr);
         matterRequest.setCustomerNr(343434L);
+        MatterRequestCallback matterRequestCallback = new MatterRequestCallback();
+        matterRequestCallback.setTerminationCallBackUrl("mooi/wel");
+        matterRequest.setCallback(matterRequestCallback);
         String expectedVehicle = "bulldozer";
         when(adminClient.searchVehicleType(matterRequest.getMatterNr())).thenReturn("bulldozer");
 
