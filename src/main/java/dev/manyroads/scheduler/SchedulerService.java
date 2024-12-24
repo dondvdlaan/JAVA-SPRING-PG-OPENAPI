@@ -20,7 +20,8 @@ import static org.quartz.TriggerBuilder.newTrigger;
 @Slf4j
 public class SchedulerService {
 
-    Scheduler scheduler;
+    private final Scheduler scheduler;
+
     @Value("${customerStandByDuration}")
     Integer customerStandByDuration;
 
