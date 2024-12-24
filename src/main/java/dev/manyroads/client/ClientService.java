@@ -1,9 +1,15 @@
 package dev.manyroads.client;
 
 import dev.manyroads.decomreception.exception.InternalException;
+import dev.manyroads.model.entity.Charge;
+import dev.manyroads.model.messages.CustomerProcessingClientMessage;
+import dev.manyroads.model.messages.MatterMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -11,12 +17,5 @@ import org.springframework.stereotype.Service;
 public class ClientService {
     CustomerProcessingClient customerProcessingClient;
 
-    public void sendCustomerDataToCustomerProcessing(int customerNr){
 
-        // Pass on data to customer processing
-        if (!customerProcessingClient.sendMessageToCustomerProcessing(getCustomerProcessingClientMessage(charge))) {
-            log.info("Failed to send message to customerProcessingClient for customer: {} ", customer.getCustomerNr());
-            throw (new InternalException("DCM 101: customerProcessingClient not responsive"));
-        }
-    }
 }

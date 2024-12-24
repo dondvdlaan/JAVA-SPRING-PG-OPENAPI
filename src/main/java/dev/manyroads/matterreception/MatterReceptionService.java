@@ -4,6 +4,7 @@ import dev.manyroads.client.AdminClient;
 import dev.manyroads.client.CustomerProcessingClient;
 import dev.manyroads.decomreception.exception.AdminClientException;
 import dev.manyroads.decomreception.exception.InternalException;
+import dev.manyroads.matterreception.exception.NoChargesFoundForCustomerException;
 import dev.manyroads.matterreception.exception.VehicleTypeNotCoincideWithDomainException;
 import dev.manyroads.decomreception.exception.VehicleTypeNotFoundException;
 import dev.manyroads.model.ChargeStatusEnum;
@@ -19,6 +20,7 @@ import dev.manyroads.model.messages.MatterMessage;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.CustomerRepository;
 import dev.manyroads.model.repository.MatterRepository;
+import dev.manyroads.scheduler.SchedulerService;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static dev.manyroads.model.ChargeStatusEnum.BOOKED;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +42,7 @@ public class MatterReceptionService {
     private final ChargeRepository chargeRepository;
     private final MatterRepository matterRepository;
     private final CustomerProcessingClient customerProcessingClient;
+    private final SchedulerService schedulerService;
 
     public MatterResponse processIncomingMatterRequest(MatterRequest matterRequest) {
         log.info("processIncomingMatterRequest: started to process incoming matter Request");
@@ -72,7 +77,7 @@ public class MatterReceptionService {
         log.info("findByCustomerNrAndChargeStatus");
         Optional<List<Charge>> oListCharges = chargeRepository.findByCustomerNrAndChargeStatus(
                 ChargeStatusEnum.DCM_APPLIED,
-                ChargeStatusEnum.BOOKED,
+                BOOKED,
                 matterRequest.getCustomerNr());
         // Check if charges for customer exists
         if (oListCharges.isPresent() && !oListCharges.get().isEmpty()) {
@@ -102,11 +107,28 @@ public class MatterReceptionService {
         }
         matterResponse.setChargeID(charge.getChargeID());
 
-        if(customer.)
+        // Start customer stannby period
+        if (!customer.isStandByFlag()) {
+            customer.setStandByFlag(true);
+            customerRepository.save(customer);
 
-
-
+            // kick off customer scheduler
+            schedulerService.scheduleCustomerStandby(customer.getCustomerNr());
+        }
         return matterResponse;
+    }
+
+    public void sendCustomerDataToCustomerProcessing(long customerNr) {
+        Optional<List<Charge>> oCharges = chargeRepository.findByCustomerNrAndChargeStatus(customerNr, BOOKED);
+        oCharges.orElseThrow(() -> new NoChargesFoundForCustomerException(customerNr));
+
+        oCharges.get().forEach(charge -> {
+            // Pass on data to customer processing
+            if (!customerProcessingClient.sendMessageToCustomerProcessing(getCustomerProcessingClientMessage(charge))) {
+                log.info("Failed to send message to customerProcessingClient for customer: {} ", customerNr);
+                throw (new InternalException("DCM 101: customerProcessingClient not responsive"));
+            }
+        });
     }
 
     // Sub methods
@@ -121,7 +143,7 @@ public class MatterReceptionService {
 
     private Charge createNewCharge(MatterRequest matterRequest, VehicleTypeEnum vehicleTypeConfirmed, Customer customer) {
         Charge newCharge = new Charge();
-        newCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
+        newCharge.setChargeStatus(BOOKED);
         newCharge.setCustomerNr(matterRequest.getCustomerNr());
         newCharge.setVehicleType(vehicleTypeConfirmed);
         newCharge.setCustomer(customer);
@@ -165,5 +187,4 @@ public class MatterReceptionService {
         newMatter.setCharge(charge);
         return newMatter;
     }
-
 }
