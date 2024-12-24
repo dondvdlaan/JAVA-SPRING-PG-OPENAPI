@@ -28,9 +28,9 @@ public class Charge {
 
     @Id
     @Builder.Default
-    @Column(name="charge_id")
+    @Column(name = "charge_id")
     private UUID chargeID = UUID.randomUUID();
-    @Column(name="charge_status")
+    @Column(name = "charge_status")
     @Enumerated(EnumType.STRING)
     private ChargeStatusEnum chargeStatus;
     @Column(name = "customer_nr")
@@ -41,13 +41,13 @@ public class Charge {
     @Column(name = "start_date")
     private Instant startDate;
     @ManyToOne()
-    @JoinColumn(name="customer_id")
+    @JoinColumn(name = "customer_id")
     private Customer customer;
     @OneToMany(mappedBy = "charge")
     private Set<Matter> matters = new HashSet<>();
 
-    public ChargeMessage getChargeMessage(){
-        return new ChargeMessage(chargeID,chargeStatus);
+    public ChargeMessage getChargeMessage() {
+        return new ChargeMessage(chargeID, chargeStatus);
     }
 
 }

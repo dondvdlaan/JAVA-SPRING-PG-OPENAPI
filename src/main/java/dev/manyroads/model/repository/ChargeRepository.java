@@ -24,4 +24,5 @@ public interface ChargeRepository extends JpaRepository<Charge, UUID> {
                                                            @Param("customerNr") long customerNr);
 
     Optional<List<Charge>> findByCustomerNr(Long customerNr);
+    Optional<List<Charge>> findByCustomerNrAndChargeStatus(Long customerNr, ChargeStatusEnum chargeStatusEnum);
 }

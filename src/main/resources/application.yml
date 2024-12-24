@@ -18,3 +18,5 @@ spring:
 logging:
   level:
     ROOT: INFO
+
+customerStandByDuration: 15
