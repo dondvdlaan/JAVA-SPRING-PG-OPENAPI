@@ -98,7 +98,7 @@ public class MatterReceptionService {
                 charge = createNewCharge(matterRequest, vehicleTypeConfirmed, customer);
                 log.info("New charge created {} for existing customer nr: {}", charge.getChargeID(), charge.getCustomer().getCustomerID());
             }
-        // Creating new charge
+            // Creating new charge
         } else {
             log.info("About to createNewCharge new customer: matterRequest {}, vehicleTypeConfirmed {}, customer {}",
                     matterRequest, vehicleTypeConfirmed, customer);
@@ -109,6 +109,7 @@ public class MatterReceptionService {
 
         // Start customer standby period
         if (!customer.isStandByFlag()) {
+            log.info("isStandByFlag(): Customer {} in standby", customer.getCustomerNr());
             customer.setStandByFlag(true);
             customerRepository.save(customer);
 
@@ -119,10 +120,12 @@ public class MatterReceptionService {
     }
 
     public void sendCustomerDataToCustomerProcessing(long customerNr) {
+        log.info("sendCustomerDataToCustomerProcessing: starts sending customer charges to customer processing client");
         Optional<List<Charge>> oCharges = chargeRepository.findByCustomerNrAndChargeStatus(customerNr, BOOKED);
         oCharges.orElseThrow(() -> new NoChargesFoundForCustomerException(customerNr));
 
         oCharges.get().forEach(charge -> {
+            log.info("forEach(charge ->");
             // Pass on data to customer processing
             if (!customerProcessingClient.sendMessageToCustomerProcessing(getCustomerProcessingClientMessage(charge))) {
                 log.info("Failed to send message to customerProcessingClient for customer: {} ", customerNr);
