@@ -98,7 +98,7 @@ public class MatterReceptionService {
                 charge = createNewCharge(matterRequest, vehicleTypeConfirmed, customer);
                 log.info("New charge created {} for existing customer nr: {}", charge.getChargeID(), charge.getCustomer().getCustomerID());
             }
-            // Creating new charge
+        // Creating new charge
         } else {
             log.info("About to createNewCharge new customer: matterRequest {}, vehicleTypeConfirmed {}, customer {}",
                     matterRequest, vehicleTypeConfirmed, customer);
@@ -107,7 +107,7 @@ public class MatterReceptionService {
         }
         matterResponse.setChargeID(charge.getChargeID());
 
-        // Start customer stannby period
+        // Start customer standby period
         if (!customer.isStandByFlag()) {
             customer.setStandByFlag(true);
             customerRepository.save(customer);
