@@ -3,6 +3,8 @@ package dev.manyroads.matterreception;
 import dev.manyroads.client.AdminClient;
 import dev.manyroads.client.CustomerProcessingClient;
 import dev.manyroads.decomreception.exception.InternalException;
+import dev.manyroads.matterreception.exception.CustomerNotFoundException;
+import dev.manyroads.matterreception.exception.NoChargesFoundForCustomerException;
 import dev.manyroads.model.ChargeStatusEnum;
 import dev.manyroads.model.MatterRequest;
 import dev.manyroads.model.MatterRequestCallback;
@@ -32,6 +34,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -62,6 +65,114 @@ public class MatterReceptionStandByServiceTests {
                 customerProcessingClient,
                 schedulerService
         );
+    }
+
+    @Test
+    @DisplayName("Failed for customer not found to Reset standby flag ")
+    void failedCustomerNotFoundToResteStandByFlagTest() {
+        long customerNr = (long) (Math.random() * 99999);
+        UUID customerID = UUID.randomUUID();
+        String matterNr = "121212";
+        String terminationCallBackUrl = "mooi/wel";
+        VehicleTypeEnum vehicleTypeEnum = VehicleTypeEnum.BULLDOZER;
+        ChargeStatusEnum chargeStatus = ChargeStatusEnum.BOOKED;
+
+        Customer existingCustomer = Customer.builder()
+                .customerID(customerID)
+                .customerNr(customerNr)
+                .build();
+        Charge existingCharge = new Charge();
+        existingCharge.setChargeID(UUID.randomUUID());
+        existingCharge.setChargeStatus(chargeStatus);
+        existingCharge.setCustomerNr(customerNr);
+        existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
+        existingCharge.setCustomer(existingCustomer);
+        Matter existingMatter = Matter.builder()
+                .matterNr(matterNr)
+                .charge(existingCharge)
+                .build();
+        existingCharge.getMatters().add(existingMatter);
+
+        String matterNr2 = "34343434";
+        Charge existingCharge2 = new Charge();
+        existingCharge.setChargeID(UUID.randomUUID());
+        existingCharge.setChargeStatus(chargeStatus);
+        existingCharge.setCustomerNr(customerNr);
+        existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
+        existingCharge.setCustomer(existingCustomer);
+        Matter existingMatter2 = Matter.builder()
+                .matterNr(matterNr2)
+                .charge(existingCharge2)
+                .build();
+        existingCharge2.getMatters().add(existingMatter2);
+        List<Charge> listCharge = new ArrayList<>();
+        listCharge.add(existingCharge);
+        listCharge.add(existingCharge2);
+        when(chargeRepository
+                .findByCustomerNrAndChargeStatus(eq(customerNr), eq(chargeStatus)))
+                .thenReturn(Optional.of(listCharge));
+        when(customerProcessingClient.sendMessageToCustomerProcessing(any())).thenReturn(true);
+        when(customerRepository.findByCustomerNr(customerNr)).thenReturn(null);
+
+        // activate
+        assertThrows(CustomerNotFoundException.class, () ->
+                matterReceptionService.sendCustomerDataToCustomerProcessing(customerNr));
+        //verify
+        verify(customerProcessingClient, times(2)).sendMessageToCustomerProcessing(any());
+        verify(customerRepository, never()).save(any(Customer.class));
+    }
+
+    @Test
+    @DisplayName("Failed charges for customer not found to CustomerProcessing ")
+    void failedChargesCustomerNotFoundToCustomerProcessingTest() {
+        long customerNr = (long) (Math.random() * 99999);
+        UUID customerID = UUID.randomUUID();
+        String matterNr = "121212";
+        String terminationCallBackUrl = "mooi/wel";
+        VehicleTypeEnum vehicleTypeEnum = VehicleTypeEnum.BULLDOZER;
+        ChargeStatusEnum chargeStatus = ChargeStatusEnum.BOOKED;
+
+        Customer existingCustomer = Customer.builder()
+                .customerID(customerID)
+                .customerNr(customerNr)
+                .build();
+        Charge existingCharge = new Charge();
+        existingCharge.setChargeID(UUID.randomUUID());
+        existingCharge.setChargeStatus(chargeStatus);
+        existingCharge.setCustomerNr(customerNr);
+        existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
+        existingCharge.setCustomer(existingCustomer);
+        Matter existingMatter = Matter.builder()
+                .matterNr(matterNr)
+                .charge(existingCharge)
+                .build();
+        existingCharge.getMatters().add(existingMatter);
+
+        String matterNr2 = "34343434";
+        Charge existingCharge2 = new Charge();
+        existingCharge.setChargeID(UUID.randomUUID());
+        existingCharge.setChargeStatus(chargeStatus);
+        existingCharge.setCustomerNr(customerNr);
+        existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
+        existingCharge.setCustomer(existingCustomer);
+        Matter existingMatter2 = Matter.builder()
+                .matterNr(matterNr2)
+                .charge(existingCharge2)
+                .build();
+        existingCharge2.getMatters().add(existingMatter2);
+        List<Charge> listCharge = new ArrayList<>();
+        when(chargeRepository
+                .findByCustomerNrAndChargeStatus(eq(customerNr), eq(chargeStatus)))
+                .thenReturn(Optional.of(listCharge));
+        when(customerProcessingClient.sendMessageToCustomerProcessing(any())).thenReturn(true);
+        when(customerRepository.findByCustomerNr(customerNr)).thenReturn(existingCustomer);
+
+        // activate
+        assertThrows(NoChargesFoundForCustomerException.class, () ->
+                matterReceptionService.sendCustomerDataToCustomerProcessing(customerNr));
+        //verify
+        verify(customerProcessingClient, never()).sendMessageToCustomerProcessing(any());
+        verify(customerRepository, never()).save(any(Customer.class));
     }
 
     @Test
@@ -162,11 +273,13 @@ public class MatterReceptionStandByServiceTests {
                 .findByCustomerNrAndChargeStatus(eq(customerNr), eq(chargeStatus)))
                 .thenReturn(Optional.of(listCharge));
         when(customerProcessingClient.sendMessageToCustomerProcessing(any())).thenReturn(true);
+        when(customerRepository.findByCustomerNr(customerNr)).thenReturn(existingCustomer);
 
         // activate
         matterReceptionService.sendCustomerDataToCustomerProcessing(customerNr);
         //verify
         verify(customerProcessingClient, times(2)).sendMessageToCustomerProcessing(any());
+        verify(customerRepository,times(1)).save(any(Customer.class));
     }
 
     @Test

@@ -4,6 +4,7 @@ import dev.manyroads.client.AdminClient;
 import dev.manyroads.client.CustomerProcessingClient;
 import dev.manyroads.decomreception.exception.AdminClientException;
 import dev.manyroads.decomreception.exception.InternalException;
+import dev.manyroads.matterreception.exception.CustomerNotFoundException;
 import dev.manyroads.matterreception.exception.NoChargesFoundForCustomerException;
 import dev.manyroads.matterreception.exception.VehicleTypeNotCoincideWithDomainException;
 import dev.manyroads.decomreception.exception.VehicleTypeNotFoundException;
@@ -122,16 +123,22 @@ public class MatterReceptionService {
     public void sendCustomerDataToCustomerProcessing(long customerNr) {
         log.info("sendCustomerDataToCustomerProcessing: starts sending customer charges to customer processing client");
         Optional<List<Charge>> oCharges = chargeRepository.findByCustomerNrAndChargeStatus(customerNr, BOOKED);
-        oCharges.orElseThrow(() -> new NoChargesFoundForCustomerException(customerNr));
+        if (oCharges.isPresent() && oCharges.get().isEmpty()) throw new NoChargesFoundForCustomerException(customerNr);
 
-        oCharges.get().forEach(charge -> {
+        oCharges.ifPresent(c -> c.forEach(charge -> {
             log.info("forEach(charge -> customer processing");
             // Pass on data to customer processing
             if (!customerProcessingClient.sendMessageToCustomerProcessing(getCustomerProcessingClientMessage(charge))) {
                 log.info("Failed to send message to customerProcessingClient for customer: {} ", customerNr);
                 throw (new InternalException("DCM 101: customerProcessingClient not responsive"));
             }
-        });
+        }));
+        // Reset customer standby flag
+        Customer processedCustomer = customerRepository.findByCustomerNr(customerNr);
+        if (processedCustomer != null) {
+            processedCustomer.setStandByFlag(false);
+            customerRepository.save(processedCustomer);
+        } else throw new CustomerNotFoundException(customerNr);
     }
 
     // Sub methods
