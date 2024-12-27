@@ -1,11 +1,10 @@
-package dev.manyroads.decomreception;
+package dev.manyroads.matterreception;
 
 import dev.manyroads.client.AdminClient;
 import dev.manyroads.client.CustomerProcessingClient;
 import dev.manyroads.decomreception.exception.AdminClientException;
 import dev.manyroads.matterreception.exception.VehicleTypeNotCoincideWithDomainException;
 import dev.manyroads.decomreception.exception.VehicleTypeNotFoundException;
-import dev.manyroads.matterreception.MatterReceptionService;
 import dev.manyroads.model.ChargeStatusEnum;
 import dev.manyroads.model.MatterRequest;
 import dev.manyroads.model.MatterRequestCallback;

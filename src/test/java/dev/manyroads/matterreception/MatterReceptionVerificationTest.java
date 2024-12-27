@@ -1,4 +1,4 @@
-package dev.manyroads.decomreception;
+package dev.manyroads.matterreception;
 
 import dev.manyroads.matterreception.exception.MatterCallbackUrlIsMissingException;
 import dev.manyroads.matterreception.exception.MatterIDIsMissingException;
