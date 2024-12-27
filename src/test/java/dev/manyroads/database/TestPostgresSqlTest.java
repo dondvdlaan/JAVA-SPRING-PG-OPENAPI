@@ -112,7 +112,6 @@ public class TestPostgresSqlTest {
                 assertEquals(c.getChargeStatus(), chargeStatus);
             });
         }
-        ;
     }
 
     @Test
