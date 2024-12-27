@@ -14,6 +14,7 @@ import dev.manyroads.model.entity.Customer;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.CustomerRepository;
 import dev.manyroads.model.repository.MatterRepository;
+import dev.manyroads.scheduler.SchedulerService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -49,13 +50,13 @@ public class PostgresSqlTest {
     @MockBean
     AdminClient adminClient;
     @MockBean
-    CustomerProcessingClient customerProcessingClient;
+    SchedulerService schedulerService;
 
     @Test
     @Transactional
     void customerExistChargeExistOtherVehicleTypeShouldNotAddMattterToExistingChargeTest() {
         // prepare
-        Long customerNr = (long) (Math.random() * 99999);
+        long customerNr = (long) (Math.random() * 99999);
         MatterRequest matterRequest = new MatterRequest();
         matterRequest.setMatterNr("121212");
         matterRequest.setCustomerNr(customerNr);
@@ -63,7 +64,6 @@ public class PostgresSqlTest {
         matterRequestCallback.setTerminationCallBackUrl("mooi/wel");
         matterRequest.setCallback(matterRequestCallback);
         when(adminClient.searchVehicleType(matterRequest.getMatterNr())).thenReturn("bulldozer");
-        when(customerProcessingClient.sendMessageToCustomerProcessing(any())).thenReturn(true);
         Customer existingCustomer = new Customer();
         existingCustomer.setCustomerNr(customerNr);
         customerRepository.save(existingCustomer);
@@ -79,7 +79,7 @@ public class PostgresSqlTest {
 
         // verify
         verify(adminClient, times(1)).searchVehicleType(anyString());
-        verify(customerProcessingClient, times(1)).sendMessageToCustomerProcessing(any());
+        verify(schedulerService, times(1)).scheduleCustomerStandby(eq(customerNr));
         assertEquals(customerNr, matterResponse.getCustomerNr());
         assertNotEquals(savedExistingCharge.getChargeID(), matterResponse.getChargeID());
     }
@@ -89,9 +89,10 @@ public class PostgresSqlTest {
     @DisplayName("Testing DB @Query for ChargeRepository")
     void checkIfChargeIsBookedTest() {
         // prepare
+        long customerNr = (long) (Math.random() * 99999);
         MatterRequest matterRequest = new MatterRequest();
         matterRequest.setMatterNr("121212");
-        matterRequest.setCustomerNr((long) (Math.random() * 9999999));
+        matterRequest.setCustomerNr(customerNr);
         MatterRequestCallback matterRequestCallback = new MatterRequestCallback();
         matterRequestCallback.setTerminationCallBackUrl("xxx/yyy");
         matterRequest.setCallback(matterRequestCallback);
@@ -107,13 +108,13 @@ public class PostgresSqlTest {
         Charge savedCharge = chargeRepository.save(charge);
         String expected = "bulldozer";
         when(adminClient.searchVehicleType(matterRequest.getMatterNr())).thenReturn("bulldozer");
-        when(customerProcessingClient.sendMessageToCustomerProcessing(any())).thenReturn(true);
 
         // activate
         MatterResponse result = matterReceptionService.processIncomingMatterRequest(matterRequest);
 
         // verify
         // Check log info messages
+        verify(schedulerService, times(1)).scheduleCustomerStandby(eq(customerNr));
 
     }
 

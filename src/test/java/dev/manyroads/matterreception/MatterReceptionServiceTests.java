@@ -62,10 +62,12 @@ public class MatterReceptionServiceTests {
     @Test
     void customerExistChargeExistOtherVehicleTypeShouldCreateNewChargeTest() {
         // prepare
-        when(adminClient.searchVehicleType(anyString())).thenReturn("bulldozer");
         Long customerNr = (long) (Math.random() * 99999);
         UUID customerID = UUID.randomUUID();
         String matterNr= "121212";
+
+        when(adminClient.searchVehicleType(anyString())).thenReturn("bulldozer");
+
         Customer existingCustomer = new Customer();
         existingCustomer.setCustomerID(customerID);
         existingCustomer.setCustomerNr(customerNr);
@@ -108,13 +110,12 @@ public class MatterReceptionServiceTests {
         MatterResponse matterResponse = matterReceptionService.processIncomingMatterRequest(matterRequest);
 
         // verify
-
         verify(adminClient, times(1)).searchVehicleType(anyString());
         verify(customerRepository, times(1)).findByCustomerNr(anyLong());
         verify(chargeRepository, times(1)).findByCustomerNrAndChargeStatus(any(), any(), anyLong());
         verify(chargeRepository, times(2)).save(any());
         verify(matterRepository, times(1)).save(any());
-        verify(customerRepository, never()).save(any());
+        verify(customerRepository, times(1)).save(any(Customer.class));
         assertEquals(customerNr, matterResponse.getCustomerNr());
         assertEquals(chargeID, matterResponse.getChargeID());
     }
@@ -158,7 +159,7 @@ public class MatterReceptionServiceTests {
 
         // verify
         verify(customerRepository, times(1)).findByCustomerNr(anyLong());
-        verify(customerRepository, times(1)).save(any());
+        verify(customerRepository, times(2)).save(any());
         verify(chargeRepository, times(1)).findByCustomerNrAndChargeStatus(any(), any(), anyLong());
         verify(chargeRepository, times(2)).save(any());
         verify(matterRepository, times(1)).save(any());
@@ -173,6 +174,7 @@ public class MatterReceptionServiceTests {
         Long customerNr = (long) (Math.random() * 99999);
         UUID customerID = UUID.randomUUID();
         String matterNr = "121212";
+
         Customer existingCustomer = new Customer();
         existingCustomer.setCustomerID(customerID);
         existingCustomer.setCustomerNr(customerNr);
@@ -198,9 +200,8 @@ public class MatterReceptionServiceTests {
         MatterResponse matterResponse = matterReceptionService.processIncomingMatterRequest(matterRequest);
 
         // verify
-
         verify(customerRepository, times(1)).findByCustomerNr(anyLong());
-        verify(customerRepository, never()).save(any());
+        verify(customerRepository, times(1)).save(any(Customer.class));
     }
 
     @Test
@@ -270,17 +271,19 @@ public class MatterReceptionServiceTests {
     @Test
     void shouldReturnCorrectCustomerNrTest() {
         // prepare
-        String matterNr= "121212";
+        Long customerNr = (long) (Math.random() * 99999);
+        UUID customerID = UUID.randomUUID();
+        String matterNr = "121212";
+
         MatterRequest matterRequest = new MatterRequest();
         matterRequest.setMatterNr(matterNr);
-        matterRequest.setCustomerNr(343434L);
+        matterRequest.setCustomerNr(customerNr);
         MatterRequestCallback matterRequestCallback = new MatterRequestCallback();
         matterRequestCallback.setTerminationCallBackUrl("mooi/wel");
         matterRequest.setCallback(matterRequestCallback);
         String expectedVehicle = "bulldozer";
         when(adminClient.searchVehicleType(matterRequest.getMatterNr())).thenReturn("bulldozer");
 
-        UUID customerID = UUID.randomUUID();
         Customer existingCustomer = new Customer();
         existingCustomer.setCustomerID(customerID);
         existingCustomer.setCustomerNr(matterRequest.getCustomerNr());
@@ -303,7 +306,7 @@ public class MatterReceptionServiceTests {
         assertEquals(matterRequest.getCustomerNr(), matterResponse.getCustomerNr());
         verify(adminClient, times(1)).searchVehicleType(anyString());
         verify(customerRepository, times(1)).findByCustomerNr(anyLong());
-        verify(customerRepository, never()).save(any());
+        verify(customerRepository, times(1)).save(any(Customer.class));
         verify(chargeRepository, times(2)).save(any());
     }
 }
