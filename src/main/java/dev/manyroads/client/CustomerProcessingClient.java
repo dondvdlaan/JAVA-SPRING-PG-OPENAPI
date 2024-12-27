@@ -29,7 +29,7 @@ public class CustomerProcessingClient extends RESTConnector {
         try {
             response = sendMessage(customerProcessingClientMessage, DCM_ROLE, CUSTOMER_PROCESSING_URL, HttpMethod.POST);
         } catch (Exception e) {
-            log.info("response: {}", response);
+            log.info("Exception response: {}", response);
             throw new InternalException(String.format("sendMessageToCustomerProcessing: %s", e.getMessage()));
         }
 
