@@ -125,7 +125,7 @@ public class MatterReceptionService {
         oCharges.orElseThrow(() -> new NoChargesFoundForCustomerException(customerNr));
 
         oCharges.get().forEach(charge -> {
-            log.info("forEach(charge ->");
+            log.info("forEach(charge -> customer processing");
             // Pass on data to customer processing
             if (!customerProcessingClient.sendMessageToCustomerProcessing(getCustomerProcessingClientMessage(charge))) {
                 log.info("Failed to send message to customerProcessingClient for customer: {} ", customerNr);

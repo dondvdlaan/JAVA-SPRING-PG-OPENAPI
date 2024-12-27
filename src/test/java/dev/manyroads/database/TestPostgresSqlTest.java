@@ -1,7 +1,6 @@
 package dev.manyroads.database;
 
 import dev.manyroads.client.AdminClient;
-import dev.manyroads.client.CustomerProcessingClient;
 import dev.manyroads.decomreception.DecomReceptionController;
 import dev.manyroads.matterreception.MatterReceptionService;
 import dev.manyroads.model.ChargeStatusEnum;
@@ -16,7 +15,7 @@ import dev.manyroads.model.enums.MatterStatus;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.CustomerRepository;
 import dev.manyroads.model.repository.MatterRepository;
-import org.hamcrest.MatcherAssert;
+import dev.manyroads.scheduler.SchedulerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,6 +34,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -57,7 +57,7 @@ public class TestPostgresSqlTest {
     @MockBean
     AdminClient adminClient;
     @MockBean
-    CustomerProcessingClient customerProcessingClient;
+    SchedulerService schedulerService;
 
     @BeforeEach
     void setUp() {
@@ -112,7 +112,6 @@ public class TestPostgresSqlTest {
                 assertEquals(c.getChargeStatus(), chargeStatus);
             });
         }
-        ;
     }
 
     @Test
@@ -127,7 +126,6 @@ public class TestPostgresSqlTest {
         matterRequestCallback.setTerminationCallBackUrl("tatata/wel");
         matterRequest.setCallback(matterRequestCallback);
         when(adminClient.searchVehicleType(matterRequest.getMatterNr())).thenReturn("bulldozer");
-        when(customerProcessingClient.sendMessageToCustomerProcessing(any())).thenReturn(true);
         Customer existingCustomer = new Customer();
         existingCustomer.setCustomerNr(customerNr);
         customerRepository.save(existingCustomer);
@@ -143,7 +141,8 @@ public class TestPostgresSqlTest {
 
         // verify
         verify(adminClient, times(1)).searchVehicleType(anyString());
-        verify(customerProcessingClient, times(1)).sendMessageToCustomerProcessing(any());
+        verify(schedulerService,times(1)).scheduleCustomerStandby(anyLong());
+        assertTrue(customerRepository.findById(existingCustomer.getCustomerID()).get().isStandByFlag());
         assertEquals(customerNr, matterResponse.getCustomerNr());
         assertNotEquals(savedExistingCharge.getChargeID(), matterResponse.getChargeID());
     }
