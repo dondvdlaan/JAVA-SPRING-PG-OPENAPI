@@ -26,6 +26,7 @@ import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,7 +127,7 @@ public class MatterReceptionService {
         if (oCharges.isPresent() && oCharges.get().isEmpty()) throw new NoChargesFoundForCustomerException(customerNr);
 
         oCharges.ifPresent(c -> c.forEach(charge -> {
-            log.info("forEach(charge -> processing customer: {}", customerNr);
+            log.info("forEach(charge -> processing customer: {}", charge.getCustomerNr());
             // Pass on data to customer processing
             if (!customerProcessingClient.sendMessageToCustomerProcessing(convertToCustomerProcessingClientMessage(charge))) {
                 log.info("Failed to send message to customerProcessingClient for customer: {} ", customerNr);
@@ -143,6 +144,7 @@ public class MatterReceptionService {
 
     // Sub methods
     private static CustomerProcessingClientMessage convertToCustomerProcessingClientMessage(Charge charge) {
+        log.info(" charge.getMatters(): " + charge.getMatters());
         log.info("convertToCustomerProcessingClientMessage: charge.getCustomerNr() {}", charge.getCustomerNr());
         List<MatterMessage> listMatterMessage = new ArrayList<>();
         charge.getMatters().forEach(matter -> {

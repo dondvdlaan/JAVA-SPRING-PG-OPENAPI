@@ -19,4 +19,4 @@ logging:
   level:
     ROOT: INFO
 
-customerStandByDuration: 15
+customerStandByDuration: 1
