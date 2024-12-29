@@ -128,8 +128,11 @@ public class MatterReceptionService {
 
         oCharges.ifPresent(c -> c.forEach(charge -> {
             log.info("forEach(charge -> processing customer: {}", charge.getCustomerNr());
+            log.info("charge.getMatters(): " + charge);
+
+            var message = convertToCustomerProcessingClientMessage(charge);
             // Pass on data to customer processing
-            if (!customerProcessingClient.sendMessageToCustomerProcessing(convertToCustomerProcessingClientMessage(charge))) {
+            if (!customerProcessingClient.sendMessageToCustomerProcessing(message)) {
                 log.info("Failed to send message to customerProcessingClient for customer: {} ", customerNr);
                 throw (new InternalException("DCM 101: customerProcessingClient not responsive"));
             }
@@ -144,7 +147,6 @@ public class MatterReceptionService {
 
     // Sub methods
     private static CustomerProcessingClientMessage convertToCustomerProcessingClientMessage(Charge charge) {
-        log.info(" charge.getMatters(): " + charge.getMatters());
         log.info("convertToCustomerProcessingClientMessage: charge.getCustomerNr() {}", charge.getCustomerNr());
         List<MatterMessage> listMatterMessage = new ArrayList<>();
         charge.getMatters().forEach(matter -> {
