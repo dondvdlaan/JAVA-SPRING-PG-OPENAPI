@@ -1,6 +1,7 @@
 package dev.manyroads.database;
 
 import dev.manyroads.client.AdminClient;
+import dev.manyroads.client.CustomerProcessingClient;
 import dev.manyroads.decomreception.DecomReceptionController;
 import dev.manyroads.matterreception.MatterReceptionService;
 import dev.manyroads.model.ChargeStatusEnum;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -58,12 +60,47 @@ public class TestPostgresSqlTest {
     AdminClient adminClient;
     @MockBean
     SchedulerService schedulerService;
+    @MockBean
+    CustomerProcessingClient customerProcessingClient;
 
     @BeforeEach
     void setUp() {
         matterRepository.deleteAll();
         chargeRepository.deleteAll();
         customerRepository.deleteAll();
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("Sending data to customer processing")
+    void sendCustomerDataToCustomerProcessingTest() {
+        // prepare
+        Long customerNr = (long) (Math.random() * 99999);
+        String matterNr = "12345";
+        ChargeStatusEnum chargeStatus = ChargeStatusEnum.BOOKED;
+        Matter existingMatter = Matter.builder().matterNr(matterNr).matterStatus(MatterStatus.EXECUTABLE).build();
+        matterRepository.save(existingMatter);
+        Set<Matter> setMatters = new HashSet<>();
+        setMatters.add(existingMatter);
+        Charge existingCharge = Charge.builder().chargeStatus(chargeStatus).customerNr(customerNr).vehicleType(VehicleTypeEnum.BULLDOZER).matters(setMatters).build();
+        chargeRepository.save(existingCharge);
+        List<Charge> listCharges = new ArrayList<>();
+        listCharges.add(existingCharge);
+        Customer existingCustomer = Customer.builder()
+                .customerNr(customerNr)
+                .charge(listCharges)
+                .build();
+        customerRepository.save(existingCustomer);
+
+        when(customerProcessingClient.sendMessageToCustomerProcessing(any())).thenReturn(true);
+
+        // activate
+        matterReceptionService.sendCustomerDataToCustomerProcessing(customerNr);
+        // verify
+        verify(customerProcessingClient, times(1)).sendMessageToCustomerProcessing(any());
+        System.out.println("Matter: " + existingMatter);
+        System.out.println("Charge: " + existingCharge);
+        System.out.println("Customer: " + existingCustomer);
     }
 
     @Test
@@ -141,7 +178,7 @@ public class TestPostgresSqlTest {
 
         // verify
         verify(adminClient, times(1)).searchVehicleType(anyString());
-        verify(schedulerService,times(1)).scheduleCustomerStandby(anyLong());
+        verify(schedulerService, times(1)).scheduleCustomerStandby(anyLong());
         assertTrue(customerRepository.findById(existingCustomer.getCustomerID()).get().isStandByFlag());
         assertEquals(customerNr, matterResponse.getCustomerNr());
         assertNotEquals(savedExistingCharge.getChargeID(), matterResponse.getChargeID());

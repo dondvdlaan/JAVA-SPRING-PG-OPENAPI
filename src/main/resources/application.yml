@@ -3,7 +3,8 @@ spring:
     database: POSTGRESQL
     show-sql: true
     hibernate:
-      ddl-auto: update
+      # in conjunction w flyway use validate
+      ddl-auto: validate
   datasource:
     platform: postgres
     url: jdbc:postgresql://localhost:5432/postgres?stringtype=unspecified
@@ -19,4 +20,4 @@ logging:
   level:
     ROOT: INFO
 
-customerStandByDuration: 15
+customerStandByDuration: 3

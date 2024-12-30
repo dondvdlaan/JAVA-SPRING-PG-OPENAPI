@@ -14,6 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class Customer {
     @Id
     @Builder.Default
@@ -22,6 +23,7 @@ public class Customer {
     @Column(name = "customer_nr")
     private Long customerNr;
     @OneToMany(mappedBy = "customer")
+    @Builder.Default
     private List<Charge> charge = new ArrayList<>();
     @Column(name = "stand_by_flag")
     private boolean standByFlag;

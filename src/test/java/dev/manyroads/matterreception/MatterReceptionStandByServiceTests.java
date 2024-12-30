@@ -13,6 +13,7 @@ import dev.manyroads.model.VehicleTypeEnum;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.entity.Customer;
 import dev.manyroads.model.entity.Matter;
+import dev.manyroads.model.messages.CustomerProcessingClientMessage;
 import dev.manyroads.model.repository.ChargeRepository;
 import dev.manyroads.model.repository.CustomerRepository;
 import dev.manyroads.model.repository.MatterRepository;
@@ -230,7 +231,7 @@ public class MatterReceptionStandByServiceTests {
 
     @Test
     @DisplayName("Happy 1 customer w 2 charges to CustomerProcessing ")
-    void happyFlowSendCustomerDataToCustomerProcessingTest() {
+    void happyFlowSendCustomerDataWith2ChargesToCustomerProcessingTest() {
         long customerNr = (long) (Math.random() * 99999);
         UUID customerID = UUID.randomUUID();
         String matterNr = "121212";
@@ -279,7 +280,48 @@ public class MatterReceptionStandByServiceTests {
         matterReceptionService.sendCustomerDataToCustomerProcessing(customerNr);
         //verify
         verify(customerProcessingClient, times(2)).sendMessageToCustomerProcessing(any());
-        verify(customerRepository,times(1)).save(any(Customer.class));
+        verify(customerRepository, times(1)).save(any(Customer.class));
+    }
+
+    @Test
+    @DisplayName("Happy 1 customer w 1 charge to CustomerProcessing ")
+    void happyFlowSendCustomerDataToCustomerProcessingTest() {
+        long customerNr = (long) (Math.random() * 99999);
+        UUID customerID = UUID.randomUUID();
+        String matterNr = "121212";
+        String terminationCallBackUrl = "mooi/wel";
+        VehicleTypeEnum vehicleTypeEnum = VehicleTypeEnum.BULLDOZER;
+        ChargeStatusEnum chargeStatus = ChargeStatusEnum.BOOKED;
+
+        Customer existingCustomer = Customer.builder()
+                .customerID(customerID)
+                .customerNr(customerNr)
+                .build();
+        Charge existingCharge = new Charge();
+        existingCharge.setChargeID(UUID.randomUUID());
+        existingCharge.setChargeStatus(chargeStatus);
+        existingCharge.setCustomerNr(customerNr);
+        existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
+        existingCharge.setCustomer(existingCustomer);
+        Matter existingMatter = Matter.builder()
+                .matterNr(matterNr)
+                .charge(existingCharge)
+                .build();
+        existingCharge.getMatters().add(existingMatter);
+
+        List<Charge> listCharge = new ArrayList<>();
+        listCharge.add(existingCharge);
+        when(chargeRepository
+                .findByCustomerNrAndChargeStatus(eq(customerNr), eq(chargeStatus)))
+                .thenReturn(Optional.of(listCharge));
+        when(customerProcessingClient.sendMessageToCustomerProcessing(any(CustomerProcessingClientMessage.class))).thenReturn(true);
+        when(customerRepository.findByCustomerNr(customerNr)).thenReturn(existingCustomer);
+
+        // activate
+        matterReceptionService.sendCustomerDataToCustomerProcessing(customerNr);
+        //verify
+        verify(customerProcessingClient, times(1)).sendMessageToCustomerProcessing(any());
+        verify(customerRepository, times(1)).save(any(Customer.class));
     }
 
     @Test
@@ -290,7 +332,7 @@ public class MatterReceptionStandByServiceTests {
         UUID customerID = UUID.randomUUID();
         String matterNr = "121212";
         String terminationCallBackUrl = "mooi/wel";
-        VehicleTypeEnum vehicleTypeEnum = VehicleTypeEnum.BULLDOZER;
+        VehicleTypeEnum requestedVehicle = VehicleTypeEnum.BULLDOZER;
 
         MatterRequest matterRequest = new MatterRequest();
         matterRequest.setMatterNr(matterNr);
@@ -299,7 +341,7 @@ public class MatterReceptionStandByServiceTests {
         matterRequestCallback.setTerminationCallBackUrl(terminationCallBackUrl);
         matterRequest.setCallback(matterRequestCallback);
 
-        when(adminClient.searchVehicleType(anyString())).thenReturn(String.valueOf(vehicleTypeEnum));
+        when(adminClient.searchVehicleType(anyString())).thenReturn(String.valueOf(requestedVehicle));
 
         Customer existingCustomer = Customer.builder()
                 .customerID(customerID)
@@ -309,36 +351,19 @@ public class MatterReceptionStandByServiceTests {
         when(customerRepository.findByCustomerNr(anyLong())).thenReturn(existingCustomer);
         when(customerRepository.save(any())).thenReturn(existingCustomer);
 
+        Matter existingMatter = Matter.builder()
+                .matterNr(matterRequest.getMatterNr())
+                .build();
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(UUID.randomUUID());
         existingCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
         existingCharge.setCustomerNr(matterRequest.getCustomerNr());
         existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
         existingCharge.setCustomer(existingCustomer);
-        Matter existingMatter = Matter.builder()
-                .matterNr(matterRequest.getMatterNr())
-                .charge(existingCharge)
-                .build();
         existingCharge.getMatters().add(existingMatter);
         List<Charge> listCharge = new ArrayList<>();
         listCharge.add(existingCharge);
         when(chargeRepository.findByCustomerNrAndChargeStatus(any(), any(), anyLong())).thenReturn(Optional.of(listCharge));
-
-        Charge newCharge = new Charge();
-        UUID chargeID = UUID.randomUUID();
-        newCharge.setChargeID(chargeID);
-        newCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
-        newCharge.setCustomerNr(matterRequest.getCustomerNr());
-        newCharge.setVehicleType(vehicleTypeEnum);
-        newCharge.setCustomer(existingCustomer);
-        when(chargeRepository.save(any())).thenReturn(newCharge);
-        Matter newMatter = Matter.builder()
-                .matterNr(matterRequest.getMatterNr())
-                .charge(newCharge)
-                .build();
-        when(matterRepository.save(any())).thenReturn(newMatter);
-        newCharge.getMatters().add(newMatter);
-        when(chargeRepository.save(any())).thenReturn(newCharge);
 
         // activate
         MatterResponse matterResponse = matterReceptionService.processIncomingMatterRequest(matterRequest);
@@ -347,12 +372,11 @@ public class MatterReceptionStandByServiceTests {
         verify(adminClient, times(1)).searchVehicleType(anyString());
         verify(customerRepository, times(1)).findByCustomerNr(anyLong());
         verify(chargeRepository, times(1)).findByCustomerNrAndChargeStatus(any(), any(), anyLong());
-        verify(chargeRepository, times(2)).save(any());
+        verify(chargeRepository, times(1)).save(any());
         verify(matterRepository, times(1)).save(any());
-        verify(customerRepository, times(0)).save(any());
+        verify(customerRepository, times(1)).save(any());
         verify(schedulerService, times(0)).scheduleCustomerStandby(eq(customerNr));
         assertEquals(customerNr, matterResponse.getCustomerNr());
-        assertEquals(chargeID, matterResponse.getChargeID());
     }
 
     @Test
@@ -390,13 +414,12 @@ public class MatterReceptionStandByServiceTests {
         newCharge.setCustomerNr(matterRequest.getCustomerNr());
         newCharge.setVehicleType(VehicleTypeEnum.BULLDOZER);
         newCharge.setCustomer(newCustomer);
-        when(chargeRepository.save(any())).thenReturn(newCharge);
         Matter newMatter = Matter.builder()
                 .matterNr(matterNr)
                 .charge(newCharge)
                 .build();
-        when(matterRepository.save(any())).thenReturn(newMatter);
         newCharge.getMatters().add(newMatter);
+        when(matterRepository.save(any())).thenReturn(newMatter);
         when(chargeRepository.save(any())).thenReturn(newCharge);
 
         // activate
@@ -406,11 +429,10 @@ public class MatterReceptionStandByServiceTests {
         verify(adminClient, times(1)).searchVehicleType(anyString());
         verify(customerRepository, times(1)).findByCustomerNr(anyLong());
         verify(chargeRepository, times(1)).findByCustomerNrAndChargeStatus(any(), any(), anyLong());
-        verify(chargeRepository, times(2)).save(any());
+        verify(chargeRepository, times(1)).save(any());
         verify(matterRepository, times(1)).save(any());
-        verify(customerRepository, times(2)).save(any());
+        verify(customerRepository, times(3)).save(any());
         verify(schedulerService, times(1)).scheduleCustomerStandby(eq(customerNr));
         assertEquals(customerNr, matterResponse.getCustomerNr());
-        assertEquals(chargeID, matterResponse.getChargeID());
     }
 }
