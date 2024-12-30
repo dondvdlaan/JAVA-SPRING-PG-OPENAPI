@@ -78,20 +78,18 @@ public class TestPostgresSqlTest {
         Long customerNr = (long) (Math.random() * 99999);
         String matterNr = "12345";
         ChargeStatusEnum chargeStatus = ChargeStatusEnum.BOOKED;
-        Customer existingCustomer = Customer.builder().customerNr(customerNr).build();
-        customerRepository.save(existingCustomer);
         Matter existingMatter = Matter.builder().matterNr(matterNr).matterStatus(MatterStatus.EXECUTABLE).build();
         matterRepository.save(existingMatter);
         Set<Matter> setMatters = new HashSet<>();
         setMatters.add(existingMatter);
-        Charge existingCharge = Charge.builder().customer(existingCustomer).chargeStatus(chargeStatus).customerNr(customerNr).vehicleType(VehicleTypeEnum.BULLDOZER).matters(setMatters).build();
+        Charge existingCharge = Charge.builder().chargeStatus(chargeStatus).customerNr(customerNr).vehicleType(VehicleTypeEnum.BULLDOZER).matters(setMatters).build();
         chargeRepository.save(existingCharge);
-        System.out.println("1-existingMatter: " + existingMatter);
-        existingMatter.setCharge(existingCharge);
-        matterRepository.save(existingMatter);
         List<Charge> listCharges = new ArrayList<>();
         listCharges.add(existingCharge);
-        existingCustomer.setCharge(listCharges);
+        Customer existingCustomer = Customer.builder()
+                .customerNr(customerNr)
+                .charge(listCharges)
+                .build();
         customerRepository.save(existingCustomer);
 
         when(customerProcessingClient.sendMessageToCustomerProcessing(any())).thenReturn(true);
@@ -100,6 +98,9 @@ public class TestPostgresSqlTest {
         matterReceptionService.sendCustomerDataToCustomerProcessing(customerNr);
         // verify
         verify(customerProcessingClient, times(1)).sendMessageToCustomerProcessing(any());
+        System.out.println("Matter: " + existingMatter);
+        System.out.println("Charge: " + existingCharge);
+        System.out.println("Customer: " + existingCustomer);
     }
 
     @Test
