@@ -2,15 +2,10 @@ package dev.manyroads.decomreception;
 
 import dev.manyroads.client.AdminClient;
 import dev.manyroads.client.CustomerProcessingClient;
-import dev.manyroads.matterreception.MatterReceptionService;
-import dev.manyroads.matterreception.exception.MatterIDIsMissingException;
-import dev.manyroads.matterreception.exception.MatterRequestCustomerNrIsMissingException;
-import dev.manyroads.matterreception.exception.MatterRequestEmptyOrNullException;
 import dev.manyroads.model.MatterRequest;
 import dev.manyroads.model.MatterRequestCallback;
 import dev.manyroads.model.MatterResponse;
 import dev.manyroads.model.VehicleTypeEnum;
-import dev.manyroads.model.entity.Customer;
 import dev.manyroads.model.messages.CustomerProcessingClientMessage;
 import dev.manyroads.model.repository.CustomerRepository;
 import dev.manyroads.verification.Verification;
@@ -22,15 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 
-import java.util.Objects;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.times;

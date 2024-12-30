@@ -1,9 +1,6 @@
 package dev.manyroads.scheduler;
 
 import dev.manyroads.matterreception.MatterReceptionService;
-import dev.manyroads.model.repository.ChargeRepository;
-import dev.manyroads.model.repository.CustomerRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
