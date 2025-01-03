@@ -2,7 +2,6 @@ package dev.manyroads.client;
 
 import dev.manyroads.decomreception.exception.InternalException;
 import dev.manyroads.model.entity.Matter;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-@AllArgsConstructor
 @Slf4j
 public class ParentMicroserviceClient extends RESTConnector {
 

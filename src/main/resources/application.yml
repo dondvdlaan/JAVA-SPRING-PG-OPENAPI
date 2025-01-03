@@ -21,3 +21,7 @@ logging:
     ROOT: INFO
 
 customerStandByDuration: 3
+
+rest:
+  user: decom
+  password: secret

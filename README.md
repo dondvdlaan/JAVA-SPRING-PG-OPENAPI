@@ -27,6 +27,9 @@ is based on Cucumber, WireMock and RESTAssured.
 A Jenkins file has been added for a pipeline to execute automatically unit testing, integration testing and building of the
 application.
 
+<h3>Authentication</h3>
+Between the microservices basic auth is applied.
+
 
 
 
