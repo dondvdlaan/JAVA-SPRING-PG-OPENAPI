@@ -2,8 +2,6 @@ package dev.manyroads.client;
 
 import dev.manyroads.decomreception.exception.InternalException;
 import dev.manyroads.model.messages.CustomerProcessingClientMessage;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
