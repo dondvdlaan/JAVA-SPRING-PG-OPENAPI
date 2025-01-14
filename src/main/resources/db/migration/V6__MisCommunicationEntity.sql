@@ -1,11 +1,9 @@
 CREATE TABLE IF NOT EXISTS mis_communication
 (
- mis_comm_id        uuid NOT NULL,
- request_uri        character varying(255) COLLATE pg_catalog."default",
+ mis_comm_id        uuid NOT NULL PRIMARY KEY,
+ request_uri        VARCHAR(256),
  message_body       bytea,
- headers_as_json    character varying(255) COLLATE pg_catalog."default",
- http_method        character varying(255) COLLATE pg_catalog."default",
- retries            integer,
-
- PRIMARY KEY (mis_comm_id)
+ headers_as_json    VARCHAR(256),
+ http_method        VARCHAR(256),
+ retries            integer
 );

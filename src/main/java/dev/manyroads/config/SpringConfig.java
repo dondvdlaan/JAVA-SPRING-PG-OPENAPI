@@ -26,4 +26,9 @@ public class SpringConfig {
         restTemplate.setInterceptors(interceptors);
         return restTemplate;
     }
+
+    @Bean
+    public RestTemplate retryRestTemplate() {
+        return new RestTemplate();
+    }
 }

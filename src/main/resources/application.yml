@@ -21,7 +21,7 @@ logging:
     ROOT: INFO
 
 customerStandByDuration: 3
-misCommunicationRetryDelay: 3
+misCommunicationRetryDelay: 5
 misCommunicationMaxRetries: 3
 
 rest:
