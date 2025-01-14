@@ -1,7 +1,6 @@
 package dev.manyroads.config;
 
 import dev.manyroads.miscommunication.RESTInterceptor;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestInterceptor;

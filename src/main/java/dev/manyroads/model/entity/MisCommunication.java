@@ -29,7 +29,7 @@ public class MisCommunication {
     @Column(name = "request_uri")
     private String requestURI;
     @Column(name = "message_body")
-    private String messageBody;
+    private byte[] messageBody;
     @Column(name = "headers_as_json")
     private String headersAsJson;
     @Column(name = "http_method")
