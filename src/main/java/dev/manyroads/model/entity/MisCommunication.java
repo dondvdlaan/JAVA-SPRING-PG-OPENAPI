@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Map;
 import java.util.UUID;
 
 @Entity
@@ -30,7 +29,7 @@ public class MisCommunication {
     @Column(name = "request_uri")
     private String requestURI;
     @Column(name = "message_body")
-    private String messageBody;
+    private byte[] messageBody;
     @Column(name = "headers_as_json")
     private String headersAsJson;
     @Column(name = "http_method")

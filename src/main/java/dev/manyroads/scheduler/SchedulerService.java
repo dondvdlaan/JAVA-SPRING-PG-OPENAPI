@@ -11,6 +11,9 @@ import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.UUID;
+
 import static org.quartz.DateBuilder.futureDate;
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.TriggerBuilder.newTrigger;
@@ -24,6 +27,10 @@ public class SchedulerService {
 
     @Value("${customerStandByDuration}")
     Integer customerStandByDuration;
+    @Value("${misCommunicationRetryDelay}")
+    Integer misCommunicationRetryDelay;
+    @Value("${misCommunicationMaxRetries}")
+    Integer misCommunicationMaxRetries;
 
     public void scheduleCustomerStandby(Long customerNr) {
 
@@ -42,6 +49,24 @@ public class SchedulerService {
         }
     }
 
+    public void scheduleMiscommunicationRetry(UUID misCommID) {
+
+       // Date startTime = DateBuilder.nextGivenSecondDate(null, misCommunicationRetryDelay);
+        JobDetail job = newJob(MisCommunicationRetryJob.class)
+                .withIdentity("retry-job-" + misCommID)
+                .usingJobData("misCommID", misCommID.toString())
+                .build();
+        Trigger trigger = newTrigger()
+                .withIdentity("trigger-retry-job-" + misCommID)
+                .startAt(futureDate(misCommunicationRetryDelay, DateBuilder.IntervalUnit.SECOND))
+                //.startAt(startTime)
+                .build();
+        try {
+            scheduler.scheduleJob(job, trigger);
+        } catch (SchedulerException ex) {
+            throw new InternalException(String.format("Scheduler failure for retry-job: %s", misCommID));
+        }
+    }
 
 
 }
