@@ -1,9 +1,7 @@
 package dev.manyroads.debug;
 
-import dev.manyroads.model.entity.MisCommunication;
 import dev.manyroads.model.repository.MiscommunicationRepository;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Service;
 
 //@Service
 public class StartTests implements CommandLineRunner {

@@ -51,15 +51,14 @@ public class SchedulerService {
 
     public void scheduleMiscommunicationRetry(UUID misCommID) {
 
-       // Date startTime = DateBuilder.nextGivenSecondDate(null, misCommunicationRetryDelay);
+        Date startTime = DateBuilder.nextGivenSecondDate(null, misCommunicationRetryDelay);
         JobDetail job = newJob(MisCommunicationRetryJob.class)
                 .withIdentity("retry-job-" + misCommID)
                 .usingJobData("misCommID", misCommID.toString())
                 .build();
         Trigger trigger = newTrigger()
                 .withIdentity("trigger-retry-job-" + misCommID)
-                .startAt(futureDate(misCommunicationRetryDelay, DateBuilder.IntervalUnit.SECOND))
-                //.startAt(startTime)
+                .startAt(startTime)
                 .build();
         try {
             scheduler.scheduleJob(job, trigger);
@@ -67,6 +66,4 @@ public class SchedulerService {
             throw new InternalException(String.format("Scheduler failure for retry-job: %s", misCommID));
         }
     }
-
-
 }
