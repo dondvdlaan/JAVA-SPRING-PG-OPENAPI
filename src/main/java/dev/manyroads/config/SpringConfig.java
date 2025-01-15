@@ -1,5 +1,6 @@
 package dev.manyroads.config;
 
+import dev.manyroads.client.RestTemplateResponseErrorHandler;
 import dev.manyroads.miscommunication.RESTInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,8 +28,10 @@ public class SpringConfig {
         return restTemplate;
     }
 
-    @Bean
+    @Bean("retryRestTemplate")
     public RestTemplate retryRestTemplate() {
-        return new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setErrorHandler(new RestTemplateResponseErrorHandler());
+        return restTemplate;
     }
 }
