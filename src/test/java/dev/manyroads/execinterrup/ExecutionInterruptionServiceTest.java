@@ -1,6 +1,6 @@
 package dev.manyroads.execinterrup;
 
-import dev.manyroads.client.AdminClient;
+import dev.manyroads.client.feign.AdminClient;
 import dev.manyroads.client.ParentMicroserviceClient;
 import dev.manyroads.execinterrup.exception.ChargeMissingForCustomerNrException;
 import dev.manyroads.execinterrup.exception.MatterCustomerNrMismatchException;
@@ -17,6 +17,7 @@ import dev.manyroads.model.repository.MatterRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 
 import java.util.List;
 import java.util.Optional;

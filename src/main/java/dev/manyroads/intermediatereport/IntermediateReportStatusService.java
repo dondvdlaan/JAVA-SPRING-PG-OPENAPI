@@ -1,6 +1,6 @@
 package dev.manyroads.intermediatereport;
 
-import dev.manyroads.client.AdminClient;
+import dev.manyroads.client.feign.AdminClient;
 import dev.manyroads.decomreception.exception.InternalException;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusChargeIDNotExistException;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusMattersNotBelongToChargeException;
