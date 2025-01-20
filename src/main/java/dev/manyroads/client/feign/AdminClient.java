@@ -1,4 +1,4 @@
-package dev.manyroads.client;
+package dev.manyroads.client.feign;
 
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.messages.ChargeMessage;
