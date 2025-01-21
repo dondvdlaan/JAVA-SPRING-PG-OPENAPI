@@ -9,7 +9,6 @@ import dev.manyroads.model.repository.MiscommunicationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -78,7 +77,9 @@ public class MisCommunicationRetryJob implements Job {
 
     // Sub methods
     private void maximumRetriesReached(int retries, MisCommunication misCommunication) {
+        log.info("MisCommunicationRetryJob: maximumRetriesReached-> maximum retries: {} reached: {}", misCommunicationMaxRetries, retries);
         misCommunication.setRetries(retries);
+        misCommunication.setRetrySuccesful(false);
         miscommunicationRepository.save(misCommunication);
     }
 

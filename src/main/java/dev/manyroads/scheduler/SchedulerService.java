@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.DateBuilder;
 import org.quartz.JobDetail;
-import org.quartz.JobExecutionContext;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
@@ -68,6 +67,7 @@ public class SchedulerService {
     }
 
     public void rescheduleJobMiscommunicationRetry(Trigger oldTrigger, int retries, String misCommID) {
+        log.info("rescheduleJobMiscommunicationRetry: started rescheduling job for tery: " + retries);
         Date reStartTime = DateBuilder.nextGivenSecondDate(null, misCommunicationRetryDelay * retries);
         Trigger newTrigger = newTrigger()
                 .withIdentity("trigger-retry-job-" + misCommID)
