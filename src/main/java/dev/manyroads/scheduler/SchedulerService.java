@@ -29,8 +29,7 @@ public class SchedulerService {
     Integer customerStandByDuration;
     @Value("${misCommunicationRetryDelay}")
     Integer misCommunicationRetryDelay;
-    @Value("${misCommunicationMaxRetries}")
-    Integer misCommunicationMaxRetries;
+
 
     public void scheduleCustomerStandby(Long customerNr) {
 
@@ -66,4 +65,19 @@ public class SchedulerService {
             throw new InternalException(String.format("Scheduler failure for retry-job: %s", misCommID));
         }
     }
+
+    public void rescheduleJobMiscommunicationRetry(Trigger oldTrigger, int retries, String misCommID) {
+        log.info("rescheduleJobMiscommunicationRetry: started rescheduling job for tery: " + retries);
+        Date reStartTime = DateBuilder.nextGivenSecondDate(null, misCommunicationRetryDelay * retries);
+        Trigger newTrigger = newTrigger()
+                .withIdentity("trigger-retry-job-" + misCommID)
+                .startAt(reStartTime)
+                .build();
+        try {
+            scheduler.rescheduleJob(oldTrigger.getKey(), newTrigger);
+        } catch (SchedulerException ex) {
+            throw new InternalException(String.format("ReScheduler failure for retry-job: %s", misCommID));
+        }
+    }
+
 }

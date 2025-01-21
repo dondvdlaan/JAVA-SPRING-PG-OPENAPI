@@ -36,4 +36,6 @@ public class MisCommunication {
     private String httpMethod;
     @Column(name = "retries")
     private int retries;
+    @Column(name = "retry_succesful")
+    private boolean retrySuccesful;
 }
