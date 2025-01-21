@@ -9,18 +9,18 @@ import dev.manyroads.model.repository.MiscommunicationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
+import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 @Component
@@ -29,16 +29,22 @@ public class MisCommunicationRetryJob implements Job {
 
     private final MiscommunicationRepository miscommunicationRepository;
     private final RestTemplate retryRestTemplate;
+    private final SchedulerService schedulerService;
+    @Value("${misCommunicationMaxRetries}")
+    Integer misCommunicationMaxRetries;
 
     public MisCommunicationRetryJob(MiscommunicationRepository miscommunicationRepository,
-                                    @Qualifier("retryRestTemplate") RestTemplate retryRestTemplate) {
+                                    @Qualifier("retryRestTemplate") RestTemplate retryRestTemplate,
+                                    SchedulerService schedulerService) {
         this.miscommunicationRepository = miscommunicationRepository;
         this.retryRestTemplate = retryRestTemplate;
+        this.schedulerService = schedulerService;
     }
 
     @Override
     @Transactional
     public void execute(JobExecutionContext jobExecutionContext) {
+        int retries;
         String misCommID = jobExecutionContext.getJobDetail().getJobDataMap().getString("misCommID");
         log.info(String.format("MisCommunicationRetryJob: executing job for retry %s", misCommID));
         MisCommunication misCommunication = miscommunicationRepository.findById(UUID.fromString(misCommID)).orElse(null);
@@ -50,12 +56,30 @@ public class MisCommunicationRetryJob implements Job {
                 misCommunication.getMessageBody(),
                 misCommunication.getHeadersAsJson()
         );
+        retries = misCommunication.getRetries();
+        retries++;
+        misCommunication.setRetries(retries);
+        miscommunicationRepository.save(misCommunication);
+
+        log.info("MisCommunicationRetryJob: current retries {}", retries);
         if (retryResponse.getStatusCode().is4xxClientError())
-            log.info(String.format("MisCommunicationRetryJob: retryResponse.getStatusCode() %s", retryResponse.getStatusCode()));
-        if (retryResponse.getStatusCode().is5xxServerError())
-            log.info(String.format("MisCommunicationRetryJob: retryResponse.getStatusCode() %s", retryResponse.getStatusCode()));
+            log.info("MisCommunicationRetryJob: retryResponse.getStatusCode() {}", retryResponse.getStatusCode());
+        if (retryResponse.getStatusCode().is5xxServerError()) {
+            log.info("MisCommunicationRetryJob: retryResponse.getStatusCode() {}", retryResponse.getStatusCode());
+            if (retries >= misCommunicationMaxRetries) {
+                maximumRetriesReached(retries, misCommunication);
+                return;
+            }
+            schedulerService.rescheduleJobMiscommunicationRetry(jobExecutionContext.getTrigger(), retries, misCommID);
+        }
         if (retryResponse.getStatusCode().is2xxSuccessful())
-            log.info(String.format("MisCommunicationRetryJob: retryResponse.getStatusCode() %s", retryResponse.getStatusCode()));
+            log.info("MisCommunicationRetryJob: retryResponse.getStatusCode() {}", retryResponse.getStatusCode());
+    }
+
+    // Sub methods
+    private void maximumRetriesReached(int retries, MisCommunication misCommunication) {
+        misCommunication.setRetries(retries);
+        miscommunicationRepository.save(misCommunication);
     }
 
     private ResponseEntity<?> retryCommunication(String url, String httpMethod, byte[] body, String headersAsJson) {

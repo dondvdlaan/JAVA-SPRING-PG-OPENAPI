@@ -5,5 +5,6 @@ CREATE TABLE IF NOT EXISTS mis_communication
  message_body       bytea,
  headers_as_json    VARCHAR(256),
  http_method        VARCHAR(256),
- retries            integer
+ retries            integer,
+ retry_succesful    boolean
 );

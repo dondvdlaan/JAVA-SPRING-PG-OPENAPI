@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.DateBuilder;
 import org.quartz.JobDetail;
+import org.quartz.JobExecutionContext;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
@@ -29,8 +30,7 @@ public class SchedulerService {
     Integer customerStandByDuration;
     @Value("${misCommunicationRetryDelay}")
     Integer misCommunicationRetryDelay;
-    @Value("${misCommunicationMaxRetries}")
-    Integer misCommunicationMaxRetries;
+
 
     public void scheduleCustomerStandby(Long customerNr) {
 
@@ -66,4 +66,18 @@ public class SchedulerService {
             throw new InternalException(String.format("Scheduler failure for retry-job: %s", misCommID));
         }
     }
+
+    public void rescheduleJobMiscommunicationRetry(Trigger oldTrigger, int retries, String misCommID) {
+        Date reStartTime = DateBuilder.nextGivenSecondDate(null, misCommunicationRetryDelay * retries);
+        Trigger newTrigger = newTrigger()
+                .withIdentity("trigger-retry-job-" + misCommID)
+                .startAt(reStartTime)
+                .build();
+        try {
+            scheduler.rescheduleJob(oldTrigger.getKey(), newTrigger);
+        } catch (SchedulerException ex) {
+            throw new InternalException(String.format("ReScheduler failure for retry-job: %s", misCommID));
+        }
+    }
+
 }
