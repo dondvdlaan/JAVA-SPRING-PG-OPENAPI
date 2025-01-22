@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.5</version>
+        <version>3.4.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -20,7 +20,7 @@
         <maven.compiler.target>23</maven.compiler.target>
         <openapi.generator.maven.plugin>7.8.0</openapi.generator.maven.plugin>
         <swagger.annotations>2.2.25</swagger.annotations>
-        <spring-cloud.version>2023.0.3</spring-cloud.version>
+        <spring-cloud.version>2024.0.0</spring-cloud.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -130,10 +130,20 @@
             <scope>provided</scope>
         </dependency>
         <!-- Testing -->
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <version>3.4.1</version>
+            <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-contract-stub-runner -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-contract-stub-runner</artifactId>
+            <version>4.2.0</version>
+        </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -160,6 +170,12 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock-standalone</artifactId>
+            <version>3.10.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

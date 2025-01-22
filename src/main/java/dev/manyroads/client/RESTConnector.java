@@ -29,7 +29,7 @@ public abstract class RESTConnector {
         headers.add("x-user-role", userRole);
         headers.setBasicAuth(restUser, restPassword);
         HttpEntity<?> requestEntity = new HttpEntity<>(messageBody, headers);
-        log.info("url: {}", url);
+        log.info("RESTConnector: sendMessage url: {}", url);
         return restTemplate.exchange(url, method, requestEntity, Void.class);
     }
 

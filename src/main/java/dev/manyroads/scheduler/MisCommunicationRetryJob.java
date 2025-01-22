@@ -59,10 +59,14 @@ public class MisCommunicationRetryJob implements Job {
         retries++;
         misCommunication.setRetries(retries);
         miscommunicationRepository.save(misCommunication);
-
         log.info("MisCommunicationRetryJob: current retries {}", retries);
-        if (retryResponse.getStatusCode().is4xxClientError())
+
+        if (retryResponse.getStatusCode().is2xxSuccessful()) {
             log.info("MisCommunicationRetryJob: retryResponse.getStatusCode() {}", retryResponse.getStatusCode());
+            misCommunication.setRetrySuccesful(true);
+            miscommunicationRepository.save(misCommunication);
+            return;
+        }
         if (retryResponse.getStatusCode().is5xxServerError()) {
             log.info("MisCommunicationRetryJob: retryResponse.getStatusCode() {}", retryResponse.getStatusCode());
             if (retries >= misCommunicationMaxRetries) {
@@ -70,9 +74,13 @@ public class MisCommunicationRetryJob implements Job {
                 return;
             }
             schedulerService.rescheduleJobMiscommunicationRetry(jobExecutionContext.getTrigger(), retries, misCommID);
+            return;
         }
-        if (retryResponse.getStatusCode().is2xxSuccessful())
+        if (retryResponse.getStatusCode().is4xxClientError()) {
             log.info("MisCommunicationRetryJob: retryResponse.getStatusCode() {}", retryResponse.getStatusCode());
+            misCommunication.setRetrySuccesful(false);
+            miscommunicationRepository.save(misCommunication);
+        }
     }
 
     // Sub methods
