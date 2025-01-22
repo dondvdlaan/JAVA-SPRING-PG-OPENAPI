@@ -22,7 +22,7 @@ public class CustomerProcessingClient extends RESTConnector {
     private final static String CUSTOMER_PROCESSING_URL = "http://localhost:7090/v1/process_charge";
 
     public boolean sendMessageToCustomerProcessing(CustomerProcessingClientMessage customerProcessingClientMessage) {
-
+        log.info("sendMessageToCustomerProcessing: CUSTOMER_PROCESSING_URL-> {}", CUSTOMER_PROCESSING_URL);
         ResponseEntity<?> response = null;
         try {
             response = sendMessage(customerProcessingClientMessage, DCM_ROLE, CUSTOMER_PROCESSING_URL, HttpMethod.POST);
