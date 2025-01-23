@@ -1,6 +1,6 @@
 package dev.manyroads.database;
 
-import dev.manyroads.client.feign.AdminClient;
+import dev.manyroads.client.AdminClient;
 import dev.manyroads.client.CustomerProcessingClient;
 import dev.manyroads.decomreception.DecomReceptionController;
 import dev.manyroads.matterreception.MatterReceptionService;

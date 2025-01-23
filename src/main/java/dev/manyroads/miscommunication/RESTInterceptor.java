@@ -17,6 +17,10 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * This class is part of th eResttemplate bean {@link dev.manyroads.config.SpringConfig } used in the RestConnector
+ * {@link dev.manyroads.client.RESTConnector } and intercepts all outgoing messages
+ */
 @Component
 @Slf4j
 public class RESTInterceptor implements ClientHttpRequestInterceptor {

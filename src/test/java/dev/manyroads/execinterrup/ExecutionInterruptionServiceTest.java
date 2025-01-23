@@ -1,6 +1,6 @@
 package dev.manyroads.execinterrup;
 
-import dev.manyroads.client.feign.AdminClient;
+import dev.manyroads.client.AdminClient;
 import dev.manyroads.client.ParentMicroserviceClient;
 import dev.manyroads.execinterrup.exception.ChargeMissingForCustomerNrException;
 import dev.manyroads.execinterrup.exception.MatterCustomerNrMismatchException;
