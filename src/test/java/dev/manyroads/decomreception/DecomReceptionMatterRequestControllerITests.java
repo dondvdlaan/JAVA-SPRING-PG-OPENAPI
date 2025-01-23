@@ -1,6 +1,6 @@
 package dev.manyroads.decomreception;
 
-import dev.manyroads.client.feign.AdminClient;
+import dev.manyroads.client.AdminClient;
 import dev.manyroads.client.CustomerProcessingClient;
 import dev.manyroads.model.MatterRequest;
 import dev.manyroads.model.MatterRequestCallback;
@@ -14,9 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.any;
@@ -38,9 +38,9 @@ public class DecomReceptionMatterRequestControllerITests {
     Verification verification;
     @Autowired
     CustomerRepository customerRepository;
-    @MockBean
+    @MockitoBean
     AdminClient adminClient;
-    @MockBean
+    @MockitoBean
     CustomerProcessingClient customerProcessingClient;
     @Value("${customerStandByDuration}")
     Integer customerStandByDuration;

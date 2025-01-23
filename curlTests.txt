@@ -1,0 +1,1 @@
+curl -v POST http://localhost:8080/v1/matters -H "cache-control: no-cache" -H "content-type: application/json" -d "{\"customerNr\":123456, \"matterNr\":\"789012\"}"

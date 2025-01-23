@@ -1,5 +1,6 @@
-package dev.manyroads.client.feign;
+package dev.manyroads.client;
 
+import dev.manyroads.client.configfeign.CustomFeignDecoder;
 import dev.manyroads.model.entity.Charge;
 import dev.manyroads.model.messages.ChargeMessage;
 import dev.manyroads.model.messages.MatterMessage;
@@ -9,7 +10,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "Decom-Admin", url = "http://localhost:7090")
+@FeignClient(
+        name = "Decom-Admin",
+        url = "http://localhost:7090",
+        configuration = {CustomFeignDecoder.class})
 public interface AdminClient {
 
     @GetMapping("/vehicles/{matterNr}")
