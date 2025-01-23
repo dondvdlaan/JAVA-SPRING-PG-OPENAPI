@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -46,9 +46,9 @@ public class PostgresSqlTest {
     DecomReceptionController caseController;
     @Autowired
     MatterReceptionService matterReceptionService;
-    @MockBean
+    @MockitoBean
     AdminClient adminClient;
-    @MockBean
+    @MockitoBean
     SchedulerService schedulerService;
 
     @Test

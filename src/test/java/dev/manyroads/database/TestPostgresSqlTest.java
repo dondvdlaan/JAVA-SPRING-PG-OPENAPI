@@ -22,7 +22,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -56,11 +56,11 @@ public class TestPostgresSqlTest {
     MatterReceptionService matterReceptionService;
     @Autowired
     DecomReceptionController decomReceptionController;
-    @MockBean
+    @MockitoBean
     AdminClient adminClient;
-    @MockBean
+    @MockitoBean
     SchedulerService schedulerService;
-    @MockBean
+    @MockitoBean
     CustomerProcessingClient customerProcessingClient;
 
     @BeforeEach
