@@ -18,8 +18,10 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 /**
- * This class is part of th eResttemplate bean {@link dev.manyroads.config.SpringConfig } used in the RestConnector
- * {@link dev.manyroads.client.RESTConnector } and intercepts all outgoing messages
+ * This class is part of the Resttemplate bean {@link dev.manyroads.config.SpringConfig } used in the RestConnector
+ * {@link dev.manyroads.client.RESTConnector } and intercepts all outgoing messages:
+ * It forward the request and checks the response. If the response is not 2xx, the retry cycle will be started, otherwise
+ * the 2xx response will be returned to originating client
  */
 @Component
 @Slf4j
@@ -40,19 +42,22 @@ public class RESTInterceptor implements ClientHttpRequestInterceptor {
         ClientHttpResponse response = null;
         try {
             response = execution.execute(request, body);
-            log.info("intercept response.getStatusCode(): " + response.getStatusCode());
-            if (!response.getStatusCode().is2xxSuccessful()) {
-                log.info("Preparing MisCommunicationEvent ");
-                MisCommunicationEvent misCommunicationEvent = new MisCommunicationEvent
-                        (this, request.getURI().toString(), request.getMethod().toString(), body, getHeadersAsJSON(request.getHeaders()));
-                applicationEventPublisher.publishEvent(misCommunicationEvent);
-            }
+            log.info("intercept: response.getStatusCode(): " + response.getStatusCode());
         } catch (IOException ex) {
-            log.info("***********IOException: " + ex.getMessage());
-            log.info("***********IOException: " + ex.getCause());
+            log.info(String.format("***********IOException: Message-> %s. Cause-> %s", ex.getMessage(), ex.getCause()));
             throw new InternalException(ex.getMessage());
         }
+        if (!response.getStatusCode().is2xxSuccessful()) startRetryCycle(request, body);
+
         return new InterceptedResponse(HttpStatus.OK, "OK", body, request.getHeaders());
+    }
+
+    // Sub methods
+    private void startRetryCycle(HttpRequest request, byte[] body) {
+        log.info("Preparing MisCommunicationEvent ");
+        MisCommunicationEvent misCommunicationEvent = new MisCommunicationEvent
+                (this, request.getURI().toString(), request.getMethod().toString(), body, getHeadersAsJSON(request.getHeaders()));
+        applicationEventPublisher.publishEvent(misCommunicationEvent);
     }
 
     private String getHeadersAsJSON(HttpHeaders headers) {

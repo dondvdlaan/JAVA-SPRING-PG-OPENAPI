@@ -27,6 +27,8 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class DecomReceptionMatterRequestControllerITests {
 
+    private static final String CLIENT_NAME = "decom";
+    private static final String CLIENT_PASSWORD = "secret";
     @LocalServerPort
     private int port;
 
@@ -66,7 +68,9 @@ public class DecomReceptionMatterRequestControllerITests {
         Long expected = matterResponse.getCustomerNr();
 
         // Activate
-        MatterResponse result = testRestTemplate.postForObject(
+        MatterResponse result = testRestTemplate
+                .withBasicAuth(CLIENT_NAME,CLIENT_PASSWORD)
+                .postForObject(
                 "http://localhost:" + port + "/v1/matters",
                 matterRequest,
                 MatterResponse.class);
