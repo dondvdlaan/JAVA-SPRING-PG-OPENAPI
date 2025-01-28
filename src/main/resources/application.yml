@@ -27,3 +27,7 @@ misCommunicationMaxRetries: 3
 rest:
   user: decom
   password: secret
+
+OAuth2rest:
+  user: decom
+  password: secret

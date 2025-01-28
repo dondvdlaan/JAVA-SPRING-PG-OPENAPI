@@ -30,6 +30,8 @@ import java.util.UUID;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class DecomReceptionControllerTests {
 
+    private static final String CLIENT_NAME = "decom";
+    private static final String CLIENT_PASSWORD = "secret";
     @LocalServerPort
     private int port;
 
@@ -81,9 +83,10 @@ public class DecomReceptionControllerTests {
         HttpEntity<MatterRequest> request = new HttpEntity<>(matterRequestIsNull, headers);
         String expectedStatusCode = "400 BAD_REQUEST";
 
-
         // Activate
-        ResponseEntity<MatterResponse> result = testRestTemplate.postForEntity(
+        ResponseEntity<MatterResponse> result = testRestTemplate
+                .withBasicAuth(CLIENT_NAME, CLIENT_PASSWORD)
+                .postForEntity(
                 "http://localhost:" + port + "/v1/matters",
                 request,
                 MatterResponse.class);
@@ -113,7 +116,9 @@ public class DecomReceptionControllerTests {
         when(matterReceptionService.processIncomingMatterRequest(any())).thenReturn(matterResponse);
 
         // Activate
-        ResponseEntity<MatterResponse> result = testRestTemplate.postForEntity(
+        ResponseEntity<MatterResponse> result = testRestTemplate
+                .withBasicAuth(CLIENT_NAME,CLIENT_PASSWORD)
+                .postForEntity(
                 "http://localhost:" + port + "/v1/matters",
                 matterRequest,
                 MatterResponse.class);
@@ -142,7 +147,9 @@ public class DecomReceptionControllerTests {
         when(matterReceptionService.processIncomingMatterRequest(any())).thenReturn(matterResponse);
 
         // Activate
-        MatterResponse result = testRestTemplate.postForObject(
+        MatterResponse result = testRestTemplate
+                .withBasicAuth(CLIENT_NAME,CLIENT_PASSWORD)
+                .postForObject(
                 "http://localhost:" + port + "/v1/matters",
                 matterRequest,
                 MatterResponse.class);
