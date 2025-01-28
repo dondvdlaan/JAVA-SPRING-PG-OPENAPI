@@ -28,6 +28,11 @@ public class SpringConfig {
         return restTemplate;
     }
 
+    @Bean
+    public RestTemplate oAUth2restTemplate() {
+        return new RestTemplate();
+    }
+
     @Bean("retryRestTemplate")
     public RestTemplate retryRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();

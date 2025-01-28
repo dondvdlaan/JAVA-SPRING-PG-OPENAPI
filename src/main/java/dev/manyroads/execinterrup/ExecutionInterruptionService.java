@@ -1,7 +1,7 @@
 package dev.manyroads.execinterrup;
 
 import dev.manyroads.client.AdminClient;
-import dev.manyroads.client.ParentMicroserviceClient;
+import dev.manyroads.client.parent.ParentMicroserviceClient;
 import dev.manyroads.decomreception.exception.InternalException;
 import dev.manyroads.execinterrup.exception.ChargeHasDoneStatusException;
 import dev.manyroads.execinterrup.exception.ChargeMissingForCustomerNrException;
@@ -151,7 +151,7 @@ public class ExecutionInterruptionService {
     private boolean requestTerminateMatter(Charge charge) {
         boolean result = false;
         for (Matter matter : charge.getMatters()) {
-            result = parentMicroserviceClient.requestParentMicroserviceToacticateTermination(matter);
+            result = parentMicroserviceClient.requestParentMicroserviceToActivateTermination(matter);
         }
         return result;
     }
