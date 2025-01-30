@@ -31,3 +31,6 @@ rest:
 OAuth2rest:
   user: decom
   password: secret
+
+parent:
+  host: localhost

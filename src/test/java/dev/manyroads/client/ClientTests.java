@@ -1,6 +1,6 @@
 package dev.manyroads.client;
 
-import dev.manyroads.decomreception.exception.InternalException;
+import dev.manyroads.decomreception.exception.InternalTechnicalException;
 import dev.manyroads.matterreception.MatterReceptionService;
 import dev.manyroads.model.ChargeStatusEnum;
 import dev.manyroads.model.VehicleTypeEnum;
@@ -86,7 +86,7 @@ public class ClientTests {
 
         // activate and verify
         assertThatThrownBy(() -> matterReceptionService.sendCustomerDataToCustomerProcessing(customerNr))
-                .isInstanceOf(InternalException.class);
+                .isInstanceOf(InternalTechnicalException.class);
     }
 
     @Test
@@ -104,6 +104,6 @@ public class ClientTests {
 
         // activate and verify
         assertThatThrownBy(() -> customerProcessingClient.sendMessageToCustomerProcessing(customerProcessingClientMessage))
-                .isInstanceOf(InternalException.class);
+                .isInstanceOf(InternalTechnicalException.class);
     }
 }

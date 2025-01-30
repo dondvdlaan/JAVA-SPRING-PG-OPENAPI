@@ -2,7 +2,7 @@ package dev.manyroads.scheduler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.manyroads.decomreception.exception.InternalException;
+import dev.manyroads.decomreception.exception.InternalTechnicalException;
 import dev.manyroads.miscommunication.exception.MiscommunicationNotFoundException;
 import dev.manyroads.model.entity.MisCommunication;
 import dev.manyroads.model.repository.MiscommunicationRepository;
@@ -98,7 +98,7 @@ public class MisCommunicationRetryJob implements Job {
         try {
             return retryRestTemplate.exchange(url, HttpMethod.valueOf(httpMethod), requestEntity, Void.class);
         } catch (ResourceAccessException ex) {
-            throw new InternalException(ex.getMessage());
+            throw new InternalTechnicalException(ex.getMessage());
         }
     }
 
@@ -107,7 +107,7 @@ public class MisCommunicationRetryJob implements Job {
         try {
             return objectMapper.readValue(headersAsJson, HttpHeaders.class);
         } catch (JsonProcessingException e) {
-            throw new InternalException(e.getMessage());
+            throw new InternalTechnicalException(e.getMessage());
         }
     }
 }

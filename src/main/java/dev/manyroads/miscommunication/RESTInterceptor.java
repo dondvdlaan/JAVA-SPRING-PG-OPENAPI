@@ -2,7 +2,7 @@ package dev.manyroads.miscommunication;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.manyroads.decomreception.exception.InternalException;
+import dev.manyroads.decomreception.exception.InternalTechnicalException;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -19,7 +19,7 @@ import java.io.IOException;
 /**
  * This class is part of the Resttemplate bean {@link dev.manyroads.config.SpringConfig } used in the RestConnector
  * {@link dev.manyroads.client.RESTConnector } and intercepts all outgoing messages:
- * It forward the request and checks the response. If the response is not 2xx, the retry cycle will be started, otherwise
+ * It forwards the request and checks the response. If the response is not 2xx, the retry cycle will be started, otherwise
  * the 2xx response will be returned to originating client
  */
 @Component
@@ -44,7 +44,7 @@ public class RESTInterceptor implements ClientHttpRequestInterceptor {
             log.info("intercept: response.getStatusCode(): " + response.getStatusCode());
         } catch (IOException ex) {
             log.info(String.format("***********IOException: Message-> %s. Cause-> %s", ex.getMessage(), ex.getCause()));
-            throw new InternalException(ex.getMessage());
+            throw new InternalTechnicalException(ex.getMessage());
         }
         if (!response.getStatusCode().is2xxSuccessful()) startRetryCycle(request, body);
 

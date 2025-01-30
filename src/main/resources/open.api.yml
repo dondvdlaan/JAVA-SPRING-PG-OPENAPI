@@ -154,6 +154,16 @@ components:
         matterNr:
           type: string
 
+    OAuth2ResponseDTO:
+      type: object
+      properties:
+        authorizationGrant:
+          type: string
+        redirectionURI:
+          type: string
+        vehicleType:
+          $ref: "#/components/schemas/VehicleTypeEnum"
+
     VehicleTypeEnum:
       type: string
       enum:

@@ -6,8 +6,8 @@ import org.springframework.web.client.ResponseErrorHandler;
 import java.io.IOException;
 
 /**
- * Goal of this RestTemplateResponseErrorHandler class is that error messages are sent within the response
- * back to RestTemplate method for handling and are not caught in the try/catch block
+ * Goal of this RestTemplateResponseErrorHandler class is that exception messages are sent within the response
+ * back to RestTemplate method for handling and are not thrown nor caught in the try/catch block
  */
 public class RestTemplateResponseErrorHandler implements ResponseErrorHandler {
     @Override

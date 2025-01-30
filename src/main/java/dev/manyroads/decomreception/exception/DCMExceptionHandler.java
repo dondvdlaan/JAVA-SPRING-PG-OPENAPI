@@ -33,7 +33,7 @@ public class DCMExceptionHandler {
             AdminClientException.class,
             VehicleTypeNotCoincideWithDomainException.class,
             VehicleTypeNotFoundException.class,
-            InternalException.class,
+            InternalTechnicalException.class,
             ChargeMissingForCustomerNrException.class,
             MatterMissingForCustomerNrException.class,
             ChargeHasDoneStatusException.class,

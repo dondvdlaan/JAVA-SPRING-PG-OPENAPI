@@ -30,7 +30,9 @@ public class SpringConfig {
 
     @Bean
     public RestTemplate oAUth2restTemplate() {
-        return new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setErrorHandler(new RestTemplateResponseErrorHandler());
+        return restTemplate;
     }
 
     @Bean("retryRestTemplate")

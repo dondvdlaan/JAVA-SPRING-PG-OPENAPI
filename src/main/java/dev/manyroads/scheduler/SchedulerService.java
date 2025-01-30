@@ -1,6 +1,6 @@
 package dev.manyroads.scheduler;
 
-import dev.manyroads.decomreception.exception.InternalException;
+import dev.manyroads.decomreception.exception.InternalTechnicalException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.DateBuilder;
@@ -44,7 +44,7 @@ public class SchedulerService {
         try {
             scheduler.scheduleJob(job, trigger);
         } catch (SchedulerException ex) {
-            throw new InternalException(String.format("Scheduler failure for customer: %d", customerNr));
+            throw new InternalTechnicalException(String.format("Scheduler failure for customer: %d", customerNr));
         }
     }
 
@@ -62,7 +62,7 @@ public class SchedulerService {
         try {
             scheduler.scheduleJob(job, trigger);
         } catch (SchedulerException ex) {
-            throw new InternalException(String.format("Scheduler failure for retry-job: %s", misCommID));
+            throw new InternalTechnicalException(String.format("Scheduler failure for retry-job: %s", misCommID));
         }
     }
 
@@ -76,7 +76,7 @@ public class SchedulerService {
         try {
             scheduler.rescheduleJob(oldTrigger.getKey(), newTrigger);
         } catch (SchedulerException ex) {
-            throw new InternalException(String.format("ReScheduler failure for retry-job: %s", misCommID));
+            throw new InternalTechnicalException(String.format("ReScheduler failure for retry-job: %s", misCommID));
         }
     }
 

@@ -1,7 +1,7 @@
 package dev.manyroads.intermediatereport;
 
 import dev.manyroads.client.AdminClient;
-import dev.manyroads.decomreception.exception.InternalException;
+import dev.manyroads.decomreception.exception.InternalTechnicalException;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusChargeIDNotExistException;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusMattersNotBelongToChargeException;
 import dev.manyroads.intermediatereport.exception.IntermediateReportStatusTransitionChargeStateException;
@@ -47,7 +47,7 @@ public class IntermediateReportStatusService {
             case PARTIALLY_EXECUTABLE ->
                     processPartiallyExecutable(charge, intermediateReportStatusRequest.getMattersIntermediateReport());
             default ->
-                    throw new InternalException("processIntermediateReportStatusRequests: Default ChargeStatusEnum enums not matched ");
+                    throw new InternalTechnicalException("processIntermediateReportStatusRequests: Default ChargeStatusEnum enums not matched ");
         }
     }
 

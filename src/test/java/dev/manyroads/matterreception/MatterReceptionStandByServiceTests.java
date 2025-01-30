@@ -2,7 +2,7 @@ package dev.manyroads.matterreception;
 
 import dev.manyroads.client.AdminClient;
 import dev.manyroads.client.CustomerProcessingClient;
-import dev.manyroads.decomreception.exception.InternalException;
+import dev.manyroads.decomreception.exception.InternalTechnicalException;
 import dev.manyroads.matterreception.exception.CustomerNotFoundException;
 import dev.manyroads.matterreception.exception.NoChargesFoundForCustomerException;
 import dev.manyroads.model.ChargeStatusEnum;
@@ -223,7 +223,7 @@ public class MatterReceptionStandByServiceTests {
         when(customerProcessingClient.sendMessageToCustomerProcessing(any())).thenReturn(false);
 
         // activate
-        assertThrows(InternalException.class, () ->
+        assertThrows(InternalTechnicalException.class, () ->
                 matterReceptionService.sendCustomerDataToCustomerProcessing(customerNr));
         //verify
         verify(customerProcessingClient, times(1)).sendMessageToCustomerProcessing(any());
