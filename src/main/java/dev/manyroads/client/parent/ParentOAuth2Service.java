@@ -30,9 +30,10 @@ public class ParentOAuth2Service extends ParentOAuth2RESTConnector {
     private String redirectionURI;
     private String accessToken;
 
-    public ParentOAuth2Service(RestTemplate oAUth2restTemplate, @Value("${parent.host}") String host) {
-        super(oAUth2restTemplate);
+    public ParentOAuth2Service(RestTemplate oAUth2restAccessCodeTemplate, @Value("${parent.host}") String host) {
+        super(oAUth2restAccessCodeTemplate);
         this.authUri = "http://" + host + ":" + port + authPath;
+        this.accessToken = null;
     }
 
     public String getAccessToken(boolean byForce) {
