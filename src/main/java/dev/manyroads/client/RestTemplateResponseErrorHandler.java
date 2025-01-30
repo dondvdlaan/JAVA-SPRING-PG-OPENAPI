@@ -15,8 +15,4 @@ public class RestTemplateResponseErrorHandler implements ResponseErrorHandler {
         return false;
     }
 
-    @Override
-    public void handleError(ClientHttpResponse response) throws IOException {
-
-    }
 }
