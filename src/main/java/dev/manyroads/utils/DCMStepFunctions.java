@@ -1,6 +1,6 @@
 package dev.manyroads.utils;
 
-import dev.manyroads.decomreception.exception.InternalException;
+import dev.manyroads.decomreception.exception.InternalTechnicalException;
 import dev.manyroads.model.ChargeStatusEnum;
 
 import static dev.manyroads.model.ChargeStatusEnum.CUSTOMER_DECEASED;
@@ -30,7 +30,7 @@ public class DCMStepFunctions {
             case DONE -> { // Do nothing, allowed is false
             }
             case EXECUTABLE, PARTIALLY_EXECUTABLE -> allowed = allReduced.contains(intermediateReportStatus);
-            default -> throw new InternalException("isTransitionAllowed: Default ChargeStatusEnum enums not matched ");
+            default -> throw new InternalTechnicalException("isTransitionAllowed: Default ChargeStatusEnum enums not matched ");
         }
 
         return allowed;

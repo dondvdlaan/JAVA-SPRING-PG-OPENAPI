@@ -1,6 +1,6 @@
 package dev.manyroads.client;
 
-import dev.manyroads.decomreception.exception.InternalException;
+import dev.manyroads.decomreception.exception.InternalTechnicalException;
 import dev.manyroads.model.messages.CustomerProcessingClientMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class CustomerProcessingClient extends RESTConnector {
             response = sendMessage(customerProcessingClientMessage, DCM_ROLE, CUSTOMER_PROCESSING_URL, HttpMethod.POST);
         } catch (Exception e) {
             log.info("Exception response: {}", response);
-            throw new InternalException(String.format("sendMessageToCustomerProcessing: %s", e.getMessage()));
+            throw new InternalTechnicalException(String.format("sendMessageToCustomerProcessing: %s", e.getMessage()));
         }
 
         return response.getStatusCode().value() == 200;

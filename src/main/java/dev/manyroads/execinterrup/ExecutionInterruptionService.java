@@ -2,7 +2,7 @@ package dev.manyroads.execinterrup;
 
 import dev.manyroads.client.AdminClient;
 import dev.manyroads.client.parent.ParentMicroserviceClient;
-import dev.manyroads.decomreception.exception.InternalException;
+import dev.manyroads.decomreception.exception.InternalTechnicalException;
 import dev.manyroads.execinterrup.exception.ChargeHasDoneStatusException;
 import dev.manyroads.execinterrup.exception.ChargeMissingForCustomerNrException;
 import dev.manyroads.execinterrup.exception.MatterCustomerNrMismatchException;
@@ -59,7 +59,7 @@ public class ExecutionInterruptionService {
             case CUSTOMER_DECEASED -> handleCustomerDeceased(execInterrupRequest);
             // TODO: case REJECTED -> handleCustomerChargeRejected(execInterrupRequest);
             default ->
-                    throw new InternalException("handleCustomerExecutionInterruption: Default ExecInterrup enums not matched ");
+                    throw new InternalTechnicalException("handleCustomerExecutionInterruption: Default ExecInterrup enums not matched ");
         }
 
         return new ExecInterrupResponse(execInterrupRequest.getCustomerNr());
@@ -68,7 +68,7 @@ public class ExecutionInterruptionService {
     private ExecInterrupResponse handleMatterExecutionInterruption(ExecInterrupRequest execInterrupRequest) {
         log.info("Handling of matter Execution Interruption for customer nr: {} started.", execInterrupRequest.getCustomerNr());
         Optional<Matter> oMatter = matterRepository.findById(UUID.fromString(execInterrupRequest.getMatterNr()));
-        oMatter.orElseThrow(() -> new InternalException(String.format("Matter with id: %s not found", execInterrupRequest.getMatterNr())));
+        oMatter.orElseThrow(() -> new InternalTechnicalException(String.format("Matter with id: %s not found", execInterrupRequest.getMatterNr())));
         if (!Objects.equals(oMatter.get().getCharge().getCustomerNr(), execInterrupRequest.getCustomerNr())) {
             throw new MatterCustomerNrMismatchException(oMatter.get().getMatterID().toString(), execInterrupRequest.getCustomerNr());
         }
@@ -77,7 +77,7 @@ public class ExecutionInterruptionService {
             case WITHDRAWN -> handleMatterWithdrawn(execInterrupRequest);
             case PAID -> handleMatterPaid(execInterrupRequest);
             default ->
-                    throw new InternalException("handleMatterExecutionInterruption: Default ExecInterrup enums not matched ");
+                    throw new InternalTechnicalException("handleMatterExecutionInterruption: Default ExecInterrup enums not matched ");
         }
 
         return new ExecInterrupResponse();

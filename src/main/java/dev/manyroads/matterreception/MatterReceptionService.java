@@ -3,7 +3,7 @@ package dev.manyroads.matterreception;
 import dev.manyroads.client.AdminClient;
 import dev.manyroads.client.CustomerProcessingClient;
 import dev.manyroads.decomreception.exception.AdminClientException;
-import dev.manyroads.decomreception.exception.InternalException;
+import dev.manyroads.decomreception.exception.InternalTechnicalException;
 import dev.manyroads.matterreception.exception.CustomerNotFoundException;
 import dev.manyroads.matterreception.exception.NoChargesFoundForCustomerException;
 import dev.manyroads.matterreception.exception.VehicleTypeNotCoincideWithDomainException;
@@ -134,7 +134,7 @@ public class MatterReceptionService {
             // Pass on data to customer processing
             if (!customerProcessingClient.sendMessageToCustomerProcessing(message)) {
                 log.info("Failed to send message to customerProcessingClient for customer: {} ", customerNr);
-                throw (new InternalException("DCM 101: customerProcessingClient not responsive"));
+                throw (new InternalTechnicalException("DCM 101: customerProcessingClient not responsive"));
             }
         }));
         // Reset customer standby flag

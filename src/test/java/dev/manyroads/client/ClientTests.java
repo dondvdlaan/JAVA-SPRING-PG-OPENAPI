@@ -1,6 +1,6 @@
 package dev.manyroads.client;
 
-import dev.manyroads.decomreception.exception.InternalException;
+import dev.manyroads.decomreception.exception.InternalTechnicalException;
 import dev.manyroads.matterreception.MatterReceptionService;
 import dev.manyroads.model.ChargeStatusEnum;
 import dev.manyroads.model.VehicleTypeEnum;
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ClientTests {
 
-    @MockBean
+    @MockitoBean
     ChargeRepository chargeRepository;
     @Autowired
     CustomerProcessingClient customerProcessingClient;
@@ -86,7 +86,7 @@ public class ClientTests {
 
         // activate and verify
         assertThatThrownBy(() -> matterReceptionService.sendCustomerDataToCustomerProcessing(customerNr))
-                .isInstanceOf(InternalException.class);
+                .isInstanceOf(InternalTechnicalException.class);
     }
 
     @Test
@@ -104,6 +104,6 @@ public class ClientTests {
 
         // activate and verify
         assertThatThrownBy(() -> customerProcessingClient.sendMessageToCustomerProcessing(customerProcessingClientMessage))
-                .isInstanceOf(InternalException.class);
+                .isInstanceOf(InternalTechnicalException.class);
     }
 }
