@@ -88,7 +88,7 @@ public class TestPostgresSqlTest {
         listCharges.add(existingCharge);
         Customer existingCustomer = Customer.builder()
                 .customerNr(customerNr)
-                .charge(listCharges)
+                .charges(listCharges)
                 .build();
         customerRepository.save(existingCustomer);
 
@@ -111,7 +111,7 @@ public class TestPostgresSqlTest {
         Long customerNr = (long) (Math.random() * 99999);
         String matterNr = "12345";
         ChargeStatusEnum chargeStatus = ChargeStatusEnum.BOOKED;
-        Customer existingCustomer = Customer.builder().customerID(UUID.randomUUID()).customerNr(customerNr).charge(new ArrayList<>()).build();
+        Customer existingCustomer = Customer.builder().customerID(UUID.randomUUID()).customerNr(customerNr).charges(new ArrayList<>()).build();
         customerRepository.save(existingCustomer);
         Charge existingCharge = Charge.builder().chargeID(UUID.randomUUID()).customer(existingCustomer).chargeStatus(chargeStatus).vehicleType(VehicleTypeEnum.BULLDOZER).matters(new HashSet<>()).build();
         chargeRepository.save(existingCharge);
@@ -119,13 +119,13 @@ public class TestPostgresSqlTest {
         matterRepository.save(existingMatter);
         existingCharge.getMatters().add(existingMatter);
         chargeRepository.save(existingCharge);
-        existingCustomer.getCharge().add(existingCharge);
+        existingCustomer.getCharges().add(existingCharge);
         customerRepository.save(existingCustomer);
 
         Long customerNr2 = (long) (Math.random() * 99999);
         String matterNr2 = "67890";
         ChargeStatusEnum chargeStatus2 = ChargeStatusEnum.DCM_APPLIED;
-        Customer existingCustomer2 = Customer.builder().customerID(UUID.randomUUID()).customerNr(customerNr2).charge(new ArrayList<>()).build();
+        Customer existingCustomer2 = Customer.builder().customerID(UUID.randomUUID()).customerNr(customerNr2).charges(new ArrayList<>()).build();
         customerRepository.save(existingCustomer2);
         Charge existingCharge2 = Charge.builder().chargeID(UUID.randomUUID()).customer(existingCustomer2).chargeStatus(chargeStatus2).vehicleType(VehicleTypeEnum.BULLDOZER).matters(new HashSet<>()).build();
         chargeRepository.save(existingCharge2);
@@ -133,7 +133,7 @@ public class TestPostgresSqlTest {
         matterRepository.save(existingMatter2);
         existingCharge2.getMatters().add(existingMatter2);
         chargeRepository.save(existingCharge2);
-        existingCustomer2.getCharge().add(existingCharge2);
+        existingCustomer2.getCharges().add(existingCharge2);
         customerRepository.save(existingCustomer2);
 
         // activate
