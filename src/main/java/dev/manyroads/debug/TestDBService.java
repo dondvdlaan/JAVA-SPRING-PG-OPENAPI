@@ -58,7 +58,6 @@ public class TestDBService {
         customerRepository.save(customer);
         Charge charge = Charge.builder()
                 .chargeID(chargeId)
-                .customerNr(customerNr)
                 .chargeStatus(ChargeStatusEnum.DCM_APPLIED)
                 .startDate(Instant.now())
                 .customer(customer)
@@ -81,7 +80,6 @@ public class TestDBService {
 
         Charge newCharge = Charge.builder()
                 .chargeID(chargeId)
-                .customerNr(customerNr)
                 .chargeStatus(ChargeStatusEnum.REJECTED)
                 .startDate(Instant.now())
                 .customer(customer)

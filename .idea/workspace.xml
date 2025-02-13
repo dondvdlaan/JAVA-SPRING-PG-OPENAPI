@@ -4,13 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a23eaa9e-4b8e-4761-8f32-86457f2a55f2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UML/Schema.puml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="a23eaa9e-4b8e-4761-8f32-86457f2a55f2" name="Changes" comment="DCM-027: Correction to Schema - Domain">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/manyroads/debug/TestDBService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/manyroads/debug/TestDBService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/manyroads/execinterrup/ExecutionInterruptionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/manyroads/execinterrup/ExecutionInterruptionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/manyroads/matterreception/MatterReceptionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/manyroads/matterreception/MatterReceptionService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dev/manyroads/model/entity/Charge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/manyroads/model/entity/Charge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/manyroads/model/entity/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/manyroads/model/entity/Customer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V1__initMigration.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V1__initMigration.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V7__RemoveCustomerNrFromCharge.sql" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,17 +42,44 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;bugfix/DCM-027-Schema-Domain-corrections&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.DecomApplication.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "bugfix/DCM-027-Schema-Domain-corrections",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "E:/GitHub/JAVA-SPRING-PG-OPENAPI/src/main/resources/db/migration",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\GitHub\JAVA-SPRING-PG-OPENAPI\src\main\resources\db\migration" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="DecomApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="dev.manyroads.DecomApplication" />
+      <module name="JAVA-SPRING-PG-OPENAPI" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="dev.manyroads.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.DecomApplication" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -61,6 +89,19 @@
       <option name="presentableId" value="Default" />
       <updated>1739455972351</updated>
     </task>
+    <task id="LOCAL-00001" summary="DCM-027: Correction to Schema - Domain">
+      <option name="closed" value="true" />
+      <created>1739462810414</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1739462810414</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="DCM-027: Correction to Schema - Domain" />
+    <option name="LAST_COMMIT_MESSAGE" value="DCM-027: Correction to Schema - Domain" />
   </component>
 </project>

@@ -41,8 +41,6 @@ public class Charge {
     @Column(name = "charge_status")
     @Enumerated(EnumType.STRING)
     private ChargeStatusEnum chargeStatus;
-    @Column(name = "customer_nr")
-    private Long customerNr;
     @Column(name = "vehicle_type")
     @Enumerated(EnumType.STRING)
     private VehicleTypeEnum vehicleType;
