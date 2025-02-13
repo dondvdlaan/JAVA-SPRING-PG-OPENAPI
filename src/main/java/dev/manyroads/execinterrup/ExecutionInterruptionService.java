@@ -69,7 +69,7 @@ public class ExecutionInterruptionService {
         log.info("Handling of matter Execution Interruption for customer nr: {} started.", execInterrupRequest.getCustomerNr());
         Optional<Matter> oMatter = matterRepository.findById(UUID.fromString(execInterrupRequest.getMatterNr()));
         oMatter.orElseThrow(() -> new InternalTechnicalException(String.format("Matter with id: %s not found", execInterrupRequest.getMatterNr())));
-        if (!Objects.equals(oMatter.get().getCharge().getCustomerNr(), execInterrupRequest.getCustomerNr())) {
+        if (!Objects.equals(oMatter.get().getCharge().getCustomer().getCustomerNr(), execInterrupRequest.getCustomerNr())) {
             throw new MatterCustomerNrMismatchException(oMatter.get().getMatterID().toString(), execInterrupRequest.getCustomerNr());
         }
 

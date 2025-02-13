@@ -1,0 +1,6 @@
+@startuml
+class Customer{
+{field} -customerID: UUID (PK)
+{field} -customerNr: Long
+}
+@enduml

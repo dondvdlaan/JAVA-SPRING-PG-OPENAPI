@@ -28,13 +28,4 @@ public class Customer {
     @Column(name = "stand_by_flag")
     private boolean standByFlag;
 
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "customerID=" + customerID +
-                ", customerNr=" + customerNr +
-                ", charge=" + charge +
-                ", standByFlag=" + standByFlag +
-                '}';
-    }
 }

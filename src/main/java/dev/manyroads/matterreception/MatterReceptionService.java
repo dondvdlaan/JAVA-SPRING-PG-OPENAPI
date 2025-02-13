@@ -129,7 +129,7 @@ public class MatterReceptionService {
         if (oCharges.isPresent() && oCharges.get().isEmpty()) throw new NoChargesFoundForCustomerException(customerNr);
 
         oCharges.ifPresent(c -> c.forEach(charge -> {
-            log.info("forEach(charge -> processing customer: {}", charge.getCustomerNr());
+            log.info("forEach(charge -> processing customer: {}", charge.getCustomer().getCustomerNr());
             var message = convertToCustomerProcessingClientMessage(charge);
             // Pass on data to customer processing
             if (!customerProcessingClient.sendMessageToCustomerProcessing(message)) {
@@ -147,7 +147,7 @@ public class MatterReceptionService {
 
     // Sub methods
     private static CustomerProcessingClientMessage convertToCustomerProcessingClientMessage(Charge charge) {
-        log.info("convertToCustomerProcessingClientMessage: charge.getCustomerNr() {}", charge.getCustomerNr());
+        log.info("convertToCustomerProcessingClientMessage: charge.getCustomerNr() {}", charge.getCustomer().getCustomerNr());
         List<MatterMessage> listMatterMessage = new ArrayList<>();
         charge.getMatters().forEach(matter -> {
             MatterMessage matterMessage = new MatterMessage(matter.getMatterNr(), matter.getMatterStatus());
@@ -161,7 +161,6 @@ public class MatterReceptionService {
         matterRepository.save(newMatter);
         Charge newCharge = new Charge();
         newCharge.setChargeStatus(BOOKED);
-        newCharge.setCustomerNr(matterRequest.getCustomerNr());
         newCharge.setVehicleType(vehicleTypeConfirmed);
         //newCharge.setCustomer(customer);
         newCharge.getMatters().add(newMatter);

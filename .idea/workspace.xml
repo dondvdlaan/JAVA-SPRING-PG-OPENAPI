@@ -4,30 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a19903d0-dc89-44b7-becf-647240a37cac" name="Changes" comment="DCM-021: Clean up in unit tests" />
+    <list default="true" id="a23eaa9e-4b8e-4761-8f32-86457f2a55f2" name="Changes" comment="DCM-027: Correction to Schema - Domain">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/manyroads/debug/TestDBService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/manyroads/debug/TestDBService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/manyroads/execinterrup/ExecutionInterruptionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/manyroads/execinterrup/ExecutionInterruptionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/manyroads/matterreception/MatterReceptionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/manyroads/matterreception/MatterReceptionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/manyroads/model/entity/Charge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/manyroads/model/entity/Charge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V1__initMigration.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V1__initMigration.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V7__RemoveCustomerNrFromCharge.sql" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Interface" />
-        <option value="Enum" />
-        <option value="Record" />
-        <option value="Class" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="main" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="RESET_MODE" value="MIXED" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -39,28 +31,13 @@
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/dondvdlaan/BGS-JAVA-SPRING-PG.git&quot;,
     &quot;accountId&quot;: &quot;4cf0e94e-bb67-4417-becf-eb7a948009e6&quot;
-  },
-  &quot;recentNewPullRequestHead&quot;: {
-    &quot;server&quot;: {
-      &quot;useHttp&quot;: false,
-      &quot;host&quot;: &quot;github.com&quot;,
-      &quot;port&quot;: null,
-      &quot;suffix&quot;: null
-    },
-    &quot;owner&quot;: &quot;dondvdlaan&quot;,
-    &quot;repository&quot;: &quot;BGS-JAVA-SPRING-PG&quot;
   }
 }</component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/main/java/dev/manyroads/model/entity/Charge.java" root0="FORCE_HIGHLIGHTING" />
-  </component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
   <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 5
 }</component>
-  <component name="ProjectId" id="2onnNlVI1ZAeVkZLLDrWvDCqdCb" />
+  <component name="ProjectId" id="2szQYQATLbww7I0YQaMSjU8AkGa" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -68,115 +45,22 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.DecomApplication.executor": "Run",
-    "JUnit.All in BGS-JAVA-SPRING-PG.executor": "Run",
-    "JUnit.All in JAVA-SPRING-PG-OPENAPI.executor": "Run",
-    "JUnit.CaseControllerTest.caseRequestShouldReturnStausCose201Test.executor": "Debug",
-    "JUnit.CaseControllerTest.executor": "Run",
-    "JUnit.CaseReceptionControllerTest.executor": "Run",
-    "JUnit.CaseReceptionControllerTests.executor": "Run",
-    "JUnit.CaseReceptionServiceTests.executor": "Run",
-    "JUnit.ClientTests.executor": "Run",
-    "JUnit.ClientTests.restTemplateNotConnectedShallThrowExceptionStartedFromMatterReceptionTest.executor": "Run",
-    "JUnit.CreateNewChargeTest.executor": "Run",
-    "JUnit.DCMStepFunctionsTest.executor": "Run",
-    "JUnit.DecomReceptionControllerTests.caseRequestCaseIDNullShouldThrowExceptionTest.executor": "Run",
-    "JUnit.DecomReceptionControllerTests.caseRequestPersonIDNullShouldThrowExceptionTest.executor": "Run",
-    "JUnit.DecomReceptionControllerTests.executor": "Run",
-    "JUnit.DecomReceptionControllerTests.matterRequestNulShouldThrowExceptionTest.executor": "Run",
-    "JUnit.DecomReceptionControllerTests.matterRequestShouldReturnMatterResponseTest.executor": "Run",
-    "JUnit.DecomReceptionControllerTests.matterRequestShouldReturnStatusCode200Test.executor": "Run",
-    "JUnit.DecomReceptionMatterRequestControllerITests.executor": "Run",
-    "JUnit.DecomReceptionMatterRequestControllerITests.matterRequestShouldReturnMatterResponseWithCustomerStandByTest.executor": "Run",
-    "JUnit.ExecInterrupVerificationTest.executor": "Run",
-    "JUnit.ExecutionInterruptionServiceParentClientTest.happyFlowCustomerDeceasedTest.executor": "Run",
-    "JUnit.ExecutionInterruptionServiceTest.customerNrCorrectMatterIdEmptyShallReturnExecInterrupResponseNotNull.executor": "Run",
-    "JUnit.ExecutionInterruptionServiceTest.executor": "Run",
-    "JUnit.ExecutionInterruptionServiceTest.happyFlowCustomerDeceasedTest.executor": "Run",
-    "JUnit.ExecutionInterruptionServiceTest.noChargeForCustomerNrShallThrowChargeMissingForCustomerNrExceptionTest.executor": "Debug",
-    "JUnit.IntermediateReportStatusServiceTest.executor": "Run",
-    "JUnit.IntermediateReportStatusServiceTest.stepFunctionDeniedToStatusParameterizedThrowsExceptionTest.executor": "Run",
-    "JUnit.IntermediateReportStatusVerificationTest.executor": "Run",
-    "JUnit.MatterReceptionControllerTests.executor": "Run",
-    "JUnit.MatterReceptionServiceTests.adminClientReturnsFeignExceptionShouldThrowAdminClientExceptionTest.executor": "Run",
-    "JUnit.MatterReceptionServiceTests.adminClientReturnsIncorrectVehicleTypeShouldThrowVehicleTypeNotCoincideExceptionTest.executor": "Run",
-    "JUnit.MatterReceptionServiceTests.adminClientReturnsNullShouldThrowVehicleTypeNotFoundExceptionTest.executor": "Run",
-    "JUnit.MatterReceptionServiceTests.customerExistChargeExistOtherVehicleTypeShouldCreateNewChargeTest.executor": "Run",
-    "JUnit.MatterReceptionServiceTests.customerExistChargeExistOtherVehicleTypeShouldNotAddMattterToExistingChargeTest.executor": "Run",
-    "JUnit.MatterReceptionServiceTests.customerExistShouldNotCreateNewCustomerTest.executor": "Run",
-    "JUnit.MatterReceptionServiceTests.customerNotExistsShoulCreateNewCustomerTest.executor": "Run",
-    "JUnit.MatterReceptionServiceTests.executor": "Run",
-    "JUnit.MatterReceptionServiceTests.shouldReturnCorrectCustomerNrTest.executor": "Run",
-    "JUnit.MatterReceptionStandByServiceTests.executor": "Run",
-    "JUnit.MatterReceptionStandByServiceTests.failedChargesCustomerNotFoundToCustomerProcessingTest.executor": "Run",
-    "JUnit.MatterReceptionStandByServiceTests.failedCustomerNotFoundToResteStandByFlagTest.executor": "Run",
-    "JUnit.MatterReceptionStandByServiceTests.failedFlowSendCustomerDataToCustomerProcessingTest.executor": "Run",
-    "JUnit.MatterReceptionStandByServiceTests.happyFlowExistingCustomerStandByTest.executor": "Run",
-    "JUnit.MatterReceptionStandByServiceTests.happyFlowSendCustomerDataToCustomerProcessingTest.executor": "Run",
-    "JUnit.MatterReceptionStandByServiceTests.happyFlowStandByTest.executor": "Run",
-    "JUnit.MatterReceptionVerificationTest.checkHappyFlowMatterReceptionVerificationTest.executor": "Run",
-    "JUnit.MatterReceptionVerificationTest.executor": "Run",
-    "JUnit.MatterReceptionVerificationTest.matterRequestCallbackNull.executor": "Run",
-    "JUnit.MatterReceptionVerificationTest.matterRequestCallbackUrlNull.executor": "Run",
-    "JUnit.MatterReceptionVerificationTest.matterRequestCustomerNrNull.executor": "Run",
-    "JUnit.MatterReceptionVerificationTest.matterRequestHeaderIsNull.executor": "Run",
-    "JUnit.MatterReceptionVerificationTest.matterRequestIsNull.executor": "Run",
-    "JUnit.MatterReceptionVerificationTest.matterRequestMatterIdIsMissing.executor": "Run",
-    "JUnit.MiscommunicationRepoPostgresSqlTest.executor": "Run",
-    "JUnit.MiscommunicationRepoPostgresSqlTest.miscommunicationRepoTest.executor": "Run",
-    "JUnit.MiscommunicationTest.executor": "Run",
-    "JUnit.MiscommunicationTest.happyFlowCustomerProcessing.executor": "Run",
-    "JUnit.ParentClientHappyFlowTest.executor": "Run",
-    "JUnit.ParentClientRefreshTokenTest.executor": "Run",
-    "JUnit.ParentClientTests.executor": "Run",
-    "JUnit.ParentClientTests.happyFlowParentMicroService.executor": "Run",
-    "JUnit.ParentClientTests.refreshingAccessCodeParentMicroService.executor": "Run",
-    "JUnit.ParentTests.happyFlowParentMicroService.executor": "Run",
-    "JUnit.PostgresSqlTest (1).executor": "Run",
-    "JUnit.PostgresSqlTest and 1 more.executor": "Run",
-    "JUnit.PostgresSqlTest.checkIfChargeIsBookedTest.executor": "Run",
-    "JUnit.PostgresSqlTest.customerExistChargeExistOtherVehicleTypeShouldNotAddMattterToExistingChargeTest.executor": "Run",
-    "JUnit.PostgresSqlTest.executor": "Run",
-    "JUnit.PostgresSqlTest.smokeTest.executor": "Run",
-    "JUnit.SaveChargeAndMatterTest.executor": "Run",
-    "JUnit.SaveChargeAndMatterTest.saveNewChargeTest.executor": "Debug",
-    "JUnit.SchedulerServiceTest.happyFlowCustomerStandByScheduleTest.executor": "Run",
-    "JUnit.TestDBSeviceTest.executor": "Run",
-    "JUnit.TestPostgresSqlTest.chargeRepoFindByCustomerAndChargeTest.executor": "Run",
-    "JUnit.TestPostgresSqlTest.customerExistChargeExistOtherVehicleTypeShouldNotAddMattterToExistingChargeTest.executor": "Run",
-    "JUnit.TestPostgresSqlTest.executor": "Run",
-    "JUnit.TestPostgresSqlTest.sendCustomerDataToCustomerProcessingTest.executor": "Run",
-    "JUnit.client in JAVA-SPRING-PG-OPENAPI.executor": "Run",
-    "JUnit.java in BGS-JAVA-SPRING-PG.executor": "Run",
-    "JUnit.java in JAVA-SPRING-PG-OPENAPI.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "feature/JSP-026-Test-Branch",
+    "git-widget-placeholder": "bugfix/DCM-027-Schema-Domain-corrections",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "E:/applications/java/Testing/WireMock/wiremock-workshop",
-    "project.structure.last.edited": "Project",
+    "last_opened_file_path": "E:/GitHub/JAVA-SPRING-PG-OPENAPI/src/main/resources/db/migration",
+    "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+    "project.structure.side.proportion": "0.0"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\GitHub\JAVA-SPRING-PG-OPENAPI\src\main\resources\db\migration" />
-      <recent name="E:\GitHub\JAVA-SPRING-PG-OPENAPI\src\main\resources" />
-    </key>
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="dev.manyroads.client" />
-      <recent name="dev.manyroads.matterreception" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="dev.manyroads.client" />
-      <recent name="dev.manyroads.execinterrup" />
-      <recent name="dev.manyroads.client.parent" />
-      <recent name="dev.manyroads.database" />
-      <recent name="dev.manyroads.miscommunication.exception" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.java in JAVA-SPRING-PG-OPENAPI">
+  <component name="RunManager">
     <configuration name="DecomApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="dev.manyroads.DecomApplication" />
       <module name="JAVA-SPRING-PG-OPENAPI" />
@@ -190,65 +74,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="DecomReceptionControllerTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="JAVA-SPRING-PG-OPENAPI" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="dev.manyroads.decomreception.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="dev.manyroads.decomreception" />
-      <option name="MAIN_CLASS_NAME" value="dev.manyroads.decomreception.DecomReceptionControllerTests" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MatterReceptionControllerTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="JAVA-SPRING-PG-OPENAPI" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="dev.manyroads.matterreception.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="dev.manyroads.matterreception" />
-      <option name="MAIN_CLASS_NAME" value="dev.manyroads.matterreception.MatterReceptionControllerTests" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="PostgresSqlTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="BGS-JAVA-SPRING-PG" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="dev.manyroads.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="dev.manyroads" />
-      <option name="MAIN_CLASS_NAME" value="dev.manyroads.PostgresSqlTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="java in JAVA-SPRING-PG-OPENAPI" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="JAVA-SPRING-PG-OPENAPI" />
-      <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/src/test/java" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.PostgresSqlTest" />
-        <item itemvalue="JUnit.MatterReceptionControllerTests" />
-        <item itemvalue="JUnit.java in JAVA-SPRING-PG-OPENAPI" />
-        <item itemvalue="JUnit.DecomReceptionControllerTests" />
         <item itemvalue="Application.DecomApplication" />
       </list>
     </recent_temporary>
@@ -256,456 +83,25 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="a19903d0-dc89-44b7-becf-647240a37cac" name="Changes" comment="BGS-000: unversioned files" />
-      <created>1731514173296</created>
+      <changelist id="a23eaa9e-4b8e-4761-8f32-86457f2a55f2" name="Changes" comment="" />
+      <created>1739455972351</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1731514173296</updated>
+      <updated>1739455972351</updated>
     </task>
-    <task id="LOCAL-00071" summary="DCM-014: Jenkins file in root to be loaded at Jenkins">
+    <task id="LOCAL-00001" summary="DCM-027: Correction to Schema - Domain">
       <option name="closed" value="true" />
-      <created>1734109800507</created>
-      <option name="number" value="00071" />
-      <option name="presentableId" value="LOCAL-00071" />
+      <created>1739462810414</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1734109800507</updated>
+      <updated>1739462810414</updated>
     </task>
-    <task id="LOCAL-00072" summary="DCM-014: Preparing Exec Interrup for itest">
-      <option name="closed" value="true" />
-      <created>1734196889621</created>
-      <option name="number" value="00072" />
-      <option name="presentableId" value="LOCAL-00072" />
-      <option name="project" value="LOCAL" />
-      <updated>1734196889621</updated>
-    </task>
-    <task id="LOCAL-00073" summary="DCM-014: Preparing Exec Interrup for itest">
-      <option name="closed" value="true" />
-      <created>1734204717950</created>
-      <option name="number" value="00073" />
-      <option name="presentableId" value="LOCAL-00073" />
-      <option name="project" value="LOCAL" />
-      <updated>1734204717950</updated>
-    </task>
-    <task id="LOCAL-00074" summary="DCM-015: Preparing Exec Interrup for itest">
-      <option name="closed" value="true" />
-      <created>1734216579322</created>
-      <option name="number" value="00074" />
-      <option name="presentableId" value="LOCAL-00074" />
-      <option name="project" value="LOCAL" />
-      <updated>1734216579322</updated>
-    </task>
-    <task id="LOCAL-00075" summary="DCM-015: Preparing Exec Interrup for itest">
-      <option name="closed" value="true" />
-      <created>1734216612281</created>
-      <option name="number" value="00075" />
-      <option name="presentableId" value="LOCAL-00075" />
-      <option name="project" value="LOCAL" />
-      <updated>1734216612281</updated>
-    </task>
-    <task id="LOCAL-00076" summary="DCM-015: Preparing Exec Interrup for itest">
-      <option name="closed" value="true" />
-      <created>1734267456138</created>
-      <option name="number" value="00076" />
-      <option name="presentableId" value="LOCAL-00076" />
-      <option name="project" value="LOCAL" />
-      <updated>1734267456138</updated>
-    </task>
-    <task id="LOCAL-00077" summary="DCM-015: Preparing for itest">
-      <option name="closed" value="true" />
-      <created>1734295200352</created>
-      <option name="number" value="00077" />
-      <option name="presentableId" value="LOCAL-00077" />
-      <option name="project" value="LOCAL" />
-      <updated>1734295200352</updated>
-    </task>
-    <task id="LOCAL-00078" summary="DCM-015: Preparing for itest">
-      <option name="closed" value="true" />
-      <created>1734369310637</created>
-      <option name="number" value="00078" />
-      <option name="presentableId" value="LOCAL-00078" />
-      <option name="project" value="LOCAL" />
-      <updated>1734369310637</updated>
-    </task>
-    <task id="LOCAL-00079" summary="DCM-016: Preparing for itest">
-      <option name="closed" value="true" />
-      <created>1734441451449</created>
-      <option name="number" value="00079" />
-      <option name="presentableId" value="LOCAL-00079" />
-      <option name="project" value="LOCAL" />
-      <updated>1734441451449</updated>
-    </task>
-    <task id="LOCAL-00080" summary="DCM-017: Termination-Call-Back-Url header added to Matter">
-      <option name="closed" value="true" />
-      <created>1734510828742</created>
-      <option name="number" value="00080" />
-      <option name="presentableId" value="LOCAL-00080" />
-      <option name="project" value="LOCAL" />
-      <updated>1734510828742</updated>
-    </task>
-    <task id="LOCAL-00081" summary="DCM-017: MatterReceptionVerificationTest added">
-      <option name="closed" value="true" />
-      <created>1734512735291</created>
-      <option name="number" value="00081" />
-      <option name="presentableId" value="LOCAL-00081" />
-      <option name="project" value="LOCAL" />
-      <updated>1734512735291</updated>
-    </task>
-    <task id="LOCAL-00082" summary="DCM-017: ExecutionInterruptionServiceTest corrected">
-      <option name="closed" value="true" />
-      <created>1734601862922</created>
-      <option name="number" value="00082" />
-      <option name="presentableId" value="LOCAL-00082" />
-      <option name="project" value="LOCAL" />
-      <updated>1734601862922</updated>
-    </task>
-    <task id="LOCAL-00083" summary="DCM-017: Moved callback url to MatterRequest">
-      <option name="closed" value="true" />
-      <created>1734683266197</created>
-      <option name="number" value="00083" />
-      <option name="presentableId" value="LOCAL-00083" />
-      <option name="project" value="LOCAL" />
-      <updated>1734683266197</updated>
-    </task>
-    <task id="LOCAL-00084" summary="DCM-017: Corrected unit tests">
-      <option name="closed" value="true" />
-      <created>1734683910098</created>
-      <option name="number" value="00084" />
-      <option name="presentableId" value="LOCAL-00084" />
-      <option name="project" value="LOCAL" />
-      <updated>1734683910098</updated>
-    </task>
-    <task id="LOCAL-00085" summary="DCM-017: Corrected unit tests">
-      <option name="closed" value="true" />
-      <created>1734687529894</created>
-      <option name="number" value="00085" />
-      <option name="presentableId" value="LOCAL-00085" />
-      <option name="project" value="LOCAL" />
-      <updated>1734687529894</updated>
-    </task>
-    <task id="LOCAL-00086" summary="DCM-017: Corrected verification unit test">
-      <option name="closed" value="true" />
-      <created>1734689402804</created>
-      <option name="number" value="00086" />
-      <option name="presentableId" value="LOCAL-00086" />
-      <option name="project" value="LOCAL" />
-      <updated>1734689402804</updated>
-    </task>
-    <task id="LOCAL-00087" summary="DCM-017: Corrected remaining unit test">
-      <option name="closed" value="true" />
-      <created>1734692560336</created>
-      <option name="number" value="00087" />
-      <option name="presentableId" value="LOCAL-00087" />
-      <option name="project" value="LOCAL" />
-      <updated>1734692560336</updated>
-    </task>
-    <task id="LOCAL-00088" summary="DCM-018: Adjusting standby logic">
-      <option name="closed" value="true" />
-      <created>1735032893453</created>
-      <option name="number" value="00088" />
-      <option name="presentableId" value="LOCAL-00088" />
-      <option name="project" value="LOCAL" />
-      <updated>1735032893453</updated>
-    </task>
-    <task id="LOCAL-00089" summary="DCM-018:implemented sendCustomerDataToCustomerProcessing in MatterReceptionService">
-      <option name="closed" value="true" />
-      <created>1735040995008</created>
-      <option name="number" value="00089" />
-      <option name="presentableId" value="LOCAL-00089" />
-      <option name="project" value="LOCAL" />
-      <updated>1735040995008</updated>
-    </task>
-    <task id="LOCAL-00090" summary="DCM-018: simple unit test for customerStandByJob">
-      <option name="closed" value="true" />
-      <created>1735060212244</created>
-      <option name="number" value="00090" />
-      <option name="presentableId" value="LOCAL-00090" />
-      <option name="project" value="LOCAL" />
-      <updated>1735060212244</updated>
-    </task>
-    <task id="LOCAL-00091" summary="DCM-018: happy flow unit test for matterRequest customer StandBy">
-      <option name="closed" value="true" />
-      <created>1735210808666</created>
-      <option name="number" value="00091" />
-      <option name="presentableId" value="LOCAL-00091" />
-      <option name="project" value="LOCAL" />
-      <updated>1735210808666</updated>
-    </task>
-    <task id="LOCAL-00092" summary="DCM-018: happy flow unit test for chargerepo @Query">
-      <option name="closed" value="true" />
-      <created>1735240894310</created>
-      <option name="number" value="00092" />
-      <option name="presentableId" value="LOCAL-00092" />
-      <option name="project" value="LOCAL" />
-      <updated>1735240894310</updated>
-    </task>
-    <task id="LOCAL-00093" summary="DCM-018: unit test for sendCustomerDataToCustomerProcessing">
-      <option name="closed" value="true" />
-      <created>1735293368579</created>
-      <option name="number" value="00093" />
-      <option name="presentableId" value="LOCAL-00093" />
-      <option name="project" value="LOCAL" />
-      <updated>1735293368579</updated>
-    </task>
-    <task id="LOCAL-00094" summary="DCM-018: unit test for sendCustomerDataToCustomerProcessing">
-      <option name="closed" value="true" />
-      <created>1735293440137</created>
-      <option name="number" value="00094" />
-      <option name="presentableId" value="LOCAL-00094" />
-      <option name="project" value="LOCAL" />
-      <updated>1735293440137</updated>
-    </task>
-    <task id="LOCAL-00095" summary="DCM-018: refined unit test for sendCustomerDataToCustomerProcessing">
-      <option name="closed" value="true" />
-      <created>1735304112821</created>
-      <option name="number" value="00095" />
-      <option name="presentableId" value="LOCAL-00095" />
-      <option name="project" value="LOCAL" />
-      <updated>1735304112822</updated>
-    </task>
-    <task id="LOCAL-00096" summary="DCM-018: extra unit test for sendCustomerDataToCustomerProcessing">
-      <option name="closed" value="true" />
-      <created>1735310819052</created>
-      <option name="number" value="00096" />
-      <option name="presentableId" value="LOCAL-00096" />
-      <option name="project" value="LOCAL" />
-      <updated>1735310819052</updated>
-    </task>
-    <task id="LOCAL-00097" summary="DCM-018: adjustments">
-      <option name="closed" value="true" />
-      <created>1735467576026</created>
-      <option name="number" value="00097" />
-      <option name="presentableId" value="LOCAL-00097" />
-      <option name="project" value="LOCAL" />
-      <updated>1735467576027</updated>
-    </task>
-    <task id="LOCAL-00098" summary="DCM-018: debugging">
-      <option name="closed" value="true" />
-      <created>1735487788405</created>
-      <option name="number" value="00098" />
-      <option name="presentableId" value="LOCAL-00098" />
-      <option name="project" value="LOCAL" />
-      <updated>1735487788405</updated>
-    </task>
-    <task id="LOCAL-00099" summary="DCM-018: unit tests alignment">
-      <option name="closed" value="true" />
-      <created>1735562040804</created>
-      <option name="number" value="00099" />
-      <option name="presentableId" value="LOCAL-00099" />
-      <option name="project" value="LOCAL" />
-      <updated>1735562040804</updated>
-    </task>
-    <task id="LOCAL-00100" summary="DCM-018: clean up">
-      <option name="closed" value="true" />
-      <created>1735562164049</created>
-      <option name="number" value="00100" />
-      <option name="presentableId" value="LOCAL-00100" />
-      <option name="project" value="LOCAL" />
-      <updated>1735562164049</updated>
-    </task>
-    <task id="LOCAL-00101" summary="DCM-019: Basic auth for microservice access tested with Postman">
-      <option name="closed" value="true" />
-      <created>1735910153007</created>
-      <option name="number" value="00101" />
-      <option name="presentableId" value="LOCAL-00101" />
-      <option name="project" value="LOCAL" />
-      <updated>1735910153007</updated>
-    </task>
-    <task id="LOCAL-00102" summary="DCM-019: Basic auth for microservice access itested">
-      <option name="closed" value="true" />
-      <created>1736080828110</created>
-      <option name="number" value="00102" />
-      <option name="presentableId" value="LOCAL-00102" />
-      <option name="project" value="LOCAL" />
-      <updated>1736080828110</updated>
-    </task>
-    <task id="LOCAL-00103" summary="DCM-020: MisCommunication entity added">
-      <option name="closed" value="true" />
-      <created>1736437007752</created>
-      <option name="number" value="00103" />
-      <option name="presentableId" value="LOCAL-00103" />
-      <option name="project" value="LOCAL" />
-      <updated>1736437007752</updated>
-    </task>
-    <task id="LOCAL-00104" summary="DCM-020: MisCommunicationEvent added">
-      <option name="closed" value="true" />
-      <created>1736604861731</created>
-      <option name="number" value="00104" />
-      <option name="presentableId" value="LOCAL-00104" />
-      <option name="project" value="LOCAL" />
-      <updated>1736604861731</updated>
-    </task>
-    <task id="LOCAL-00105" summary="DCM-020: MisCommunicationRetryJob added">
-      <option name="closed" value="true" />
-      <created>1736843796090</created>
-      <option name="number" value="00105" />
-      <option name="presentableId" value="LOCAL-00105" />
-      <option name="project" value="LOCAL" />
-      <updated>1736843796090</updated>
-    </task>
-    <task id="LOCAL-00106" summary="DCM-020: MisCommunicationRetryJob retryRestTemplate  added">
-      <option name="closed" value="true" />
-      <created>1736877427111</created>
-      <option name="number" value="00106" />
-      <option name="presentableId" value="LOCAL-00106" />
-      <option name="project" value="LOCAL" />
-      <updated>1736877427111</updated>
-    </task>
-    <task id="LOCAL-00107" summary="DCM-020: RestTemplateResponseErrorHandler added to retryRestTemplate bean">
-      <option name="closed" value="true" />
-      <created>1736935892784</created>
-      <option name="number" value="00107" />
-      <option name="presentableId" value="LOCAL-00107" />
-      <option name="project" value="LOCAL" />
-      <updated>1736935892784</updated>
-    </task>
-    <task id="LOCAL-00108" summary="DCM-020: RestTemplate Reschedule added">
-      <option name="closed" value="true" />
-      <created>1737465940765</created>
-      <option name="number" value="00108" />
-      <option name="presentableId" value="LOCAL-00108" />
-      <option name="project" value="LOCAL" />
-      <updated>1737465940766</updated>
-    </task>
-    <task id="LOCAL-00109" summary="DCM-020: RestTemplate Reschedule manual tested">
-      <option name="closed" value="true" />
-      <created>1737468752989</created>
-      <option name="number" value="00109" />
-      <option name="presentableId" value="LOCAL-00109" />
-      <option name="project" value="LOCAL" />
-      <updated>1737468752989</updated>
-    </task>
-    <task id="LOCAL-00110" summary="DCM-020: RestTemplate Reschedule manual tested debugged">
-      <option name="closed" value="true" />
-      <created>1737536268635</created>
-      <option name="number" value="00110" />
-      <option name="presentableId" value="LOCAL-00110" />
-      <option name="project" value="LOCAL" />
-      <updated>1737536268635</updated>
-    </task>
-    <task id="LOCAL-00111" summary="DCM-020: RestTemplate Reschedule manual tested debugged">
-      <option name="closed" value="true" />
-      <created>1737542552418</created>
-      <option name="number" value="00111" />
-      <option name="presentableId" value="LOCAL-00111" />
-      <option name="project" value="LOCAL" />
-      <updated>1737542552418</updated>
-    </task>
-    <task id="LOCAL-00112" summary="DCM-021: Documentation for RESTInterceptor">
-      <option name="closed" value="true" />
-      <created>1737632938926</created>
-      <option name="number" value="00112" />
-      <option name="presentableId" value="LOCAL-00112" />
-      <option name="project" value="LOCAL" />
-      <updated>1737632938926</updated>
-    </task>
-    <task id="LOCAL-00113" summary="DCM-021: Documentation for RESTInterceptor">
-      <option name="closed" value="true" />
-      <created>1737633199439</created>
-      <option name="number" value="00113" />
-      <option name="presentableId" value="LOCAL-00113" />
-      <option name="project" value="LOCAL" />
-      <updated>1737633199439</updated>
-    </task>
-    <task id="LOCAL-00114" summary="DCM-021: Fixed unit tests">
-      <option name="closed" value="true" />
-      <created>1738056803844</created>
-      <option name="number" value="00114" />
-      <option name="presentableId" value="LOCAL-00114" />
-      <option name="project" value="LOCAL" />
-      <updated>1738056803844</updated>
-    </task>
-    <task id="LOCAL-00115" summary="DCM-021: Unit test OAuth2Restconnector with WireMock">
-      <option name="closed" value="true" />
-      <created>1738092454482</created>
-      <option name="number" value="00115" />
-      <option name="presentableId" value="LOCAL-00115" />
-      <option name="project" value="LOCAL" />
-      <updated>1738092454482</updated>
-    </task>
-    <task id="LOCAL-00116" summary="DCM-021: Implemented requestParentMicroserviceToActivateTermination + Unit testwith WireMock">
-      <option name="closed" value="true" />
-      <created>1738239434498</created>
-      <option name="number" value="00116" />
-      <option name="presentableId" value="LOCAL-00116" />
-      <option name="project" value="LOCAL" />
-      <updated>1738239434498</updated>
-    </task>
-    <task id="LOCAL-00117" summary="DCM-021: Implemented requestParentMicroserviceToActivateTermination + Unit testwith WireMock">
-      <option name="closed" value="true" />
-      <created>1738240085317</created>
-      <option name="number" value="00117" />
-      <option name="presentableId" value="LOCAL-00117" />
-      <option name="project" value="LOCAL" />
-      <updated>1738240085317</updated>
-    </task>
-    <task id="LOCAL-00118" summary="DCM-021: Clean up in unit tests">
-      <option name="closed" value="true" />
-      <created>1738247930027</created>
-      <option name="number" value="00118" />
-      <option name="presentableId" value="LOCAL-00118" />
-      <option name="project" value="LOCAL" />
-      <updated>1738247930027</updated>
-    </task>
-    <task id="LOCAL-00119" summary="DCM-021: Clean up in unit tests">
-      <option name="closed" value="true" />
-      <created>1739454083014</created>
-      <option name="number" value="00119" />
-      <option name="presentableId" value="LOCAL-00119" />
-      <option name="project" value="LOCAL" />
-      <updated>1739454083015</updated>
-    </task>
-    <option name="localTasksCounter" value="120" />
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="feature/DCM-018-Customer-Standby" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="DCM-018: simple unit test for customerStandByJob" />
-    <MESSAGE value="DCM-018: happy flow unit test for matterRequest customer StandBy" />
-    <MESSAGE value="DCM-018: happy flow unit test for chargerepo @Query" />
-    <MESSAGE value="DCM-018: unit test for sendCustomerDataToCustomerProcessing" />
-    <MESSAGE value="DCM-018: refined unit test for sendCustomerDataToCustomerProcessing" />
-    <MESSAGE value="DCM-018: extra unit test for sendCustomerDataToCustomerProcessing" />
-    <MESSAGE value="DCM-018: adjustments" />
-    <MESSAGE value="DCM-018: debugging" />
-    <MESSAGE value="DCM-018: unit tests alignment" />
-    <MESSAGE value="DCM-018: clean up" />
-    <MESSAGE value="DCM-019: Basic auth for microservice access tested with Postman" />
-    <MESSAGE value="DCM-019: Basic auth for microservice access itested" />
-    <MESSAGE value="DCM-020: MisCommunication entity added" />
-    <MESSAGE value="DCM-020: MisCommunicationEvent added" />
-    <MESSAGE value="DCM-020: MisCommunicationRetryJob added" />
-    <MESSAGE value="DCM-020: MisCommunicationRetryJob retryRestTemplate  added" />
-    <MESSAGE value="DCM-020: RestTemplateResponseErrorHandler added to retryRestTemplate bean" />
-    <MESSAGE value="DCM-020: RestTemplate Reschedule added" />
-    <MESSAGE value="DCM-020: RestTemplate Reschedule manual tested" />
-    <MESSAGE value="DCM-020: RestTemplate Reschedule manual tested debugged" />
-    <MESSAGE value="DCM-021: Documentation for RESTInterceptor" />
-    <MESSAGE value="DCM-021: Fixed unit tests" />
-    <MESSAGE value="DCM-021: Unit test OAuth2Restconnector with WireMock" />
-    <MESSAGE value="DCM-021: Implemented requestParentMicroserviceToActivateTermination + Unit testwith WireMock" />
-    <MESSAGE value="DCM-021: Clean up in unit tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="DCM-021: Clean up in unit tests" />
+    <MESSAGE value="DCM-027: Correction to Schema - Domain" />
+    <option name="LAST_COMMIT_MESSAGE" value="DCM-027: Correction to Schema - Domain" />
   </component>
 </project>

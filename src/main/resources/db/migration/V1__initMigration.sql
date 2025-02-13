@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS charges
 charge_id       uuid NOT NULL,
 customer_id     uuid,
 charge_status   character varying(255) COLLATE pg_catalog."default" NOT NULL,
-customer_nr     bigint NOT NULL UNIQUE,
 vehicle_type    character varying(255) COLLATE pg_catalog."default",
 start_date      timestamp without time zone,
 
