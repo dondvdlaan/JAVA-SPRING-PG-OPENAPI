@@ -56,7 +56,6 @@ public class ClientTests {
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(UUID.randomUUID());
         existingCharge.setChargeStatus(chargeStatus);
-        existingCharge.setCustomerNr(customerNr);
         existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
         existingCharge.setCustomer(existingCustomer);
         Matter existingMatter = Matter.builder()
@@ -69,7 +68,6 @@ public class ClientTests {
         Charge existingCharge2 = new Charge();
         existingCharge.setChargeID(UUID.randomUUID());
         existingCharge.setChargeStatus(chargeStatus);
-        existingCharge.setCustomerNr(customerNr);
         existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
         existingCharge.setCustomer(existingCustomer);
         Matter existingMatter2 = Matter.builder()

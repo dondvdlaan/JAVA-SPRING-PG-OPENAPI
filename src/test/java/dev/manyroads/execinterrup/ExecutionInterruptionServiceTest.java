@@ -65,7 +65,6 @@ public class ExecutionInterruptionServiceTest {
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(chargeId);
         existingCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
-        existingCharge.setCustomerNr(customerNr);
 
         Matter existingMatter = new Matter();
         existingMatter.setMatterID(UUID.fromString(matterId));
@@ -104,7 +103,6 @@ public class ExecutionInterruptionServiceTest {
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(chargeId);
         existingCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
-        existingCharge.setCustomerNr(customerNr);
 
         Matter existingMatter = new Matter();
         existingMatter.setMatterID(UUID.fromString(matterId));
@@ -144,7 +142,6 @@ public class ExecutionInterruptionServiceTest {
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(chargeId);
         existingCharge.setChargeStatus(ChargeStatusEnum.DCM_APPLIED);
-        existingCharge.setCustomerNr(customerNr);
 
         Matter existingMatter = new Matter();
         existingMatter.setMatterID(UUID.fromString(matterId));
@@ -185,7 +182,6 @@ public class ExecutionInterruptionServiceTest {
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(chargeId);
         existingCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
-        existingCharge.setCustomerNr(customerNr);
         Matter existingMatter = new Matter();
         existingMatter.setMatterID(UUID.fromString(matterId));
         existingMatter.setMatterStatus(MatterStatus.EXECUTABLE);
@@ -220,7 +216,6 @@ public class ExecutionInterruptionServiceTest {
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(chargeId);
         existingCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
-        existingCharge.setCustomerNr(customerNr);
         Matter existingMatter = new Matter();
         existingMatter.setMatterID(UUID.fromString(matterId));
         existingMatter.setMatterStatus(MatterStatus.EXECUTABLE);
@@ -283,7 +278,6 @@ public class ExecutionInterruptionServiceTest {
 
         Charge existingCharge = new Charge();
         existingCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
-        existingCharge.setCustomerNr(customerNr);
         List<Charge> listCharges = (List.of(existingCharge));
         when(chargeRepository.findByCustomerNr(anyLong())).thenReturn(Optional.of(listCharges));
         ExecInterrupResponse expected = new ExecInterrupResponse(customerNr);

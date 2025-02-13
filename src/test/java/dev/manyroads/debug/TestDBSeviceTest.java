@@ -47,7 +47,6 @@ public class TestDBSeviceTest {
         when(customerRepository.save(any())).thenReturn(newCustomer);
 
         Charge charge = new Charge();
-        charge.setCustomerNr(customerNr);
         charge.setCustomer(newCustomer);
         when(chargeRepository.save(any())).thenReturn(charge);
 

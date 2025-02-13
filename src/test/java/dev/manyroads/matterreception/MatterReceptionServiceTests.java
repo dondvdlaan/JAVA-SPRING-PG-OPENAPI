@@ -86,7 +86,6 @@ public class MatterReceptionServiceTests {
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(UUID.randomUUID());
         existingCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
-        existingCharge.setCustomerNr(customerNr);
         existingCharge.setVehicleType(existingVehicle);
         existingCharge.setCustomer(existingCustomer);
         List<Charge> listCharge = new ArrayList<>();
@@ -101,7 +100,6 @@ public class MatterReceptionServiceTests {
         UUID newChargeID = UUID.randomUUID();
         newCharge.setChargeID(newChargeID);
         newCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
-        newCharge.setCustomerNr(customerNr);
         newCharge.setVehicleType(requestedVehicle);
         newCharge.setCustomer(existingCustomer);
         newCharge.getMatters().add(newMatter);
