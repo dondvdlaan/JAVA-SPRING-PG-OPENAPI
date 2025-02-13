@@ -93,7 +93,7 @@ public class MatterReceptionService {
                 matterRepository.save(newMatter);
                 charge.getMatters().add(newMatter);
                 chargeRepository.save(charge);
-                customer.getCharge().add(charge);
+                customer.getCharges().add(charge);
                 customerRepository.save(customer);
                 log.info("Vehicle type coincides, matter added to existing charge: {}", charge.getChargeID());
             } else {
@@ -165,8 +165,8 @@ public class MatterReceptionService {
         //newCharge.setCustomer(customer);
         newCharge.getMatters().add(newMatter);
         chargeRepository.save(newCharge);
-        System.out.println("customer.getCharge(): " + customer.getCharge());
-        customer.getCharge().add(newCharge);
+        System.out.println("customer.getCharge(): " + customer.getCharges());
+        customer.getCharges().add(newCharge);
         customerRepository.save(customer);
         return newCharge;
     }

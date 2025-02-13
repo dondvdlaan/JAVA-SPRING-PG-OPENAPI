@@ -24,7 +24,7 @@ public class Customer {
     private Long customerNr;
     @OneToMany(mappedBy = "customer")
     @Builder.Default
-    private List<Charge> charge = new ArrayList<>();
+    private List<Charge> charges = new ArrayList<>();
     @Column(name = "stand_by_flag")
     private boolean standByFlag;
 

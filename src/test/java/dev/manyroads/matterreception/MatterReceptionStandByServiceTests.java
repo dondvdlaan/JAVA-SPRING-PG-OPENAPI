@@ -85,7 +85,6 @@ public class MatterReceptionStandByServiceTests {
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(UUID.randomUUID());
         existingCharge.setChargeStatus(chargeStatus);
-        existingCharge.setCustomerNr(customerNr);
         existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
         existingCharge.setCustomer(existingCustomer);
         Matter existingMatter = Matter.builder()
@@ -98,7 +97,6 @@ public class MatterReceptionStandByServiceTests {
         Charge existingCharge2 = new Charge();
         existingCharge.setChargeID(UUID.randomUUID());
         existingCharge.setChargeStatus(chargeStatus);
-        existingCharge.setCustomerNr(customerNr);
         existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
         existingCharge.setCustomer(existingCustomer);
         Matter existingMatter2 = Matter.builder()
@@ -140,7 +138,6 @@ public class MatterReceptionStandByServiceTests {
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(UUID.randomUUID());
         existingCharge.setChargeStatus(chargeStatus);
-        existingCharge.setCustomerNr(customerNr);
         existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
         existingCharge.setCustomer(existingCustomer);
         Matter existingMatter = Matter.builder()
@@ -153,7 +150,6 @@ public class MatterReceptionStandByServiceTests {
         Charge existingCharge2 = new Charge();
         existingCharge.setChargeID(UUID.randomUUID());
         existingCharge.setChargeStatus(chargeStatus);
-        existingCharge.setCustomerNr(customerNr);
         existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
         existingCharge.setCustomer(existingCustomer);
         Matter existingMatter2 = Matter.builder()
@@ -193,7 +189,6 @@ public class MatterReceptionStandByServiceTests {
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(UUID.randomUUID());
         existingCharge.setChargeStatus(chargeStatus);
-        existingCharge.setCustomerNr(customerNr);
         existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
         existingCharge.setCustomer(existingCustomer);
         Matter existingMatter = Matter.builder()
@@ -206,7 +201,6 @@ public class MatterReceptionStandByServiceTests {
         Charge existingCharge2 = new Charge();
         existingCharge.setChargeID(UUID.randomUUID());
         existingCharge.setChargeStatus(chargeStatus);
-        existingCharge.setCustomerNr(customerNr);
         existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
         existingCharge.setCustomer(existingCustomer);
         Matter existingMatter2 = Matter.builder()
@@ -246,7 +240,6 @@ public class MatterReceptionStandByServiceTests {
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(UUID.randomUUID());
         existingCharge.setChargeStatus(chargeStatus);
-        existingCharge.setCustomerNr(customerNr);
         existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
         existingCharge.setCustomer(existingCustomer);
         Matter existingMatter = Matter.builder()
@@ -259,7 +252,6 @@ public class MatterReceptionStandByServiceTests {
         Charge existingCharge2 = new Charge();
         existingCharge.setChargeID(UUID.randomUUID());
         existingCharge.setChargeStatus(chargeStatus);
-        existingCharge.setCustomerNr(customerNr);
         existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
         existingCharge.setCustomer(existingCustomer);
         Matter existingMatter2 = Matter.builder()
@@ -300,7 +292,6 @@ public class MatterReceptionStandByServiceTests {
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(UUID.randomUUID());
         existingCharge.setChargeStatus(chargeStatus);
-        existingCharge.setCustomerNr(customerNr);
         existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
         existingCharge.setCustomer(existingCustomer);
         Matter existingMatter = Matter.builder()
@@ -357,7 +348,6 @@ public class MatterReceptionStandByServiceTests {
         Charge existingCharge = new Charge();
         existingCharge.setChargeID(UUID.randomUUID());
         existingCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
-        existingCharge.setCustomerNr(matterRequest.getCustomerNr());
         existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
         existingCharge.setCustomer(existingCustomer);
         existingCharge.getMatters().add(existingMatter);
@@ -411,7 +401,6 @@ public class MatterReceptionStandByServiceTests {
         UUID chargeID = UUID.randomUUID();
         newCharge.setChargeID(chargeID);
         newCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
-        newCharge.setCustomerNr(matterRequest.getCustomerNr());
         newCharge.setVehicleType(VehicleTypeEnum.BULLDOZER);
         newCharge.setCustomer(newCustomer);
         Matter newMatter = Matter.builder()

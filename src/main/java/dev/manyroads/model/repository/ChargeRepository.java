@@ -17,7 +17,7 @@ public interface ChargeRepository extends JpaRepository<Charge, UUID> {
                     "FROM Charge c " +
                     "WHERE (c.chargeStatus = :cs1 " +
                     "OR c.chargeStatus = :cs2 ) " +
-                    "AND c.customerNr = :customerNr "
+                    "AND c.customer.customerNr = :customerNr "
     )
     Optional<List<Charge>> findByCustomerNrAndChargeStatus(@Param("cs1") ChargeStatusEnum chargeStatus1,
                                                            @Param("cs2") ChargeStatusEnum chargeStatus2,

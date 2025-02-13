@@ -71,7 +71,6 @@ public class PostgresSqlTest {
         customerRepository.save(existingCustomer);
         Charge existingCharge = new Charge();
         existingCharge.setChargeStatus(ChargeStatusEnum.BOOKED);
-        existingCharge.setCustomerNr(matterRequest.getCustomerNr());
         existingCharge.setVehicleType(VehicleTypeEnum.DIRTBIKE);
         existingCharge.setCustomer(existingCustomer);
         Charge savedExistingCharge = chargeRepository.save(existingCharge);
@@ -104,7 +103,6 @@ public class PostgresSqlTest {
         System.out.println("savedCustomer " + chargeRepository.findById(savedCustomer.getCustomerID()));
         Charge charge = new Charge();
         charge.setChargeStatus(ChargeStatusEnum.BOOKED);
-        charge.setCustomerNr(savedCustomer.getCustomerNr());
         charge.setCustomer(savedCustomer);
         charge.setVehicleType(VehicleTypeEnum.BULLDOZER);
         Charge savedCharge = chargeRepository.save(charge);
@@ -130,7 +128,6 @@ public class PostgresSqlTest {
         Charge job = new Charge();
         ChargeStatusEnum status = ChargeStatusEnum.BOOKED;
         job.setChargeStatus(status);
-        job.setCustomerNr(customer.getCustomerNr());
         job.setCustomer(customer);
         Charge savedJob = chargeRepository.save(job);
 

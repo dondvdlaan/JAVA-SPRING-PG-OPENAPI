@@ -7,11 +7,17 @@
     <list default="true" id="a23eaa9e-4b8e-4761-8f32-86457f2a55f2" name="Changes" comment="DCM-027: Correction to Schema - Domain">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dev/manyroads/debug/TestDBService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/manyroads/debug/TestDBService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/manyroads/execinterrup/ExecutionInterruptionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/manyroads/execinterrup/ExecutionInterruptionService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dev/manyroads/matterreception/MatterReceptionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/manyroads/matterreception/MatterReceptionService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/manyroads/model/entity/Charge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/manyroads/model/entity/Charge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V1__initMigration.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V1__initMigration.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V7__RemoveCustomerNrFromCharge.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/manyroads/model/entity/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/manyroads/model/entity/Customer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/manyroads/model/repository/ChargeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/manyroads/model/repository/ChargeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/dev/manyroads/client/ClientTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/dev/manyroads/client/ClientTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/dev/manyroads/database/PostgresSqlTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/dev/manyroads/database/PostgresSqlTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/dev/manyroads/database/TestPostgresSqlTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/dev/manyroads/database/TestPostgresSqlTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/dev/manyroads/debug/TestDBSeviceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/dev/manyroads/debug/TestDBSeviceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/dev/manyroads/execinterrup/ExecutionInterruptionServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/dev/manyroads/execinterrup/ExecutionInterruptionServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/dev/manyroads/matterreception/MatterReceptionServiceTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/dev/manyroads/matterreception/MatterReceptionServiceTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/dev/manyroads/matterreception/MatterReceptionStandByServiceTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/dev/manyroads/matterreception/MatterReceptionStandByServiceTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/dev/manyroads/miscommunication/MiscommunicationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/dev/manyroads/miscommunication/MiscommunicationTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,6 +51,8 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.DecomApplication.executor": "Run",
+    "JUnit.ClientTests.executor": "Run",
+    "JUnit.TestDBSeviceTest.saveCustomerTest.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "bugfix/DCM-027-Schema-Domain-corrections",
@@ -60,7 +68,7 @@
       <recent name="E:\GitHub\JAVA-SPRING-PG-OPENAPI\src\main\resources\db\migration" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.DecomApplication">
     <configuration name="DecomApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="dev.manyroads.DecomApplication" />
       <module name="JAVA-SPRING-PG-OPENAPI" />
@@ -74,9 +82,42 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ClientTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="JAVA-SPRING-PG-OPENAPI" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="dev.manyroads.client.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="dev.manyroads.client" />
+      <option name="MAIN_CLASS_NAME" value="dev.manyroads.client.ClientTests" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestDBSeviceTest.saveCustomerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="JAVA-SPRING-PG-OPENAPI" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="dev.manyroads.debug.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="dev.manyroads.debug" />
+      <option name="MAIN_CLASS_NAME" value="dev.manyroads.debug.TestDBSeviceTest" />
+      <option name="METHOD_NAME" value="saveCustomerTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.DecomApplication" />
+        <item itemvalue="JUnit.ClientTests" />
+        <item itemvalue="JUnit.TestDBSeviceTest.saveCustomerTest" />
       </list>
     </recent_temporary>
   </component>
@@ -97,7 +138,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739462810414</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="DCM-027: Correction to Schema - Domain">
+      <option name="closed" value="true" />
+      <created>1739475844809</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1739475844809</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

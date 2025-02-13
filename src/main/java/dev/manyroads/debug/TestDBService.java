@@ -42,7 +42,7 @@ public class TestDBService {
         log.info("savedCharge: {}", savedCharge);
         log.info("charge: {}", charge);
 
-        newCustomer.getCharge().add(charge);
+        newCustomer.getCharges().add(charge);
         customerRepository.save(newCustomer);
     }
 
@@ -63,16 +63,16 @@ public class TestDBService {
                 .customer(customer)
                 .build();
         chargeRepository.save(charge);
-        List<Charge> listCjages = new ArrayList<>() ;
+        List<Charge> listCjages = new ArrayList<>();
         listCjages.add(charge);
-        customer.setCharge(listCjages);
+        customer.setCharges(listCjages);
         customerRepository.save(customer);
 
         return customer;
     }
 
     @Transactional
-    public long addNewChargeToCustomerAndSave(Customer customer){
+    public long addNewChargeToCustomerAndSave(Customer customer) {
 
         Long customerNr = (long) (Math.random() * 999999);
         UUID customerId = UUID.randomUUID();
@@ -91,13 +91,9 @@ public class TestDBService {
         newCharge.setCustomer(existingCustomer);
         chargeRepository.save(newCharge);
         // Update customer entity, OneToMany
-        existingCustomer.getCharge().add(newCharge);
+        existingCustomer.getCharges().add(newCharge);
         customerRepository.save(existingCustomer);
 
-        return existingCustomer.getCharge().size();
+        return existingCustomer.getCharges().size();
     }
-
-
-
-
 }
