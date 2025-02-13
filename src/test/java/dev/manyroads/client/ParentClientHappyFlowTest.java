@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import com.github.tomakehurst.wiremock.stubbing.Scenario;
 import dev.manyroads.client.parent.ParentMicroserviceClient;
 import dev.manyroads.model.OAuth2ResponseDTO;
@@ -32,6 +33,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(
@@ -40,24 +42,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Slf4j
 public class ParentClientHappyFlowTest {
 
-    WireMockServer wireMockServer;
+    private final WireMockServer wireMockServer= new WireMockServer(new WireMockConfiguration().port(7090));;
 
     @Autowired
-    ParentMicroserviceClient parentMicroserviceClient;
+    private ParentMicroserviceClient parentMicroserviceClient;
 
     @BeforeEach
-    void setup() throws InterruptedException  {
+    void setup() throws InterruptedException {
         int port = 7090;
-        wireMockServer = new WireMockServer(new WireMockConfiguration().port(port));
+        //wireMockServer = new WireMockServer(new WireMockConfiguration().port(port));
         wireMockServer.start();
-        WireMock.configureFor("localhost", port);
         System.out.printf("[@BeforeEach] wireMockServer started at port %d at %s: \n", port, LocalDateTime.now());
     }
 
     @AfterEach
-    void teardown() {
-        wireMockServer.stop();
+    void teardown() throws InterruptedException {
         wireMockServer.resetAll();
+        wireMockServer.stop();
         if (wireMockServer != null) {
             wireMockServer.stop();
         }
@@ -67,6 +68,7 @@ public class ParentClientHappyFlowTest {
     /**
      * This test is disabled, because it "leeks" to the next test "ParentClientRefreshTokenTest", although each individual test
      * runs fine
+     *
      * @throws Exception
      */
     @Disabled
@@ -74,7 +76,7 @@ public class ParentClientHappyFlowTest {
     @DisplayName("Happy Flow Parent MicroService")
     void happyFlowParentMicroService() throws Exception {
         // prepare
-         String APPLICATION_JSON = "application/json";
+        String APPLICATION_JSON = "application/json";
         ObjectMapper mapper = new ObjectMapper();
         String username = "decom";
         String password = "secret";
@@ -93,7 +95,7 @@ public class ParentClientHappyFlowTest {
                 .redirectionURI("http://localhost:7090/access-token");
         OAuth2ResponseDTO responseDTO2 = new OAuth2ResponseDTO().vehicleType(VehicleTypeEnum.BULLDOZER);
 
-        stubFor(get(urlMatching("/auth"))
+        wireMockServer.stubFor(get(urlMatching("/auth"))
                 .withHeader("Grant-Type", equalTo("Authorization Code"))
                 .withBasicAuth(username, password)
                 .willReturn(aResponse()
@@ -101,7 +103,7 @@ public class ParentClientHappyFlowTest {
                         .withHeader("content-type", MediaType.APPLICATION_JSON_VALUE)
                         .withStatus(HttpStatus.OK.value())));
 
-        stubFor(get(urlMatching("/access-token"))
+        wireMockServer.stubFor(get(urlMatching("/access-token"))
                 .withHeader("Grant-Type", equalTo("Authorization Code"))
                 .withHeader("Authorization-Grant", equalTo(authorizationGrant))
                 .willReturn(aResponse()
@@ -109,7 +111,7 @@ public class ParentClientHappyFlowTest {
                         .withHeader("Access-Token", accessToken)
                         .withStatus(HttpStatus.OK.value())));
 
-        stubFor(post(urlMatching("/terminate"))
+        wireMockServer.stubFor(post(urlMatching("/terminate"))
                 .withHeader("Access-Token", equalTo(accessToken))
                 .willReturn(aResponse()
                         .withHeader("content-type", APPLICATION_JSON)
@@ -118,9 +120,9 @@ public class ParentClientHappyFlowTest {
         // activate
         boolean res = parentMicroserviceClient.requestParentMicroserviceToActivateTermination(matter);
         // Verify
-        verify(1, getRequestedFor(urlMatching("/auth")));
-        verify(1, getRequestedFor(urlMatching("/access-token")));
-        verify(1, postRequestedFor(urlMatching("/terminate")));
+        wireMockServer.verify(1, getRequestedFor(urlMatching("/auth")));
+        wireMockServer.verify(1, getRequestedFor(urlMatching("/access-token")));
+        wireMockServer.verify(1, postRequestedFor(urlMatching("/terminate")));
         assertTrue(res);
     }
 

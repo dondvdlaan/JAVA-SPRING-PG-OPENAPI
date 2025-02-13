@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import com.github.tomakehurst.wiremock.stubbing.Scenario;
 import dev.manyroads.client.parent.ParentMicroserviceClient;
 import dev.manyroads.model.OAuth2ResponseDTO;
@@ -41,24 +42,24 @@ import static org.mockito.ArgumentMatchers.eq;
 @Slf4j
 public class ParentClientRefreshTokenTest {
 
-    WireMockServer wireMockServer;
+    private final WireMockServer wireMockServer= new WireMockServer(new WireMockConfiguration().port(7090));;
+
 
     @Autowired
-    ParentMicroserviceClient parentMicroserviceClient;
+    private ParentMicroserviceClient parentMicroserviceClient;
 
     @BeforeEach
     void setup() throws InterruptedException  {
         int port = 7090;
-        wireMockServer = new WireMockServer(new WireMockConfiguration().port(port));
+        //wireMockServer = new WireMockServer(new WireMockConfiguration().port(port));
         wireMockServer.start();
-        WireMock.configureFor("localhost", port);
         System.out.printf("[@BeforeEach] wireMockServer started at port %d at %s: \n", port, LocalDateTime.now());
     }
 
     @AfterEach
     void teardown() {
-        wireMockServer.stop();
         wireMockServer.resetAll();
+        wireMockServer.stop();
         if (wireMockServer != null) {
             wireMockServer.stop();
         }
@@ -88,7 +89,7 @@ public class ParentClientRefreshTokenTest {
                 .redirectionURI("http://localhost:7090/access-token");
         OAuth2ResponseDTO responseDTO2 = new OAuth2ResponseDTO().vehicleType(VehicleTypeEnum.BULLDOZER);
 
-        stubFor(get(urlMatching("/auth"))
+        wireMockServer.stubFor(get(urlMatching("/auth"))
                 .withHeader("Grant-Type", equalTo("Authorization Code"))
                 .withBasicAuth(username, password)
                 .willReturn(aResponse()
@@ -96,7 +97,7 @@ public class ParentClientRefreshTokenTest {
                         .withHeader("content-type", MediaType.APPLICATION_JSON_VALUE)
                         .withStatus(HttpStatus.OK.value())));
 
-        stubFor(get(urlMatching("/access-token"))
+        wireMockServer.stubFor(get(urlMatching("/access-token"))
                 .withHeader("Grant-Type", equalTo("Authorization Code"))
                 .withHeader("Authorization-Grant", equalTo(authorizationGrant))
                 .willReturn(aResponse()
@@ -105,7 +106,7 @@ public class ParentClientRefreshTokenTest {
                         .withStatus(HttpStatus.OK.value())));
 
         // accesscode expired
-        stubFor(post(urlMatching("/terminate"))
+        wireMockServer.stubFor(post(urlMatching("/terminate"))
                 .withHeader("Access-Token", equalTo(accessToken))
                 .inScenario("Refresh Scenario")
                 .whenScenarioStateIs(Scenario.STARTED)
@@ -116,7 +117,7 @@ public class ParentClientRefreshTokenTest {
                 .willSetStateTo("Refresh"));
 
         // accesscode refreshed
-        stubFor(post(urlMatching("/terminate"))
+        wireMockServer.stubFor(post(urlMatching("/terminate"))
                 .withHeader("Access-Token", equalTo(accessToken))
                 .inScenario("Refresh Scenario")
                 .whenScenarioStateIs("Refresh")
@@ -128,9 +129,9 @@ public class ParentClientRefreshTokenTest {
         // activate
         boolean res = parentMicroserviceClient.requestParentMicroserviceToActivateTermination(matter);
         // Verify
-        verify(2, getRequestedFor(urlMatching("/auth")));
-        verify(2, getRequestedFor(urlMatching("/access-token")));
-        verify(2, postRequestedFor(urlMatching("/terminate")));
+        wireMockServer.verify(2, getRequestedFor(urlMatching("/auth")));
+        wireMockServer.verify(2, getRequestedFor(urlMatching("/access-token")));
+        wireMockServer.verify(2, postRequestedFor(urlMatching("/terminate")));
         assertTrue(res);
     }
 }
