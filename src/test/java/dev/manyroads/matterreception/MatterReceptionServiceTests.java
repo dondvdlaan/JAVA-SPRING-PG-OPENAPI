@@ -75,7 +75,7 @@ public class MatterReceptionServiceTests {
         existingCustomer.setCustomerID(customerID);
         existingCustomer.setCustomerNr(customerNr);
         existingCustomer.setStandByFlag(true);
-        when(customerRepository.findByCustomerNr(anyLong())).thenReturn(existingCustomer);
+        when(customerRepository.findByCustomerNr(anyLong())).thenReturn(Optional.of(existingCustomer));
 
         MatterRequest matterRequest = new MatterRequest();
         matterRequest.setMatterNr(matterNr);
@@ -174,7 +174,7 @@ public class MatterReceptionServiceTests {
         Customer existingCustomer = new Customer();
         existingCustomer.setCustomerID(customerID);
         existingCustomer.setCustomerNr(customerNr);
-        when(customerRepository.findByCustomerNr(anyLong())).thenReturn(existingCustomer);
+        when(customerRepository.findByCustomerNr(anyLong())).thenReturn(Optional.of(existingCustomer));
 
         // activate
         MatterResponse matterResponse = matterReceptionService.processIncomingMatterRequest(matterRequest);
@@ -267,7 +267,7 @@ public class MatterReceptionServiceTests {
         Customer existingCustomer = new Customer();
         existingCustomer.setCustomerID(customerID);
         existingCustomer.setCustomerNr(customerNr);
-        when(customerRepository.findByCustomerNr(anyLong())).thenReturn(existingCustomer);
+        when(customerRepository.findByCustomerNr(anyLong())).thenReturn(Optional.of(existingCustomer));
 
         // activate
         MatterResponse matterResponse = matterReceptionService.processIncomingMatterRequest(matterRequest);

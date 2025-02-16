@@ -63,8 +63,7 @@ public class MatterReceptionService {
         }
 
         // Check if customer exists, otherwise create new account and save
-        Customer oCustomer = customerRepository.findByCustomerNr(matterRequest.getCustomerNr());
-        Customer customer = Optional.ofNullable(oCustomer)
+        Customer customer = customerRepository.findByCustomerNr(matterRequest.getCustomerNr())
                 .orElseGet(
                         () -> {
                             log.info("Optional.ofNullable(oCustomer): creating new customer");
@@ -125,7 +124,7 @@ public class MatterReceptionService {
     public void sendCustomerDataToCustomerProcessing(long customerNr) {
         log.info("sendCustomerDataToCustomerProcessing: starts sending customer charges to customer processing client");
 
-        Optional<List<Charge>> oCharges = chargeRepository.findByCustomerNrAndChargeStatus(customerNr, BOOKED);
+        Optional<List<Charge>> oCharges = chargeRepository.findByCustomerNrAndChargeStatuss(customerNr, BOOKED);
         if (oCharges.isPresent() && oCharges.get().isEmpty()) throw new NoChargesFoundForCustomerException(customerNr);
 
         oCharges.ifPresent(c -> c.forEach(charge -> {
@@ -138,10 +137,10 @@ public class MatterReceptionService {
             }
         }));
         // Reset customer standby flag
-        Customer processedCustomer = customerRepository.findByCustomerNr(customerNr);
-        if (processedCustomer != null) {
-            processedCustomer.setStandByFlag(false);
-            customerRepository.save(processedCustomer);
+        Optional<Customer> oProcessedCustomer = customerRepository.findByCustomerNr(customerNr);
+        if (oProcessedCustomer.isPresent()) {
+            oProcessedCustomer.get().setStandByFlag(false);
+            customerRepository.save(oProcessedCustomer.get());
         } else throw new CustomerNotFoundException(customerNr);
     }
 

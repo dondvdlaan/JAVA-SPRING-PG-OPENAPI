@@ -7,14 +7,17 @@ import dev.manyroads.execinterrup.exception.ChargeHasDoneStatusException;
 import dev.manyroads.execinterrup.exception.ChargeMissingForCustomerNrException;
 import dev.manyroads.execinterrup.exception.MatterCustomerNrMismatchException;
 import dev.manyroads.execinterrup.exception.MatterMissingForCustomerNrException;
+import dev.manyroads.matterreception.exception.CustomerNotFoundException;
 import dev.manyroads.model.ChargeStatusEnum;
 import dev.manyroads.model.ExecInterrupRequest;
 import dev.manyroads.model.ExecInterrupResponse;
 import dev.manyroads.model.entity.Charge;
+import dev.manyroads.model.entity.Customer;
 import dev.manyroads.model.entity.ExecInterrup;
 import dev.manyroads.model.entity.Matter;
 import dev.manyroads.model.enums.MatterStatus;
 import dev.manyroads.model.repository.ChargeRepository;
+import dev.manyroads.model.repository.CustomerRepository;
 import dev.manyroads.model.repository.ExecInterrupRepository;
 import dev.manyroads.model.repository.MatterRepository;
 import dev.manyroads.utils.DCMutils;
@@ -32,6 +35,7 @@ import java.util.UUID;
 @Slf4j
 public class ExecutionInterruptionService {
 
+    CustomerRepository customerRepository;
     ChargeRepository chargeRepository;
     MatterRepository matterRepository;
     ExecInterrupRepository execInterrupRepository;
@@ -85,19 +89,21 @@ public class ExecutionInterruptionService {
 
     private void handleCustomerDeceased(ExecInterrupRequest execInterrupRequest) {
         log.info("Started handleCustomerDeceased for customer nr: {} ", execInterrupRequest.getCustomerNr());
-        Optional<List<Charge>> oChargeList = chargeRepository.findByCustomerNr(execInterrupRequest.getCustomerNr());
-        oChargeList.orElseThrow(() -> new ChargeMissingForCustomerNrException(execInterrupRequest.getCustomerNr()));
-        oChargeList.get().forEach(System.out::println);
+        Customer customer = customerRepository.findByCustomerNr(execInterrupRequest.getCustomerNr())
+                .orElseThrow(() -> new CustomerNotFoundException(execInterrupRequest.getCustomerNr()));
+        if (customer.getCharges() == null || customer.getCharges().isEmpty())
+            throw new ChargeMissingForCustomerNrException(execInterrupRequest.getCustomerNr());
+        customer.getCharges().forEach(System.out::println);
 
         // Filter charges for status booked
         List<Charge> listChargesDecom =
-                oChargeList.get()
+                customer.getCharges()
                         .stream()
-                        .peek(c->System.out.println("c.getChargeStatus(): " + c.getChargeStatus()))
+                        .peek(c -> System.out.println("c.getChargeStatus(): " + c.getChargeStatus()))
                         .filter(c -> c.getChargeStatus() == ChargeStatusEnum.BOOKED).toList();
 
         // Update status for active charges
-        DCMutils.isActive(oChargeList.get())
+        DCMutils.isActive(customer.getCharges())
                 .forEach(c -> {
                     c.setChargeStatus(ChargeStatusEnum.CUSTOMER_DECEASED);
                     chargeRepository.save(c);
@@ -109,7 +115,7 @@ public class ExecutionInterruptionService {
                 .forEach(set -> set.forEach(matter -> adminClient.terminateMatter(matter.convertToMatterMessage())));
 
         // Request to parent microservice to send a termination matter request
-        boolean result = oChargeList.get()
+        boolean result = customer.getCharges()
                 .stream()
                 .allMatch(this::requestTerminateMatter);
         log.info("handleCustomerDeceased Requests to parent microservice went correctly: " + result);

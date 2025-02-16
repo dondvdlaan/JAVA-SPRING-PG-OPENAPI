@@ -38,13 +38,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Copied from PostgresSqlTest for individual tests
  */
 @SpringBootTest
-public class TestPostgresSqlTest {
+public class ChargePostgresSqlTest {
 
     @Autowired
     ChargeRepository chargeRepository;
@@ -72,35 +76,42 @@ public class TestPostgresSqlTest {
 
     @Test
     @Transactional
-    @DisplayName("Sending data to customer processing")
-    void sendCustomerDataToCustomerProcessingTest() {
+    @DisplayName("Customer and ChargeStatus Query test")
+    void CustomerAndChargeStatusQueryTest() {
         // prepare
-        Long customerNr = (long) (Math.random() * 99999);
+        long customerNr = (long) (Math.random() * 99999);
         String matterNr = "12345";
         ChargeStatusEnum chargeStatus = ChargeStatusEnum.BOOKED;
-        Matter existingMatter = Matter.builder().matterNr(matterNr).matterStatus(MatterStatus.EXECUTABLE).build();
-        matterRepository.save(existingMatter);
-        Set<Matter> setMatters = new HashSet<>();
-        setMatters.add(existingMatter);
-        Charge existingCharge = Charge.builder().chargeStatus(chargeStatus).vehicleType(VehicleTypeEnum.BULLDOZER).matters(setMatters).build();
-        chargeRepository.save(existingCharge);
-        List<Charge> listCharges = new ArrayList<>();
-        listCharges.add(existingCharge);
         Customer existingCustomer = Customer.builder()
                 .customerNr(customerNr)
-                .charges(listCharges)
                 .build();
         customerRepository.save(existingCustomer);
-
-        when(customerProcessingClient.sendMessageToCustomerProcessing(any())).thenReturn(true);
+        Charge existingCharge = new Charge();
+        existingCharge.setChargeStatus(chargeStatus);
+        existingCharge.setVehicleType(VehicleTypeEnum.BULLDOZER);
+        existingCharge.setCustomer(existingCustomer);
+        chargeRepository.save(existingCharge);
+        existingCustomer.getCharges().add(existingCharge);
+        Matter existingMatter = Matter.builder().matterNr(matterNr).matterStatus(MatterStatus.EXECUTABLE).build();
+        existingMatter.setCharge(existingCharge);
+        matterRepository.save(existingMatter);
+        existingCharge.getMatters().add(existingMatter);
 
         // activate
-        matterReceptionService.sendCustomerDataToCustomerProcessing(customerNr);
+        Optional<List<Charge>> oCharges = chargeRepository.findByCustomerNrAndChargeStatus(
+                chargeStatus, ChargeStatusEnum.CUSTOMER_DECEASED, customerNr);
         // verify
-        verify(customerProcessingClient, times(1)).sendMessageToCustomerProcessing(any());
-        System.out.println("Matter: " + existingMatter);
-        System.out.println("Charge: " + existingCharge);
-        System.out.println("Customer: " + existingCustomer);
+        oCharges.ifPresent(charges -> {
+            System.out.println("Printing:");
+            charges.forEach(System.out::println);
+        });
+
+        assertEquals(1, matterRepository.count());
+        assertEquals(1, chargeRepository.count());
+        assertEquals(1, customerRepository.count());
+        assertEquals(false, oCharges.isEmpty());
+        assertEquals(true, oCharges.isPresent());
+        assertEquals(1, oCharges.get().size());
     }
 
     @Test

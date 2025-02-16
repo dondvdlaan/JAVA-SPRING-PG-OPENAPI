@@ -22,7 +22,10 @@ public class Customer {
     private UUID customerID = UUID.randomUUID();
     @Column(name = "customer_nr")
     private Long customerNr;
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(
+            //cascade = CascadeType.PERSIST,
+            //fetch = FetchType.LAZY,
+            mappedBy = "customer")
     @Builder.Default
     private List<Charge> charges = new ArrayList<>();
     @Column(name = "stand_by_flag")
