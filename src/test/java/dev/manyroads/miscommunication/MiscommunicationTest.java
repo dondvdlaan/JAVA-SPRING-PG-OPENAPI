@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.LocalDateTime;
@@ -30,7 +29,6 @@ import java.util.UUID;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -118,7 +116,7 @@ public class MiscommunicationTest {
         existingCustomer.setCustomerID(customerID);
         existingCustomer.setCustomerNr(customerNr);
         existingCustomer.setStandByFlag(true);
-        when(customerRepository.findByCustomerNr(anyLong())).thenReturn(existingCustomer);
+        when(customerRepository.findByCustomerNr(anyLong())).thenReturn(Optional.of(existingCustomer));
         MatterRequest matterRequest = new MatterRequest();
         matterRequest.setMatterNr(matterNr);
         matterRequest.setCustomerNr(customerNr);
@@ -132,13 +130,13 @@ public class MiscommunicationTest {
         existingCharge.setCustomer(existingCustomer);
         List<Charge> listCharge = new ArrayList<>();
         listCharge.add(existingCharge);
-        when(chargeRepository.findByCustomerNrAndChargeStatus(anyLong(), any(ChargeStatusEnum.class))).thenReturn(Optional.of(listCharge));
+        when(chargeRepository.findByCustomerNrAndChargeStatuss(anyLong(), any(ChargeStatusEnum.class))).thenReturn(Optional.of(listCharge));
 
         // activate
         matterReceptionService.sendCustomerDataToCustomerProcessing(customerNr);
 
         // verify
-        verify(chargeRepository, times(1)).findByCustomerNrAndChargeStatus(anyLong(), any(ChargeStatusEnum.class));
+        verify(chargeRepository, times(1)).findByCustomerNrAndChargeStatuss(anyLong(), any(ChargeStatusEnum.class));
         verify(customerRepository, times(1)).findByCustomerNr(anyLong());
     }
 
@@ -160,7 +158,7 @@ public class MiscommunicationTest {
         existingCustomer.setCustomerID(customerID);
         existingCustomer.setCustomerNr(customerNr);
         existingCustomer.setStandByFlag(true);
-        when(customerRepository.findByCustomerNr(anyLong())).thenReturn(existingCustomer);
+        when(customerRepository.findByCustomerNr(anyLong())).thenReturn(Optional.of(existingCustomer));
         MatterRequest matterRequest = new MatterRequest();
         matterRequest.setMatterNr(matterNr);
         matterRequest.setCustomerNr(customerNr);
@@ -174,13 +172,13 @@ public class MiscommunicationTest {
         existingCharge.setCustomer(existingCustomer);
         List<Charge> listCharge = new ArrayList<>();
         listCharge.add(existingCharge);
-        when(chargeRepository.findByCustomerNrAndChargeStatus(anyLong(), any(ChargeStatusEnum.class))).thenReturn(Optional.of(listCharge));
+        when(chargeRepository.findByCustomerNrAndChargeStatuss(anyLong(), any(ChargeStatusEnum.class))).thenReturn(Optional.of(listCharge));
 
         // activate
         matterReceptionService.sendCustomerDataToCustomerProcessing(customerNr);
 
         // verify
-        verify(chargeRepository, times(1)).findByCustomerNrAndChargeStatus(anyLong(), any(ChargeStatusEnum.class));
+        verify(chargeRepository, times(1)).findByCustomerNrAndChargeStatuss(anyLong(), any(ChargeStatusEnum.class));
         verify(customerRepository, times(1)).findByCustomerNr(anyLong());
     }
 

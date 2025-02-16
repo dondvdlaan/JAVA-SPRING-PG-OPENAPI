@@ -13,7 +13,7 @@ import java.util.UUID;
 public interface ChargeRepository extends JpaRepository<Charge, UUID> {
 
     @Query(
-            "SELECT c " +
+            value = "SELECT c " +
                     "FROM Charge c " +
                     "WHERE (c.chargeStatus = :cs1 " +
                     "OR c.chargeStatus = :cs2 ) " +
@@ -23,6 +23,13 @@ public interface ChargeRepository extends JpaRepository<Charge, UUID> {
                                                            @Param("cs2") ChargeStatusEnum chargeStatus2,
                                                            @Param("customerNr") long customerNr);
 
-    Optional<List<Charge>> findByCustomerNr(Long customerNr);
-    Optional<List<Charge>> findByCustomerNrAndChargeStatus(Long customerNr, ChargeStatusEnum chargeStatusEnum);
+    @Query(
+            value = "SELECT c " +
+                    "FROM Charge c " +
+                    "WHERE c.chargeStatus = :cs1 " +
+                    //       "OR c.chargeStatus = :cs2 ) " +
+                    //       "WHERE c.customer.customerNr = :customerNr "
+                    "AND c.customer.customerNr = :customerNr "
+    )
+    Optional<List<Charge>> findByCustomerNrAndChargeStatuss(Long customerNr, @Param("cs1") ChargeStatusEnum chargeStatusEnum);
 }

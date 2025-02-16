@@ -3,10 +3,12 @@ package dev.manyroads.model.entity;
 import dev.manyroads.model.ChargeStatusEnum;
 import dev.manyroads.model.VehicleTypeEnum;
 import dev.manyroads.model.messages.ChargeMessage;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -49,7 +51,10 @@ public class Charge {
     @ManyToOne()
     @JoinColumn(name = "customer_id")
     private Customer customer;
-    @OneToMany(mappedBy = "charge")
+    @OneToMany(
+            //cascade = CascadeType.PERSIST,
+           // fetch = FetchType.LAZY,
+            mappedBy = "charge")
     private Set<Matter> matters = new HashSet<>();
 
     public ChargeMessage getChargeMessage() {

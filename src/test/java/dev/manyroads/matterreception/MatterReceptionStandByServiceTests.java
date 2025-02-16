@@ -108,7 +108,7 @@ public class MatterReceptionStandByServiceTests {
         listCharge.add(existingCharge);
         listCharge.add(existingCharge2);
         when(chargeRepository
-                .findByCustomerNrAndChargeStatus(eq(customerNr), eq(chargeStatus)))
+                .findByCustomerNrAndChargeStatuss(eq(customerNr), eq(chargeStatus)))
                 .thenReturn(Optional.of(listCharge));
         when(customerProcessingClient.sendMessageToCustomerProcessing(any())).thenReturn(true);
         when(customerRepository.findByCustomerNr(customerNr)).thenReturn(null);
@@ -159,10 +159,10 @@ public class MatterReceptionStandByServiceTests {
         existingCharge2.getMatters().add(existingMatter2);
         List<Charge> listCharge = new ArrayList<>();
         when(chargeRepository
-                .findByCustomerNrAndChargeStatus(eq(customerNr), eq(chargeStatus)))
+                .findByCustomerNrAndChargeStatuss(eq(customerNr), eq(chargeStatus)))
                 .thenReturn(Optional.of(listCharge));
         when(customerProcessingClient.sendMessageToCustomerProcessing(any())).thenReturn(true);
-        when(customerRepository.findByCustomerNr(customerNr)).thenReturn(existingCustomer);
+        when(customerRepository.findByCustomerNr(customerNr)).thenReturn(Optional.of(existingCustomer));
 
         // activate
         assertThrows(NoChargesFoundForCustomerException.class, () ->
@@ -212,7 +212,7 @@ public class MatterReceptionStandByServiceTests {
         listCharge.add(existingCharge);
         listCharge.add(existingCharge2);
         when(chargeRepository
-                .findByCustomerNrAndChargeStatus(eq(customerNr), eq(chargeStatus)))
+                .findByCustomerNrAndChargeStatuss(eq(customerNr), eq(chargeStatus)))
                 .thenReturn(Optional.of(listCharge));
         when(customerProcessingClient.sendMessageToCustomerProcessing(any())).thenReturn(false);
 
@@ -263,10 +263,10 @@ public class MatterReceptionStandByServiceTests {
         listCharge.add(existingCharge);
         listCharge.add(existingCharge2);
         when(chargeRepository
-                .findByCustomerNrAndChargeStatus(eq(customerNr), eq(chargeStatus)))
+                .findByCustomerNrAndChargeStatuss(eq(customerNr), eq(chargeStatus)))
                 .thenReturn(Optional.of(listCharge));
         when(customerProcessingClient.sendMessageToCustomerProcessing(any())).thenReturn(true);
-        when(customerRepository.findByCustomerNr(customerNr)).thenReturn(existingCustomer);
+        when(customerRepository.findByCustomerNr(customerNr)).thenReturn(Optional.of(existingCustomer));
 
         // activate
         matterReceptionService.sendCustomerDataToCustomerProcessing(customerNr);
@@ -303,10 +303,10 @@ public class MatterReceptionStandByServiceTests {
         List<Charge> listCharge = new ArrayList<>();
         listCharge.add(existingCharge);
         when(chargeRepository
-                .findByCustomerNrAndChargeStatus(eq(customerNr), eq(chargeStatus)))
+                .findByCustomerNrAndChargeStatuss(eq(customerNr), eq(chargeStatus)))
                 .thenReturn(Optional.of(listCharge));
         when(customerProcessingClient.sendMessageToCustomerProcessing(any(CustomerProcessingClientMessage.class))).thenReturn(true);
-        when(customerRepository.findByCustomerNr(customerNr)).thenReturn(existingCustomer);
+        when(customerRepository.findByCustomerNr(customerNr)).thenReturn(Optional.of(existingCustomer));
 
         // activate
         matterReceptionService.sendCustomerDataToCustomerProcessing(customerNr);
@@ -339,7 +339,7 @@ public class MatterReceptionStandByServiceTests {
                 .customerNr(customerNr)
                 .standByFlag(true)
                 .build();
-        when(customerRepository.findByCustomerNr(anyLong())).thenReturn(existingCustomer);
+        when(customerRepository.findByCustomerNr(anyLong())).thenReturn(Optional.of(existingCustomer));
         when(customerRepository.save(any())).thenReturn(existingCustomer);
 
         Matter existingMatter = Matter.builder()

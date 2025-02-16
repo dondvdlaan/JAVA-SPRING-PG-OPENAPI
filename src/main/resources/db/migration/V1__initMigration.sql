@@ -29,4 +29,4 @@ PRIMARY KEY (matter_id )
 );
 
 ALTER TABLE charges ADD CONSTRAINT fk_customer_id FOREIGN KEY (customer_id) REFERENCES customers(customer_id);
---ALTER TABLE matters ADD CONSTRAINT fk_charge_id FOREIGN KEY (charge_id) REFERENCES charges(charge_id);
+ALTER TABLE matters ADD CONSTRAINT fk_charge_id FOREIGN KEY (charge_id) REFERENCES charges(charge_id);

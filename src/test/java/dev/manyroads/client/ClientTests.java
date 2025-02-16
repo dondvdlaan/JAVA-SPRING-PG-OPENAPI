@@ -79,7 +79,7 @@ public class ClientTests {
         listCharge.add(existingCharge);
         listCharge.add(existingCharge2);
         when(chargeRepository
-                .findByCustomerNrAndChargeStatus(eq(customerNr), eq(chargeStatus)))
+                .findByCustomerNrAndChargeStatuss(eq(customerNr), eq(chargeStatus)))
                 .thenReturn(Optional.of(listCharge));
 
         // activate and verify
